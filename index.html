@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Tablas Divertidas</title>
+  <meta name="theme-color" content="#ff7f50" />
+  <style>
+    :root {
+      --bg1: #ff9a9e;
+      --bg2: #fad0c4;
+      --bg3: #6ee7f9;
+      --card: rgba(255,255,255,.84);
+      --text: #24344d;
+      --danger: #ff4d5a;
+      --success: #1fbf75;
+      --shadow: 0 18px 40px rgba(0,0,0,.18);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
+      overflow-x: hidden;
+    }
+    body { position: relative; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+    .bg-fall {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .falling {
+      position: absolute;
+      top: -10vh;
+      opacity: .14;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 3px 20px rgba(0,0,0,.18);
+      animation: fall linear forwards;
+      user-select: none;
+      will-change: transform;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-10vh) rotate(0deg); }
+      to { transform: translateY(120vh) rotate(180deg); }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 16px 28px;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 520px;
+      display: none;
+      animation: fadeIn .35s ease;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      text-align: center;
+      padding-top: 28px;
+    }
+
+    .logo {
+      font-size: 64px;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,.15));
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      font-size: clamp(42px, 11vw, 64px);
+      line-height: .92;
+      color: #fff;
+      text-shadow: 0 10px 24px rgba(0,0,0,.18);
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      margin: 10px auto 18px;
+      font-size: 22px;
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 4px 10px rgba(0,0,0,.15);
+    }
+
+    .panel {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .menu-buttons {
+      display: grid;
+      gap: 14px;
+      margin: 26px 0 18px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active { transform: scale(.985); }
+
+    .btn-primary {
+      width: 100%;
+      border-radius: 999px;
+      padding: 22px 20px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #ffa24d, #ff5f74);
+      box-shadow: 0 14px 28px rgba(255,95,116,.34);
+    }
+
+    .btn-secondary, .btn-ghost {
+      width: 100%;
+      border-radius: 999px;
+      padding: 17px 18px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ff6a79;
+      background: rgba(255,255,255,.84);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-ghost {
+      color: #2e4969;
+      background: rgba(255,255,255,.6);
+    }
+
+    .rules {
+      margin-top: 16px;
+      color: rgba(255,255,255,.95);
+      font-size: 20px;
+      line-height: 1.55;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      color: white;
+      font-weight: 700;
+    }
+
+    .pill {
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .hearts { letter-spacing: 4px; white-space: nowrap; }
+
+    .question-card {
+      position: relative;
+      background: var(--card);
+      border-radius: 30px;
+      min-height: 210px;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .question-card.shake {
+      animation: shake .32s ease;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    .question {
+      font-size: clamp(54px, 16vw, 90px);
+      font-weight: 900;
+      letter-spacing: -.06em;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .feedback-text {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      font-weight: 900;
+      opacity: 0;
+      pointer-events: none;
+      text-align: center;
+      width: calc(100% - 32px);
+    }
+
+    .feedback-text.show.success { color: var(--success); opacity: 1; animation: popMsg .7s ease; }
+    .feedback-text.show.error { color: var(--danger); opacity: 1; animation: popMsg .7s ease; }
+
+    @keyframes popMsg {
+      0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(.8); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(1.04); }
+    }
+
+    .timer-wrap {
+      margin: 22px 6px 8px;
+      text-align: center;
+    }
+
+    .timer-bar {
+      height: 16px;
+      width: 100%;
+      background: rgba(255,255,255,.4);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    .timer-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #26d5d9, #62e78d);
+      transition: width .08s linear;
+    }
+
+    .timer-fill.warn { background: linear-gradient(90deg, #f8d34d, #ff9946); }
+    .timer-fill.danger { background: linear-gradient(90deg, #ff7b59, #ff3e67); }
+
+    .timer-label {
+      margin-top: 9px;
+      color: white;
+      font-size: 20px;
+      font-weight: 900;
+      text-shadow: 0 4px 10px rgba(0,0,0,.18);
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .voice-box, .manual-box {
+      background: rgba(255,255,255,.13);
+      border: 2px solid rgba(255,255,255,.35);
+      border-radius: 28px;
+      padding: 18px;
+      color: white;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .voice-main {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mic-btn {
+      flex: 0 0 76px;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff, #d9f8ff);
+      color: #1d5b7b;
+      font-size: 30px;
+      box-shadow: 0 12px 22px rgba(0,0,0,.14);
+    }
+
+    .mic-btn.listening {
+      background: linear-gradient(135deg, #ffced4, #ff7b8e);
+      color: white;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,99,132,.45); }
+      70% { box-shadow: 0 0 0 18px rgba(255,99,132,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,99,132,0); }
+    }
+
+    .voice-text strong { display: block; font-size: 26px; margin-bottom: 6px; }
+    .voice-sub { opacity: .95; font-size: 16px; line-height: 1.35; }
+
+    .transcript {
+      margin-top: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.14);
+      padding: 10px 12px;
+      min-height: 46px;
+      font-size: 16px;
+      word-break: break-word;
+    }
+
+    .mode-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mini-btn {
+      border-radius: 16px;
+      padding: 14px 12px;
+      font-weight: 800;
+      color: #274260;
+      background: rgba(255,255,255,.85);
+    }
+
+    .mini-btn.active {
+      background: linear-gradient(135deg, #3fe1e0, #88f0aa);
+      color: #13414b;
+    }
+
+    .manual-box { display: none; }
+    .manual-box.show { display: block; }
+
+    .manual-input, .name-input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 2px solid rgba(36,52,77,.08);
+      font-size: 22px;
+      outline: none;
+      color: var(--text);
+      background: rgba(255,255,255,.96);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .manual-actions, .final-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .slap {
+      position: fixed;
+      right: -180px;
+      top: 44%;
+      transform: translateY(-50%) rotate(0deg);
+      font-size: 180px;
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      filter: drop-shadow(0 16px 30px rgba(0,0,0,.24));
+    }
+
+    .slap.show {
+      animation: slapIn .55s ease forwards;
+    }
+
+    @keyframes slapIn {
+      0% { right: -240px; opacity: 0; transform: translateY(-50%) rotate(18deg) scale(.8); }
+      20% { opacity: 1; }
+      55% { right: 10px; transform: translateY(-50%) rotate(-10deg) scale(1.04); }
+      100% { right: -140px; opacity: 0; transform: translateY(-50%) rotate(-18deg) scale(.98); }
+    }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,60,84,.22);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .flash.show { animation: flash .32s ease; }
+
+    @keyframes flash {
+      0% { opacity: 0; }
+      40% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .surprise {
+      margin-top: 18px;
+      text-align: center;
+      min-height: 34px;
+      color: white;
+      font-weight: 900;
+      font-size: 22px;
+      text-shadow: 0 4px 10px rgba(0,0,0,.18);
+    }
+
+    .records-list {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .record-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      color: white;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      padding: 12px 14px;
+      border-radius: 18px;
+      font-weight: 700;
+    }
+
+    .empty {
+      color: rgba(255,255,255,.92);
+      font-size: 18px;
+      text-align: center;
+      padding: 20px 0 8px;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      text-align: center;
+      color: rgba(255,255,255,.85);
+      font-size: 14px;
+    }
+
+    @media (max-width: 420px) {
+      .manual-actions, .final-actions { grid-template-columns: 1fr; }
+      .voice-main { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-fall" id="bgFall"></div>
+  <div class="flash" id="flash"></div>
+  <div class="slap" id="slap">✋</div>
+
+  <main class="app">
+    <section class="screen active" id="homeScreen">
+      <div class="hero">
+        <div class="logo">🧮</div>
+        <h1>TABLAS<br>DIVERTIDAS</h1>
+        <div class="subtitle">¡Multiplica a toda velocidad!</div>
+      </div>
+
+      <div class="menu-buttons">
+        <button class="btn-primary" id="playBtn">▶ JUGAR</button>
+        <button class="btn-secondary" id="recordsBtn">🏆 Récords</button>
+        <button class="btn-ghost" id="howBtn">⚙ Cómo jugar</button>
+      </div>
+
+      <div class="panel rules">
+        🎯 Responde <strong>40 multiplicaciones</strong><br>
+        🎤 Usa tu voz o el teclado manual<br>
+        ⏱ Tienes <strong>3 segundos</strong> por pregunta<br>
+        💥 Cuidado con las <strong>3 vidas</strong><br>
+        ✨ Si lo logras, hay sorpresa final
+      </div>
+    </section>
+
+    <section class="screen" id="gameScreen">
+      <div class="topbar">
+        <div class="pill" id="scorePill">0 / 40</div>
+        <div class="pill hearts" id="livesPill">❤️❤️❤️</div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <div class="feedback-text" id="feedbackText"></div>
+        <div class="question" id="questionText">6 × 7 = ?</div>
+      </div>
+
+      <div class="timer-wrap">
+        <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+        <div class="timer-label" id="timerLabel">3.0s</div>
+      </div>
+
+      <div class="surprise" id="surpriseText"></div>
+
+      <div class="controls">
+        <div class="mode-switch">
+          <button class="mini-btn active" id="voiceModeBtn">🎤 Voz</button>
+          <button class="mini-btn" id="manualModeBtn">⌨️ Teclado</button>
+        </div>
+
+        <div class="voice-box" id="voiceBox">
+          <div class="voice-main">
+            <button class="mic-btn" id="micBtn" aria-label="Activar micrófono">🎤</button>
+            <div class="voice-text">
+              <strong id="voiceTitle">Responder con voz</strong>
+              <div class="voice-sub" id="voiceSub">Toca el micrófono y di el resultado</div>
+            </div>
+          </div>
+          <div class="transcript" id="transcript">Aún no hay respuesta detectada.</div>
+        </div>
+
+        <div class="manual-box" id="manualBox">
+          <input id="manualInput" class="manual-input" type="text" inputmode="numeric" autocomplete="off" placeholder="Escribe la respuesta" />
+          <div class="manual-actions">
+            <button class="btn-ghost" id="clearManualBtn">Limpiar</button>
+            <button class="btn-secondary" id="submitManualBtn">Responder</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="finalScreen">
+      <div class="hero">
+        <div class="logo" id="finalEmoji">🏁</div>
+        <h1 id="finalTitle">FIN DE LA PARTIDA</h1>
+        <div class="subtitle" id="finalSubtitle">Has llegado lejos</div>
+      </div>
+
+      <div class="panel">
+        <div style="font-size: 24px; font-weight: 900; text-align:center; color:#24415e;">Puntuación: <span id="finalScore">0</span></div>
+        <div style="margin-top:14px; color:#35516f; font-size:18px; text-align:center;">Escribe tu nombre para guardar tu récord.</div>
+        <div style="margin-top:16px;">
+          <input id="nameInput" class="name-input" type="text" maxlength="20" placeholder="Tu nombre" />
+        </div>
+        <div class="final-actions">
+          <button class="btn-ghost" id="playAgainBtn">Jugar otra vez</button>
+          <button class="btn-secondary" id="saveScoreBtn">Guardar</button>
+        </div>
+        <div id="saveStatus" style="margin-top:12px; text-align:center; font-weight:800; color:#35516f;"></div>
+      </div>
+
+      <div class="menu-buttons" style="margin-top:18px;">
+        <button class="btn-primary" id="goRecordsBtn">Ver récords</button>
+        <button class="btn-ghost" id="backHomeBtn">Volver al inicio</button>
+      </div>
+    </section>
+
+    <section class="screen" id="recordsScreen">
+      <div class="hero">
+        <div class="logo">🏆</div>
+        <h1>RÉCORDS</h1>
+        <div class="subtitle">Tus mejores partidas</div>
+      </div>
+
+      <div class="records-list" id="recordsList"></div>
+      <div class="menu-buttons">
+        <button class="btn-secondary" id="clearRecordsBtn">🗑 Borrar récords</button>
+        <button class="btn-primary" id="recordsBackBtn">← Volver</button>
+      </div>
+      <div class="footer-note">Guardado local en este navegador</div>
+    </section>
+  </main>
+
+  <script>
+    const GOAL = 40;
+    const ROUND_SECONDS = 3;
+    const RECORDS_KEY = 'tablas_divertidas_records_v2';
+
+    const motivational = [
+      '🔥 Bien', '⚡ Rápido', '💥 Crack', '🚀 Imparable', '🧠 Mente veloz', '⭐ Brutal'
+    ];
+    const milestoneMessages = {
+      10: '⚡ Vas volando',
+      20: '🔥 Modo bestia activado',
+      30: '🚀 Ya casi eres leyenda',
+      40: '👑 Nivel leyenda desbloqueado'
+    };
+
+    const state = {
+      screen: 'home',
+      score: 0,
+      lives: 3,
+      a: 1,
+      b: 1,
+      answer: 1,
+      roundActive: false,
+      timeLeft: ROUND_SECONDS,
+      timerId: null,
+      timerEndAt: 0,
+      mode: 'voice',
+      recognition: null,
+      speechSupported: false,
+      listening: false,
+      transcript: '',
+      lastValidatedToken: '',
+      hasSavedCurrentScore: false,
+      lastScore: 0,
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const screens = {
+      home: $('homeScreen'),
+      game: $('gameScreen'),
+      final: $('finalScreen'),
+      records: $('recordsScreen'),
+    };
+
+    const els = {
+      playBtn: $('playBtn'),
+      recordsBtn: $('recordsBtn'),
+      howBtn: $('howBtn'),
+      scorePill: $('scorePill'),
+      livesPill: $('livesPill'),
+      questionText: $('questionText'),
+      timerFill: $('timerFill'),
+      timerLabel: $('timerLabel'),
+      feedbackText: $('feedbackText'),
+      surpriseText: $('surpriseText'),
+      voiceModeBtn: $('voiceModeBtn'),
+      manualModeBtn: $('manualModeBtn'),
+      voiceBox: $('voiceBox'),
+      manualBox: $('manualBox'),
+      micBtn: $('micBtn'),
+      voiceTitle: $('voiceTitle'),
+      voiceSub: $('voiceSub'),
+      transcript: $('transcript'),
+      manualInput: $('manualInput'),
+      clearManualBtn: $('clearManualBtn'),
+      submitManualBtn: $('submitManualBtn'),
+      questionCard: $('questionCard'),
+      slap: $('slap'),
+      flash: $('flash'),
+      finalEmoji: $('finalEmoji'),
+      finalTitle: $('finalTitle'),
+      finalSubtitle: $('finalSubtitle'),
+      finalScore: $('finalScore'),
+      nameInput: $('nameInput'),
+      saveScoreBtn: $('saveScoreBtn'),
+      saveStatus: $('saveStatus'),
+      playAgainBtn: $('playAgainBtn'),
+      goRecordsBtn: $('goRecordsBtn'),
+      backHomeBtn: $('backHomeBtn'),
+      recordsList: $('recordsList'),
+      clearRecordsBtn: $('clearRecordsBtn'),
+      recordsBackBtn: $('recordsBackBtn'),
+      bgFall: $('bgFall'),
+    };
+
+    function initSpeech() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        state.speechSupported = false;
+        els.voiceTitle.textContent = 'Voz no disponible';
+        els.voiceSub.textContent = 'Usa el teclado manual en este navegador';
+        return;
+      }
+      state.speechSupported = true;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-ES';
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 3;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        state.listening = true;
+        updateMicState();
+        els.transcript.textContent = 'Escuchando…';
+      };
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        let finalText = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          const text = result[0].transcript || '';
+          if (result.isFinal) finalText += text + ' ';
+          else interim += text + ' ';
+        }
+        const combined = (finalText || interim).trim();
+        state.transcript = combined;
+        els.transcript.textContent = combined || 'Aún no hay respuesta detectada.';
+
+        if (finalText.trim()) {
+          safelyValidate(finalText.trim());
+        }
+      };
+
+      recognition.onerror = () => {
+        state.listening = false;
+        updateMicState();
+        if (state.mode === 'voice') {
+          els.transcript.textContent = 'No se pudo reconocer. Intenta otra vez o usa teclado.';
+        }
+      };
+
+      recognition.onend = () => {
+        state.listening = false;
+        updateMicState();
+      };
+
+      state.recognition = recognition;
+      updateMicState();
+    }
+
+    function normalizeAnswer(value) {
+      if (value == null) return '';
+      let text = String(value)
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.,;:!?¿¡_\-]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      const dictionary = {
+        cero: '0', un: '1', uno: '1', una: '1', dos: '2', tres: '3', cuatro: '4', cinco: '5',
+        seis: '6', siete: '7', ocho: '8', nueve: '9', diez: '10', once: '11', doce: '12', trece: '13',
+        catorce: '14', quince: '15', dieciseis: '16', diecisiete: '17', dieciocho: '18', diecinueve: '19',
+        veinte: '20', veintiuno: '21', veintidos: '22', veintitres: '23', veinticuatro: '24', veinticinco: '25',
+        veintiseis: '26', veintisiete: '27', veintiocho: '28', veintinueve: '29', treinta: '30',
+        'treinta y uno': '31', 'treinta y dos': '32', 'treinta y tres': '33', 'treinta y cuatro': '34', 'treinta y cinco': '35',
+        'treinta y seis': '36', 'treinta y siete': '37', 'treinta y ocho': '38', 'treinta y nueve': '39', cuarenta: '40',
+        'cuarenta y uno': '41', 'cuarenta y dos': '42', 'cuarenta y tres': '43', 'cuarenta y cuatro': '44', 'cuarenta y cinco': '45',
+        'cuarenta y seis': '46', 'cuarenta y siete': '47', 'cuarenta y ocho': '48', 'cuarenta y nueve': '49', cincuenta: '50',
+        'cincuenta y uno': '51', 'cincuenta y dos': '52', 'cincuenta y tres': '53', 'cincuenta y cuatro': '54', 'cincuenta y cinco': '55',
+        'cincuenta y seis': '56', 'cincuenta y siete': '57', 'cincuenta y ocho': '58', 'cincuenta y nueve': '59',
+        sesenta: '60', setenta: '70', ochenta: '80', noventa: '90', cien: '100'
+      };
+
+      if (dictionary[text] !== undefined) return dictionary[text];
+
+      const compact = text.replace(/\s+/g, '');
+      if (dictionary[compact] !== undefined) return dictionary[compact];
+
+      const numeric = text.match(/\d+/g);
+      if (numeric && numeric.length) return numeric.join('');
+      return text;
+    }
+
+    function safelyValidate(rawValue) {
+      if (!state.roundActive) return;
+      const normalized = normalizeAnswer(rawValue);
+      if (!normalized) return;
+
+      const token = state.score + '|' + state.lives + '|' + state.answer + '|' + normalized;
+      if (token === state.lastValidatedToken) return;
+      state.lastValidatedToken = token;
+
+      const correct = String(state.answer);
+      if (normalized === correct) {
+        handleCorrect();
+      } else {
+        handleWrong('Respuesta correcta: ' + state.answer);
+      }
+    }
+
+    function generateQuestion() {
+      const difficulty = Math.min(10, 3 + Math.floor(state.score / 4));
+      let a = 1 + Math.floor(Math.random() * difficulty);
+      let b = 1 + Math.floor(Math.random() * 10);
+      if (Math.random() > .55) [a, b] = [b, a];
+      state.a = a;
+      state.b = b;
+      state.answer = a * b;
+      state.lastValidatedToken = '';
+      state.transcript = '';
+      els.questionText.textContent = `${a} × ${b} = ?`;
+      els.transcript.textContent = state.mode === 'voice' ? 'Aún no hay respuesta detectada.' : 'Modo teclado activo';
+      els.manualInput.value = '';
+      hideFeedback();
+      updateSurprise('');
+    }
+
+    function startGame() {
+      state.score = 0;
+      state.lives = 3;
+      state.hasSavedCurrentScore = false;
+      state.lastScore = 0;
+      showScreen('game');
+      updateHud();
+      generateQuestion();
+      startRound();
+      if (state.mode === 'manual') focusManualSoon();
+    }
+
+    function startRound() {
+      state.roundActive = true;
+      stopRecognition();
+      clearTimer();
+      state.timerEndAt = performance.now() + ROUND_SECONDS * 1000;
+      tickTimer();
+    }
+
+    function tickTimer() {
+      clearTimer();
+      state.timerId = requestAnimationFrame(function frame(now) {
+        const msLeft = Math.max(0, state.timerEndAt - now);
+        state.timeLeft = msLeft / 1000;
+        renderTimer();
+        if (msLeft <= 0) {
+          handleWrong('⏰ Tiempo agotado. Era ' + state.answer);
+          return;
+        }
+        state.timerId = requestAnimationFrame(frame);
+      });
+    }
+
+    function clearTimer() {
+      if (state.timerId) cancelAnimationFrame(state.timerId);
+      state.timerId = null;
+    }
+
+    function renderTimer() {
+      const ratio = Math.max(0, Math.min(1, state.timeLeft / ROUND_SECONDS));
+      els.timerFill.style.width = `${ratio * 100}%`;
+      els.timerLabel.textContent = `${state.timeLeft.toFixed(1)}s`;
+      els.timerFill.classList.remove('warn', 'danger');
+      if (ratio < .34) els.timerFill.classList.add('danger');
+      else if (ratio < .67) els.timerFill.classList.add('warn');
+    }
+
+    function handleCorrect() {
+      if (!state.roundActive) return;
+      state.roundActive = false;
+      clearTimer();
+      stopRecognition();
+      state.score += 1;
+      state.lastScore = state.score;
+      updateHud();
+      showFeedback(randomItem(motivational), 'success');
+      playSuccessSound();
+      maybeSurprise();
+      if (state.score >= GOAL) {
+        setTimeout(() => endGame(true), 700);
+        return;
+      }
+      setTimeout(() => {
+        generateQuestion();
+        startRound();
+        if (state.mode === 'manual') focusManualSoon();
+      }, 520);
+    }
+
+    function handleWrong(message) {
+      if (!state.roundActive) return;
+      state.roundActive = false;
+      clearTimer();
+      stopRecognition();
+      state.lives -= 1;
+      updateHud();
+      showFeedback('¡INCORRECTO!', 'error');
+      updateSurprise(message || 'Fallaste');
+      els.questionCard.classList.add('shake');
+      setTimeout(() => els.questionCard.classList.remove('shake'), 350);
+      triggerSlap();
+      vibrate([120, 50, 120]);
+      playErrorSound();
+      if (state.lives <= 0) {
+        setTimeout(() => endGame(false), 900);
+        return;
+      }
+      setTimeout(() => {
+        generateQuestion();
+        startRound();
+        if (state.mode === 'manual') focusManualSoon();
+      }, 950);
+    }
+
+    function endGame(won) {
+      clearTimer();
+      stopRecognition();
+      showScreen('final');
+      els.finalScore.textContent = String(state.score);
+      els.saveStatus.textContent = '';
+      els.nameInput.value = '';
+      state.hasSavedCurrentScore = false;
+      if (won) {
+        els.finalEmoji.textContent = '👑';
+        els.finalTitle.textContent = '¡HAS GANADO!';
+        els.finalSubtitle.textContent = 'Dominas las tablas. La sorpresa es que… eres una máquina.';
+        createCelebrationBurst();
+        playWinSound();
+      } else {
+        els.finalEmoji.textContent = '😵';
+        els.finalTitle.textContent = 'FIN DE LA PARTIDA';
+        els.finalSubtitle.textContent = 'La mano ganó esta vez. Otra ronda y la rompes.';
+      }
+      setTimeout(() => els.nameInput.focus(), 180);
+    }
+
+    function maybeSurprise() {
+      const msg = milestoneMessages[state.score] || '';
+      if (msg) updateSurprise(msg);
+    }
+
+    function updateSurprise(text) {
+      els.surpriseText.textContent = text || '';
+    }
+
+    function updateHud() {
+      els.scorePill.textContent = `${state.score} / ${GOAL}`;
+      els.livesPill.textContent = '❤️'.repeat(Math.max(0, state.lives)) + '🖤'.repeat(Math.max(0, 3 - state.lives));
+    }
+
+    function showFeedback(text, kind) {
+      els.feedbackText.textContent = text;
+      els.feedbackText.className = `feedback-text show ${kind}`;
+      setTimeout(hideFeedback, 700);
+    }
+
+    function hideFeedback() {
+      els.feedbackText.className = 'feedback-text';
+    }
+
+    function switchMode(mode) {
+      state.mode = mode;
+      const voice = mode === 'voice';
+      els.voiceModeBtn.classList.toggle('active', voice);
+      els.manualModeBtn.classList.toggle('active', !voice);
+      els.voiceBox.style.display = voice ? 'block' : 'none';
+      els.manualBox.classList.toggle('show', !voice);
+      if (voice) {
+        els.transcript.textContent = state.transcript || 'Aún no hay respuesta detectada.';
+      } else {
+        stopRecognition();
+        focusManualSoon();
+      }
+    }
+
+    function focusManualSoon() {
+      setTimeout(() => {
+        if (state.screen === 'game' && state.mode === 'manual') {
+          els.manualInput.focus();
+          els.manualInput.select();
+        }
+      }, 60);
+    }
+
+    function showScreen(name) {
+      state.screen = name;
+      Object.entries(screens).forEach(([key, el]) => el.classList.toggle('active', key === name));
+    }
+
+    function startRecognition() {
+      if (!state.speechSupported || !state.recognition || !state.roundActive) return;
+      try {
+        state.transcript = '';
+        els.transcript.textContent = 'Escuchando…';
+        state.recognition.start();
+      } catch (_) {}
+    }
+
+    function stopRecognition() {
+      if (state.recognition && state.listening) {
+        try { state.recognition.stop(); } catch (_) {}
+      }
+      state.listening = false;
+      updateMicState();
+    }
+
+    function updateMicState() {
+      els.micBtn.classList.toggle('listening', state.listening);
+      els.micBtn.textContent = state.listening ? '🔴' : '🎤';
+    }
+
+    function triggerSlap() {
+      els.flash.classList.remove('show');
+      els.slap.classList.remove('show');
+      void els.slap.offsetWidth;
+      els.flash.classList.add('show');
+      els.slap.classList.add('show');
+    }
+
+    function vibrate(pattern) {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getRecords() {
+      try {
+        return JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveRecord(name, score) {
+      const safeName = (name || 'Sin nombre').trim().slice(0, 20) || 'Sin nombre';
+      const records = getRecords();
+      records.push({ name: safeName, score, date: new Date().toLocaleDateString('es-ES') });
+      records.sort((a, b) => b.score - a.score);
+      localStorage.setItem(RECORDS_KEY, JSON.stringify(records.slice(0, 10)));
+    }
+
+    function renderRecords() {
+      const records = getRecords();
+      els.recordsList.innerHTML = '';
+      if (!records.length) {
+        els.recordsList.innerHTML = '<div class="empty">Todavía no hay récords guardados.</div>';
+        return;
+      }
+      records.forEach((record, index) => {
+        const item = document.createElement('div');
+        item.className = 'record-item';
+        item.innerHTML = `<div>#${index + 1} · ${escapeHtml(record.name)}</div><div>${record.score} pts · ${escapeHtml(record.date)}</div>`;
+        els.recordsList.appendChild(item);
+      });
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function createFallingMath() {
+      const symbols = ['×', '+', '-', '=', '?', '7', '8', '9', '6', '3', '12', '24'];
+      setInterval(() => {
+        const span = document.createElement('span');
+        span.className = 'falling';
+        span.textContent = randomItem(symbols);
+        span.style.left = Math.random() * 100 + 'vw';
+        span.style.fontSize = 22 + Math.random() * 34 + 'px';
+        span.style.animationDuration = 7 + Math.random() * 8 + 's';
+        els.bgFall.appendChild(span);
+        setTimeout(() => span.remove(), 16000);
+      }, 500);
+    }
+
+    function createCelebrationBurst() {
+      for (let i = 0; i < 18; i++) {
+        setTimeout(() => {
+          const span = document.createElement('span');
+          span.className = 'falling';
+          span.textContent = randomItem(['🎉', '✨', '🧠', '👑', '40', '×']);
+          span.style.left = Math.random() * 100 + 'vw';
+          span.style.top = '-5vh';
+          span.style.fontSize = 26 + Math.random() * 34 + 'px';
+          span.style.opacity = .5;
+          span.style.animationDuration = 3 + Math.random() * 2 + 's';
+          els.bgFall.appendChild(span);
+          setTimeout(() => span.remove(), 5500);
+        }, i * 80);
+      }
+    }
+
+    let audioCtx = null;
+    function getAudioContext() {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone({ freq = 440, type = 'sine', duration = 0.12, gain = 0.04, when = 0 }) {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, ctx.currentTime + when);
+        g.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + when + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + when + duration);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(ctx.currentTime + when);
+        osc.stop(ctx.currentTime + when + duration + 0.02);
+      } catch (_) {}
+    }
+
+    function playSuccessSound() {
+      playTone({ freq: 660, type: 'triangle', duration: 0.11, gain: 0.03, when: 0 });
+      playTone({ freq: 880, type: 'triangle', duration: 0.14, gain: 0.03, when: 0.08 });
+    }
+
+    function playErrorSound() {
+      playTone({ freq: 220, type: 'sawtooth', duration: 0.08, gain: 0.05, when: 0 });
+      playTone({ freq: 170, type: 'square', duration: 0.12, gain: 0.04, when: 0.07 });
+    }
+
+    function playWinSound() {
+      playTone({ freq: 523, type: 'triangle', duration: 0.12, gain: 0.03, when: 0 });
+      playTone({ freq: 659, type: 'triangle', duration: 0.12, gain: 0.03, when: 0.12 });
+      playTone({ freq: 784, type: 'triangle', duration: 0.18, gain: 0.03, when: 0.24 });
+    }
+
+    function setupEvents() {
+      els.playBtn.addEventListener('click', startGame);
+      els.recordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
+      els.howBtn.addEventListener('click', () => alert('Responde la multiplicación antes de que se acabe el tiempo. Puedes usar voz o teclado. Tienes 3 vidas y debes llegar a 40 aciertos.'));
+
+      els.voiceModeBtn.addEventListener('click', () => switchMode('voice'));
+      els.manualModeBtn.addEventListener('click', () => switchMode('manual'));
+
+      els.micBtn.addEventListener('click', () => {
+        if (!state.speechSupported) {
+          switchMode('manual');
+          return;
+        }
+        if (state.listening) stopRecognition();
+        else startRecognition();
+      });
+
+      els.clearManualBtn.addEventListener('click', () => {
+        els.manualInput.value = '';
+        els.manualInput.focus();
+      });
+
+      els.submitManualBtn.addEventListener('click', () => safelyValidate(els.manualInput.value));
+      els.manualInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') safelyValidate(els.manualInput.value);
+      });
+
+      els.saveScoreBtn.addEventListener('click', () => {
+        if (state.hasSavedCurrentScore) {
+          els.saveStatus.textContent = 'Este resultado ya está guardado.';
+          return;
+        }
+        const name = els.nameInput.value.trim();
+        saveRecord(name, state.lastScore || state.score);
+        state.hasSavedCurrentScore = true;
+        els.saveStatus.textContent = '✅ Récord guardado correctamente';
+        renderRecords();
+      });
+
+      els.playAgainBtn.addEventListener('click', startGame);
+      els.goRecordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
+      els.backHomeBtn.addEventListener('click', () => showScreen('home'));
+      els.recordsBackBtn.addEventListener('click', () => showScreen('home'));
+      els.clearRecordsBtn.addEventListener('click', () => {
+        if (confirm('¿Seguro que quieres borrar los récords?')) {
+          localStorage.removeItem(RECORDS_KEY);
+          renderRecords();
+        }
+      });
+    }
+
+    function bootstrap() {
+      initSpeech();
+      createFallingMath();
+      setupEvents();
+      renderRecords();
+      updateHud();
+      switchMode('voice');
+    }
+
+    bootstrap();
+  </script>
+</body>
+</html>
