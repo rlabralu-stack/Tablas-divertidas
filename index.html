@@ -16,7 +16,6 @@
       --success: #1fbf75;
       --shadow: 0 18px 40px rgba(0,0,0,.18);
     }
-
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
@@ -35,7 +34,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .falling {
       position: absolute;
       top: -10vh;
@@ -47,7 +45,6 @@
       user-select: none;
       will-change: transform;
     }
-
     @keyframes fall {
       from { transform: translateY(-10vh) rotate(0deg); }
       to { transform: translateY(120vh) rotate(180deg); }
@@ -61,31 +58,20 @@
       justify-content: center;
       padding: 20px 16px 28px;
     }
-
     .screen {
       width: 100%;
       max-width: 520px;
       display: none;
       animation: fadeIn .35s ease;
     }
-
     .screen.active { display: block; }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero {
-      text-align: center;
-      padding-top: 28px;
-    }
-
-    .logo {
-      font-size: 64px;
-      filter: drop-shadow(0 8px 16px rgba(0,0,0,.15));
-    }
-
+    .hero { text-align: center; padding-top: 28px; }
+    .logo { font-size: 64px; filter: drop-shadow(0 8px 16px rgba(0,0,0,.15)); }
     h1 {
       margin: 10px 0 8px;
       font-size: clamp(42px, 11vw, 64px);
@@ -94,14 +80,12 @@
       text-shadow: 0 10px 24px rgba(0,0,0,.18);
       letter-spacing: -.04em;
     }
-
     .subtitle {
       margin: 10px auto 18px;
       font-size: 22px;
       color: rgba(255,255,255,.92);
       text-shadow: 0 4px 10px rgba(0,0,0,.15);
     }
-
     .panel {
       background: rgba(255,255,255,.12);
       border: 1px solid rgba(255,255,255,.28);
@@ -111,13 +95,7 @@
       box-shadow: var(--shadow);
       padding: 16px;
     }
-
-    .menu-buttons {
-      display: grid;
-      gap: 14px;
-      margin: 26px 0 18px;
-    }
-
+    .menu-buttons { display: grid; gap: 14px; margin: 26px 0 18px; }
     button {
       border: 0;
       cursor: pointer;
@@ -125,9 +103,7 @@
       transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
       -webkit-tap-highlight-color: transparent;
     }
-
     button:active { transform: scale(.985); }
-
     .btn-primary {
       width: 100%;
       border-radius: 999px;
@@ -138,7 +114,6 @@
       background: linear-gradient(135deg, #ffa24d, #ff5f74);
       box-shadow: 0 14px 28px rgba(255,95,116,.34);
     }
-
     .btn-secondary, .btn-ghost {
       width: 100%;
       border-radius: 999px;
@@ -149,19 +124,13 @@
       background: rgba(255,255,255,.84);
       box-shadow: var(--shadow);
     }
-
-    .btn-ghost {
-      color: #2e4969;
-      background: rgba(255,255,255,.6);
-    }
-
+    .btn-ghost { color: #2e4969; background: rgba(255,255,255,.6); }
     .rules {
       margin-top: 16px;
       color: rgba(255,255,255,.95);
       font-size: 20px;
       line-height: 1.55;
     }
-
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -172,7 +141,6 @@
       color: white;
       font-weight: 700;
     }
-
     .pill {
       background: rgba(255,255,255,.18);
       border: 1px solid rgba(255,255,255,.3);
@@ -182,9 +150,7 @@
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
-
     .hearts { letter-spacing: 4px; white-space: nowrap; }
-
     .question-card {
       position: relative;
       background: var(--card);
@@ -196,11 +162,7 @@
       padding: 24px;
       overflow: hidden;
     }
-
-    .question-card.shake {
-      animation: shake .32s ease;
-    }
-
+    .question-card.shake { animation: shake .32s ease; }
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       20% { transform: translateX(-8px); }
@@ -208,7 +170,6 @@
       60% { transform: translateX(-6px); }
       80% { transform: translateX(6px); }
     }
-
     .question {
       font-size: clamp(54px, 16vw, 90px);
       font-weight: 900;
@@ -216,7 +177,6 @@
       color: var(--text);
       text-align: center;
     }
-
     .feedback-text {
       position: absolute;
       top: 14px;
@@ -229,21 +189,15 @@
       text-align: center;
       width: calc(100% - 32px);
     }
-
     .feedback-text.show.success { color: var(--success); opacity: 1; animation: popMsg .7s ease; }
     .feedback-text.show.error { color: var(--danger); opacity: 1; animation: popMsg .7s ease; }
-
     @keyframes popMsg {
       0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(.8); }
       20% { opacity: 1; }
       100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(1.04); }
     }
 
-    .timer-wrap {
-      margin: 22px 6px 8px;
-      text-align: center;
-    }
-
+    .timer-wrap { margin: 22px 6px 8px; text-align: center; }
     .timer-bar {
       height: 16px;
       width: 100%;
@@ -252,18 +206,15 @@
       overflow: hidden;
       box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
     }
-
     .timer-fill {
       height: 100%;
       width: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, #26d5d9, #62e78d);
-      transition: width .08s linear;
+      transition: width .05s linear;
     }
-
     .timer-fill.warn { background: linear-gradient(90deg, #f8d34d, #ff9946); }
     .timer-fill.danger { background: linear-gradient(90deg, #ff7b59, #ff3e67); }
-
     .timer-label {
       margin-top: 9px;
       color: white;
@@ -272,13 +223,8 @@
       text-shadow: 0 4px 10px rgba(0,0,0,.18);
     }
 
-    .controls {
-      display: grid;
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .voice-box, .manual-box {
+    .controls { display: grid; gap: 14px; margin-top: 20px; }
+    .voice-box {
       background: rgba(255,255,255,.13);
       border: 2px solid rgba(255,255,255,.35);
       border-radius: 28px;
@@ -288,14 +234,12 @@
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
-
     .voice-main {
       display: flex;
       align-items: center;
       gap: 14px;
     }
-
-    .mic-btn {
+    .mic-orb {
       flex: 0 0 76px;
       width: 76px;
       height: 76px;
@@ -304,23 +248,21 @@
       color: #1d5b7b;
       font-size: 30px;
       box-shadow: 0 12px 22px rgba(0,0,0,.14);
+      display: grid;
+      place-items: center;
     }
-
-    .mic-btn.listening {
+    .mic-orb.listening {
       background: linear-gradient(135deg, #ffced4, #ff7b8e);
       color: white;
       animation: pulse 1s infinite;
     }
-
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(255,99,132,.45); }
       70% { box-shadow: 0 0 0 18px rgba(255,99,132,0); }
       100% { box-shadow: 0 0 0 0 rgba(255,99,132,0); }
     }
-
     .voice-text strong { display: block; font-size: 26px; margin-bottom: 6px; }
     .voice-sub { opacity: .95; font-size: 16px; line-height: 1.35; }
-
     .transcript {
       margin-top: 12px;
       border-radius: 18px;
@@ -329,48 +271,6 @@
       min-height: 46px;
       font-size: 16px;
       word-break: break-word;
-    }
-
-    .mode-switch {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .mini-btn {
-      border-radius: 16px;
-      padding: 14px 12px;
-      font-weight: 800;
-      color: #274260;
-      background: rgba(255,255,255,.85);
-    }
-
-    .mini-btn.active {
-      background: linear-gradient(135deg, #3fe1e0, #88f0aa);
-      color: #13414b;
-    }
-
-    .manual-box { display: none; }
-    .manual-box.show { display: block; }
-
-    .manual-input, .name-input {
-      width: 100%;
-      padding: 16px 18px;
-      border-radius: 18px;
-      border: 2px solid rgba(36,52,77,.08);
-      font-size: 22px;
-      outline: none;
-      color: var(--text);
-      background: rgba(255,255,255,.96);
-      box-shadow: inset 0 2px 8px rgba(0,0,0,.05);
-    }
-
-    .manual-actions, .final-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
     }
 
     .slap {
@@ -384,18 +284,13 @@
       pointer-events: none;
       filter: drop-shadow(0 16px 30px rgba(0,0,0,.24));
     }
-
-    .slap.show {
-      animation: slapIn .55s ease forwards;
-    }
-
+    .slap.show { animation: slapIn .55s ease forwards; }
     @keyframes slapIn {
       0% { right: -240px; opacity: 0; transform: translateY(-50%) rotate(18deg) scale(.8); }
       20% { opacity: 1; }
       55% { right: 10px; transform: translateY(-50%) rotate(-10deg) scale(1.04); }
       100% { right: -140px; opacity: 0; transform: translateY(-50%) rotate(-18deg) scale(.98); }
     }
-
     .flash {
       position: fixed;
       inset: 0;
@@ -404,9 +299,7 @@
       opacity: 0;
       pointer-events: none;
     }
-
     .flash.show { animation: flash .32s ease; }
-
     @keyframes flash {
       0% { opacity: 0; }
       40% { opacity: 1; }
@@ -423,12 +316,7 @@
       text-shadow: 0 4px 10px rgba(0,0,0,.18);
     }
 
-    .records-list {
-      margin-top: 14px;
-      display: grid;
-      gap: 10px;
-    }
-
+    .records-list { margin-top: 14px; display: grid; gap: 10px; }
     .record-item {
       display: flex;
       justify-content: space-between;
@@ -441,14 +329,12 @@
       border-radius: 18px;
       font-weight: 700;
     }
-
     .empty {
       color: rgba(255,255,255,.92);
       font-size: 18px;
       text-align: center;
       padding: 20px 0 8px;
     }
-
     .footer-note {
       margin-top: 14px;
       text-align: center;
@@ -456,8 +342,26 @@
       font-size: 14px;
     }
 
+    .name-input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 2px solid rgba(36,52,77,.08);
+      font-size: 22px;
+      outline: none;
+      color: var(--text);
+      background: rgba(255,255,255,.96);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,.05);
+    }
+    .final-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
     @media (max-width: 420px) {
-      .manual-actions, .final-actions { grid-template-columns: 1fr; }
+      .final-actions { grid-template-columns: 1fr; }
       .voice-main { align-items: flex-start; }
     }
   </style>
@@ -483,7 +387,7 @@
 
       <div class="panel rules">
         🎯 Responde <strong>40 multiplicaciones</strong><br>
-        🎤 Usa tu voz o el teclado manual<br>
+        🎤 La app escucha automáticamente<br>
         ⏱ Tienes <strong>3 segundos</strong> por pregunta<br>
         💥 Cuidado con las <strong>3 vidas</strong><br>
         ✨ Si lo logras, hay sorpresa final
@@ -509,28 +413,15 @@
       <div class="surprise" id="surpriseText"></div>
 
       <div class="controls">
-        <div class="mode-switch">
-          <button class="mini-btn active" id="voiceModeBtn">🎤 Voz</button>
-          <button class="mini-btn" id="manualModeBtn">⌨️ Teclado</button>
-        </div>
-
         <div class="voice-box" id="voiceBox">
           <div class="voice-main">
-            <button class="mic-btn" id="micBtn" aria-label="Activar micrófono">🎤</button>
+            <div class="mic-orb" id="micOrb">🎤</div>
             <div class="voice-text">
-              <strong id="voiceTitle">Responder con voz</strong>
-              <div class="voice-sub" id="voiceSub">Toca el micrófono y di el resultado</div>
+              <strong id="voiceTitle">Escucha automática</strong>
+              <div class="voice-sub" id="voiceSub">La partida escucha sola en cada pregunta</div>
             </div>
           </div>
-          <div class="transcript" id="transcript">Aún no hay respuesta detectada.</div>
-        </div>
-
-        <div class="manual-box" id="manualBox">
-          <input id="manualInput" class="manual-input" type="text" inputmode="numeric" autocomplete="off" placeholder="Escribe la respuesta" />
-          <div class="manual-actions">
-            <button class="btn-ghost" id="clearManualBtn">Limpiar</button>
-            <button class="btn-secondary" id="submitManualBtn">Responder</button>
-          </div>
+          <div class="transcript" id="transcript">Pulsa JUGAR y concede permiso al micrófono.</div>
         </div>
       </div>
     </section>
@@ -580,11 +471,10 @@
   <script>
     const GOAL = 40;
     const ROUND_SECONDS = 3;
-    const RECORDS_KEY = 'tablas_divertidas_records_v2';
+    const FINAL_GRACE_MS = 300;
+    const RECORDS_KEY = 'tablas_divertidas_records_v3';
 
-    const motivational = [
-      '🔥 Bien', '⚡ Rápido', '💥 Crack', '🚀 Imparable', '🧠 Mente veloz', '⭐ Brutal'
-    ];
+    const motivational = ['🔥 Bien', '⚡ Rápido', '💥 Crack', '🚀 Imparable', '🧠 Mente veloz', '⭐ Brutal'];
     const milestoneMessages = {
       10: '⚡ Vas volando',
       20: '🔥 Modo bestia activado',
@@ -596,14 +486,11 @@
       screen: 'home',
       score: 0,
       lives: 3,
-      a: 1,
-      b: 1,
       answer: 1,
       roundActive: false,
       timeLeft: ROUND_SECONDS,
       timerId: null,
       timerEndAt: 0,
-      mode: 'voice',
       recognition: null,
       speechSupported: false,
       listening: false,
@@ -611,6 +498,10 @@
       lastValidatedToken: '',
       hasSavedCurrentScore: false,
       lastScore: 0,
+      graceTimeoutId: null,
+      roundDeadline: 0,
+      timeoutPending: false,
+      firstPermissionAttempted: false,
     };
 
     const $ = (id) => document.getElementById(id);
@@ -632,17 +523,11 @@
       timerLabel: $('timerLabel'),
       feedbackText: $('feedbackText'),
       surpriseText: $('surpriseText'),
-      voiceModeBtn: $('voiceModeBtn'),
-      manualModeBtn: $('manualModeBtn'),
       voiceBox: $('voiceBox'),
-      manualBox: $('manualBox'),
-      micBtn: $('micBtn'),
+      micOrb: $('micOrb'),
       voiceTitle: $('voiceTitle'),
       voiceSub: $('voiceSub'),
       transcript: $('transcript'),
-      manualInput: $('manualInput'),
-      clearManualBtn: $('clearManualBtn'),
-      submitManualBtn: $('submitManualBtn'),
       questionCard: $('questionCard'),
       slap: $('slap'),
       flash: $('flash'),
@@ -667,9 +552,11 @@
       if (!SpeechRecognition) {
         state.speechSupported = false;
         els.voiceTitle.textContent = 'Voz no disponible';
-        els.voiceSub.textContent = 'Usa el teclado manual en este navegador';
+        els.voiceSub.textContent = 'Este navegador no soporta reconocimiento de voz';
+        els.transcript.textContent = 'Prueba en Chrome móvil o en un navegador compatible.';
         return;
       }
+
       state.speechSupported = true;
       const recognition = new SpeechRecognition();
       recognition.lang = 'es-ES';
@@ -680,7 +567,7 @@
       recognition.onstart = () => {
         state.listening = true;
         updateMicState();
-        els.transcript.textContent = 'Escuchando…';
+        if (state.roundActive) els.transcript.textContent = 'Escuchando…';
       };
 
       recognition.onresult = (event) => {
@@ -692,20 +579,21 @@
           if (result.isFinal) finalText += text + ' ';
           else interim += text + ' ';
         }
+
         const combined = (finalText || interim).trim();
         state.transcript = combined;
-        els.transcript.textContent = combined || 'Aún no hay respuesta detectada.';
+        els.transcript.textContent = combined || 'Escuchando…';
 
         if (finalText.trim()) {
-          safelyValidate(finalText.trim());
+          safelyValidate(finalText.trim(), performance.now());
         }
       };
 
       recognition.onerror = () => {
         state.listening = false;
         updateMicState();
-        if (state.mode === 'voice') {
-          els.transcript.textContent = 'No se pudo reconocer. Intenta otra vez o usa teclado.';
+        if (state.screen === 'game') {
+          els.transcript.textContent = 'No se pudo reconocer. Sigue hablando en la siguiente ronda.';
         }
       };
 
@@ -744,29 +632,30 @@
       };
 
       if (dictionary[text] !== undefined) return dictionary[text];
-
       const compact = text.replace(/\s+/g, '');
       if (dictionary[compact] !== undefined) return dictionary[compact];
-
       const numeric = text.match(/\d+/g);
       if (numeric && numeric.length) return numeric.join('');
       return text;
     }
 
-    function safelyValidate(rawValue) {
-      if (!state.roundActive) return;
+    function safelyValidate(rawValue, eventTime = performance.now()) {
+      if (!state.roundActive && !state.timeoutPending) return;
+
       const normalized = normalizeAnswer(rawValue);
       if (!normalized) return;
+
+      const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
+      if (eventTime > acceptedWindow) return;
 
       const token = state.score + '|' + state.lives + '|' + state.answer + '|' + normalized;
       if (token === state.lastValidatedToken) return;
       state.lastValidatedToken = token;
 
-      const correct = String(state.answer);
-      if (normalized === correct) {
+      if (normalized === String(state.answer)) {
+        clearGraceTimeout();
+        state.timeoutPending = false;
         handleCorrect();
-      } else {
-        handleWrong('Respuesta correcta: ' + state.answer);
       }
     }
 
@@ -775,14 +664,11 @@
       let a = 1 + Math.floor(Math.random() * difficulty);
       let b = 1 + Math.floor(Math.random() * 10);
       if (Math.random() > .55) [a, b] = [b, a];
-      state.a = a;
-      state.b = b;
       state.answer = a * b;
       state.lastValidatedToken = '';
       state.transcript = '';
       els.questionText.textContent = `${a} × ${b} = ?`;
-      els.transcript.textContent = state.mode === 'voice' ? 'Aún no hay respuesta detectada.' : 'Modo teclado activo';
-      els.manualInput.value = '';
+      els.transcript.textContent = 'Preparado…';
       hideFeedback();
       updateSurprise('');
     }
@@ -795,16 +681,21 @@
       showScreen('game');
       updateHud();
       generateQuestion();
-      startRound();
-      if (state.mode === 'manual') focusManualSoon();
+      startRound(true);
     }
 
-    function startRound() {
+    function startRound(autoListen = true) {
       state.roundActive = true;
+      state.timeoutPending = false;
+      clearGraceTimeout();
       stopRecognition();
       clearTimer();
       state.timerEndAt = performance.now() + ROUND_SECONDS * 1000;
+      state.roundDeadline = state.timerEndAt;
       tickTimer();
+      if (autoListen) {
+        setTimeout(() => startRecognition(), 120);
+      }
     }
 
     function tickTimer() {
@@ -814,16 +705,36 @@
         state.timeLeft = msLeft / 1000;
         renderTimer();
         if (msLeft <= 0) {
-          handleWrong('⏰ Tiempo agotado. Era ' + state.answer);
+          onTimerReachedZero();
           return;
         }
         state.timerId = requestAnimationFrame(frame);
       });
     }
 
+    function onTimerReachedZero() {
+      clearTimer();
+      state.timeLeft = 0;
+      renderTimer();
+      state.timeoutPending = true;
+      els.transcript.textContent = state.transcript || 'Cerrando respuesta…';
+      clearGraceTimeout();
+      state.graceTimeoutId = setTimeout(() => {
+        if (state.timeoutPending && state.roundActive) {
+          state.timeoutPending = false;
+          handleWrong('⏰ Tiempo agotado. Era ' + state.answer);
+        }
+      }, FINAL_GRACE_MS);
+    }
+
     function clearTimer() {
       if (state.timerId) cancelAnimationFrame(state.timerId);
       state.timerId = null;
+    }
+
+    function clearGraceTimeout() {
+      if (state.graceTimeoutId) clearTimeout(state.graceTimeoutId);
+      state.graceTimeoutId = null;
     }
 
     function renderTimer() {
@@ -839,6 +750,7 @@
       if (!state.roundActive) return;
       state.roundActive = false;
       clearTimer();
+      clearGraceTimeout();
       stopRecognition();
       state.score += 1;
       state.lastScore = state.score;
@@ -846,14 +758,15 @@
       showFeedback(randomItem(motivational), 'success');
       playSuccessSound();
       maybeSurprise();
+
       if (state.score >= GOAL) {
         setTimeout(() => endGame(true), 700);
         return;
       }
+
       setTimeout(() => {
         generateQuestion();
-        startRound();
-        if (state.mode === 'manual') focusManualSoon();
+        startRound(true);
       }, 520);
     }
 
@@ -861,6 +774,7 @@
       if (!state.roundActive) return;
       state.roundActive = false;
       clearTimer();
+      clearGraceTimeout();
       stopRecognition();
       state.lives -= 1;
       updateHud();
@@ -871,25 +785,30 @@
       triggerSlap();
       vibrate([120, 50, 120]);
       playErrorSound();
+
       if (state.lives <= 0) {
         setTimeout(() => endGame(false), 900);
         return;
       }
+
       setTimeout(() => {
         generateQuestion();
-        startRound();
-        if (state.mode === 'manual') focusManualSoon();
+        startRound(true);
       }, 950);
     }
 
     function endGame(won) {
       clearTimer();
+      clearGraceTimeout();
       stopRecognition();
+      state.roundActive = false;
+      state.timeoutPending = false;
       showScreen('final');
       els.finalScore.textContent = String(state.score);
       els.saveStatus.textContent = '';
       els.nameInput.value = '';
       state.hasSavedCurrentScore = false;
+
       if (won) {
         els.finalEmoji.textContent = '👑';
         els.finalTitle.textContent = '¡HAS GANADO!';
@@ -901,6 +820,7 @@
         els.finalTitle.textContent = 'FIN DE LA PARTIDA';
         els.finalSubtitle.textContent = 'La mano ganó esta vez. Otra ronda y la rompes.';
       }
+
       setTimeout(() => els.nameInput.focus(), 180);
     }
 
@@ -928,30 +848,6 @@
       els.feedbackText.className = 'feedback-text';
     }
 
-    function switchMode(mode) {
-      state.mode = mode;
-      const voice = mode === 'voice';
-      els.voiceModeBtn.classList.toggle('active', voice);
-      els.manualModeBtn.classList.toggle('active', !voice);
-      els.voiceBox.style.display = voice ? 'block' : 'none';
-      els.manualBox.classList.toggle('show', !voice);
-      if (voice) {
-        els.transcript.textContent = state.transcript || 'Aún no hay respuesta detectada.';
-      } else {
-        stopRecognition();
-        focusManualSoon();
-      }
-    }
-
-    function focusManualSoon() {
-      setTimeout(() => {
-        if (state.screen === 'game' && state.mode === 'manual') {
-          els.manualInput.focus();
-          els.manualInput.select();
-        }
-      }, 60);
-    }
-
     function showScreen(name) {
       state.screen = name;
       Object.entries(screens).forEach(([key, el]) => el.classList.toggle('active', key === name));
@@ -962,6 +858,7 @@
       try {
         state.transcript = '';
         els.transcript.textContent = 'Escuchando…';
+        state.firstPermissionAttempted = true;
         state.recognition.start();
       } catch (_) {}
     }
@@ -975,8 +872,8 @@
     }
 
     function updateMicState() {
-      els.micBtn.classList.toggle('listening', state.listening);
-      els.micBtn.textContent = state.listening ? '🔴' : '🎤';
+      els.micOrb.classList.toggle('listening', state.listening);
+      els.micOrb.textContent = state.listening ? '🔴' : '🎤';
     }
 
     function triggerSlap() {
@@ -1111,30 +1008,7 @@
     function setupEvents() {
       els.playBtn.addEventListener('click', startGame);
       els.recordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
-      els.howBtn.addEventListener('click', () => alert('Responde la multiplicación antes de que se acabe el tiempo. Puedes usar voz o teclado. Tienes 3 vidas y debes llegar a 40 aciertos.'));
-
-      els.voiceModeBtn.addEventListener('click', () => switchMode('voice'));
-      els.manualModeBtn.addEventListener('click', () => switchMode('manual'));
-
-      els.micBtn.addEventListener('click', () => {
-        if (!state.speechSupported) {
-          switchMode('manual');
-          return;
-        }
-        if (state.listening) stopRecognition();
-        else startRecognition();
-      });
-
-      els.clearManualBtn.addEventListener('click', () => {
-        els.manualInput.value = '';
-        els.manualInput.focus();
-      });
-
-      els.submitManualBtn.addEventListener('click', () => safelyValidate(els.manualInput.value));
-      els.manualInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') safelyValidate(els.manualInput.value);
-      });
-
+      els.howBtn.addEventListener('click', () => alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. La partida escucha automáticamente en cada pregunta. Tienes 3 vidas y debes llegar a 40 aciertos.'));
       els.saveScoreBtn.addEventListener('click', () => {
         if (state.hasSavedCurrentScore) {
           els.saveStatus.textContent = 'Este resultado ya está guardado.';
@@ -1146,7 +1020,6 @@
         els.saveStatus.textContent = '✅ Récord guardado correctamente';
         renderRecords();
       });
-
       els.playAgainBtn.addEventListener('click', startGame);
       els.goRecordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
       els.backHomeBtn.addEventListener('click', () => showScreen('home'));
@@ -1165,7 +1038,6 @@
       setupEvents();
       renderRecords();
       updateHud();
-      switchMode('voice');
     }
 
     bootstrap();
