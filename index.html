@@ -16,7 +16,6 @@
       --success: #1fbf75;
       --shadow: 0 18px 40px rgba(0,0,0,.18);
     }
-
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
@@ -29,22 +28,12 @@
     body { position: relative; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
     .bg-fall {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
+      position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
     }
     .falling {
-      position: absolute;
-      top: -10vh;
-      opacity: .14;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 0 3px 20px rgba(0,0,0,.18);
-      animation: fall linear forwards;
-      user-select: none;
-      will-change: transform;
+      position: absolute; top: -10vh; opacity: .14; font-weight: 800; color: #fff;
+      text-shadow: 0 3px 20px rgba(0,0,0,.18); animation: fall linear forwards;
+      user-select: none; will-change: transform;
     }
     @keyframes fall {
       from { transform: translateY(-10vh) rotate(0deg); }
@@ -52,19 +41,10 @@
     }
 
     .app {
-      position: relative;
-      z-index: 1;
-      min-height: 100dvh;
-      display: flex;
-      justify-content: center;
-      padding: 20px 16px 28px;
+      position: relative; z-index: 1; min-height: 100dvh; display: flex;
+      justify-content: center; padding: 20px 16px 28px;
     }
-    .screen {
-      width: 100%;
-      max-width: 520px;
-      display: none;
-      animation: fadeIn .35s ease;
-    }
+    .screen { width: 100%; max-width: 520px; display: none; animation: fadeIn .35s ease; }
     .screen.active { display: block; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
@@ -74,101 +54,62 @@
     .hero { text-align: center; padding-top: 28px; }
     .logo { font-size: 64px; filter: drop-shadow(0 8px 16px rgba(0,0,0,.15)); }
     h1 {
-      margin: 10px 0 8px;
-      font-size: clamp(42px, 11vw, 64px);
-      line-height: .92;
-      color: #fff;
-      text-shadow: 0 10px 24px rgba(0,0,0,.18);
-      letter-spacing: -.04em;
+      margin: 10px 0 8px; font-size: clamp(42px, 11vw, 64px); line-height: .92;
+      color: #fff; text-shadow: 0 10px 24px rgba(0,0,0,.18); letter-spacing: -.04em;
     }
     .subtitle {
-      margin: 10px auto 18px;
-      font-size: 22px;
-      color: rgba(255,255,255,.92);
+      margin: 10px auto 18px; font-size: 22px; color: rgba(255,255,255,.92);
       text-shadow: 0 4px 10px rgba(0,0,0,.15);
     }
     .panel {
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.28);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 16px;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 28px; box-shadow: var(--shadow); padding: 16px;
     }
+
     .menu-buttons { display: grid; gap: 14px; margin: 26px 0 18px; }
     button {
-      border: 0;
-      cursor: pointer;
-      font: inherit;
+      border: 0; cursor: pointer; font: inherit;
       transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
       -webkit-tap-highlight-color: transparent;
     }
     button:active { transform: scale(.985); }
 
     .btn-primary {
-      width: 100%;
-      border-radius: 999px;
-      padding: 22px 20px;
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      background: linear-gradient(135deg, #ffa24d, #ff5f74);
+      width: 100%; border-radius: 999px; padding: 22px 20px; font-size: 22px;
+      font-weight: 800; color: #fff; background: linear-gradient(135deg, #ffa24d, #ff5f74);
       box-shadow: 0 14px 28px rgba(255,95,116,.34);
     }
     .btn-secondary, .btn-ghost {
-      width: 100%;
-      border-radius: 999px;
-      padding: 17px 18px;
-      font-size: 20px;
-      font-weight: 700;
-      color: #ff6a79;
-      background: rgba(255,255,255,.84);
+      width: 100%; border-radius: 999px; padding: 17px 18px; font-size: 20px;
+      font-weight: 700; color: #ff6a79; background: rgba(255,255,255,.84);
       box-shadow: var(--shadow);
     }
     .btn-ghost { color: #2e4969; background: rgba(255,255,255,.6); }
-
     .rules {
-      margin-top: 16px;
-      color: rgba(255,255,255,.95);
-      font-size: 20px;
-      line-height: 1.55;
+      margin-top: 16px; color: rgba(255,255,255,.95); font-size: 20px; line-height: 1.55;
     }
 
     .topbar {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      color: white;
-      font-weight: 700;
+      display: flex; justify-content: space-between; gap: 12px; align-items: center;
+      margin-top: 10px; margin-bottom: 20px; color: white; font-weight: 700;
     }
     .pill {
-      background: rgba(255,255,255,.18);
-      border: 1px solid rgba(255,255,255,.3);
-      padding: 10px 12px;
-      border-radius: 999px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.12);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
+      padding: 10px 12px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     }
     .hearts { letter-spacing: 4px; white-space: nowrap; }
 
     .question-card {
-      position: relative;
-      background: var(--card);
-      border-radius: 30px;
-      min-height: 210px;
-      display: grid;
-      place-items: center;
-      box-shadow: var(--shadow);
-      padding: 24px;
-      overflow: hidden;
-      transition: transform .08s linear, filter .08s linear;
+      position: relative; background: var(--card); border-radius: 30px; min-height: 210px;
+      display: grid; place-items: center; box-shadow: var(--shadow); padding: 24px;
+      overflow: hidden; transition: transform .08s linear, filter .08s linear;
     }
-    .question-card.hit { animation: megaShake .78s cubic-bezier(.36,.07,.19,.97); filter: brightness(.9) saturate(1.2); }
+    .question-card.hit {
+      animation: megaShake .72s cubic-bezier(.36,.07,.19,.97);
+      filter: brightness(.9) saturate(1.2);
+    }
     @keyframes megaShake {
       0% { transform: translateX(0) rotate(0deg) scale(1); }
       10% { transform: translateX(-16px) rotate(-1deg) scale(.99); }
@@ -182,24 +123,14 @@
     }
 
     .question {
-      font-size: clamp(54px, 16vw, 90px);
-      font-weight: 900;
-      letter-spacing: -.06em;
-      color: var(--text);
-      text-align: center;
+      font-size: clamp(54px, 16vw, 90px); font-weight: 900; letter-spacing: -.06em;
+      color: var(--text); text-align: center;
     }
 
     .feedback-text {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 22px;
-      font-weight: 900;
-      opacity: 0;
-      pointer-events: none;
-      text-align: center;
-      width: calc(100% - 32px);
+      position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+      font-size: 22px; font-weight: 900; opacity: 0; pointer-events: none;
+      text-align: center; width: calc(100% - 32px);
     }
     .feedback-text.show.success { color: var(--success); opacity: 1; animation: popMsg .7s ease; }
     .feedback-text.show.error { color: var(--danger); opacity: 1; animation: popMsg .9s ease; }
@@ -211,182 +142,70 @@
 
     .timer-wrap { margin: 22px 6px 8px; text-align: center; }
     .timer-bar {
-      height: 16px;
-      width: 100%;
-      background: rgba(255,255,255,.4);
-      border-radius: 999px;
-      overflow: hidden;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
+      height: 16px; width: 100%; background: rgba(255,255,255,.4); border-radius: 999px;
+      overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
     }
     .timer-fill {
-      height: 100%;
-      width: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #26d5d9, #62e78d);
-      transition: width .05s linear;
+      height: 100%; width: 100%; border-radius: inherit;
+      background: linear-gradient(90deg, #26d5d9, #62e78d); transition: width .05s linear;
     }
     .timer-fill.warn { background: linear-gradient(90deg, #f8d34d, #ff9946); }
     .timer-fill.danger { background: linear-gradient(90deg, #ff7b59, #ff3e67); }
     .timer-label {
-      margin-top: 9px;
-      color: white;
-      font-size: 20px;
-      font-weight: 900;
+      margin-top: 9px; color: white; font-size: 20px; font-weight: 900;
       text-shadow: 0 4px 10px rgba(0,0,0,.18);
     }
 
     .controls { display: grid; gap: 14px; margin-top: 20px; }
     .voice-box {
-      background: rgba(255,255,255,.13);
-      border: 2px solid rgba(255,255,255,.35);
-      border-radius: 28px;
-      padding: 18px;
-      color: white;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(255,255,255,.13); border: 2px solid rgba(255,255,255,.35);
+      border-radius: 28px; padding: 18px; color: white; box-shadow: var(--shadow);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     }
-    .voice-main {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .voice-main { display: flex; align-items: center; gap: 14px; }
     .mic-orb {
-      flex: 0 0 76px;
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ffffff, #d9f8ff);
-      color: #1d5b7b;
-      font-size: 30px;
-      box-shadow: 0 12px 22px rgba(0,0,0,.14);
-      display: grid;
-      place-items: center;
+      flex: 0 0 76px; width: 76px; height: 76px; border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff, #d9f8ff); color: #1d5b7b;
+      font-size: 30px; box-shadow: 0 12px 22px rgba(0,0,0,.14);
+      display: grid; place-items: center;
     }
     .mic-orb.listening {
       background: linear-gradient(135deg, #ffced4, #ff7b8e);
-      color: white;
-      animation: pulse 1s infinite;
+      color: white; animation: pulse 1s infinite;
     }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(255,99,132,.45); }
       70% { box-shadow: 0 0 0 18px rgba(255,99,132,0); }
       100% { box-shadow: 0 0 0 0 rgba(255,99,132,0); }
     }
-
     .voice-text strong { display: block; font-size: 26px; margin-bottom: 6px; }
     .voice-sub { opacity: .95; font-size: 16px; line-height: 1.35; }
     .transcript {
-      margin-top: 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.14);
-      padding: 10px 12px;
-      min-height: 46px;
-      font-size: 16px;
-      word-break: break-word;
+      margin-top: 12px; border-radius: 18px; background: rgba(255,255,255,.14);
+      padding: 10px 12px; min-height: 46px; font-size: 16px; word-break: break-word;
     }
 
     .slap-stage {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 45;
-      overflow: hidden;
+      position: fixed; inset: 0; pointer-events: none; z-index: 45; overflow: hidden;
     }
-    .arm {
-      position: absolute;
-      right: -420px;
-      top: 42%;
-      width: 420px;
-      height: 140px;
-      opacity: 0;
-      transform-origin: right center;
-      will-change: transform, right, opacity;
+    .slap-hand {
+      position: absolute; right: -260px; top: 44%; width: 260px; height: 260px;
+      opacity: 0; transform: translateY(-50%) rotate(18deg) scale(.65);
+      filter: drop-shadow(0 18px 34px rgba(0,0,0,.28)); will-change: transform, right, opacity;
+      display: grid; place-items: center; font-size: 230px;
     }
-    .arm.show { animation: armSwing .82s cubic-bezier(.18,.9,.18,1) forwards; }
-
-    .forearm {
-      position: absolute;
-      right: 90px;
-      top: 46px;
-      width: 250px;
-      height: 54px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, #ffd2a8, #e8a56f);
-      box-shadow: inset 0 -6px 14px rgba(0,0,0,.09), 0 12px 24px rgba(0,0,0,.22);
-      transform: rotate(-8deg);
-    }
-    .sleeve {
-      position: absolute;
-      right: 260px;
-      top: 34px;
-      width: 120px;
-      height: 82px;
-      border-radius: 28px 8px 8px 28px;
-      background: linear-gradient(180deg, #2455d8, #0d2f8e);
-      box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      transform: rotate(-8deg);
-    }
-    .hand {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 150px;
-      height: 150px;
-      transform: rotate(-4deg);
-      filter: drop-shadow(0 16px 30px rgba(0,0,0,.28));
-    }
-    .palm {
-      position: absolute;
-      left: 24px;
-      top: 42px;
-      width: 95px;
-      height: 88px;
-      border-radius: 42px 42px 38px 38px;
-      background: linear-gradient(180deg, #ffd5af, #efae77);
-      border: 3px solid rgba(84,36,8,.16);
-    }
-    .thumb {
-      position: absolute;
-      left: 8px;
-      top: 68px;
-      width: 46px;
-      height: 26px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #ffd5af, #efae77);
-      transform: rotate(-30deg);
-      border: 3px solid rgba(84,36,8,.16);
-    }
-    .finger {
-      position: absolute;
-      top: 0;
-      width: 22px;
-      height: 72px;
-      border-radius: 18px 18px 12px 12px;
-      background: linear-gradient(180deg, #ffd8b2, #eeac75);
-      border: 3px solid rgba(84,36,8,.15);
-    }
-    .f1 { left: 36px; height: 78px; }
-    .f2 { left: 60px; height: 86px; }
-    .f3 { left: 84px; height: 82px; }
-    .f4 { left: 108px; height: 72px; }
-
-    @keyframes armSwing {
-      0% { right: -470px; opacity: 0; transform: translateY(-50%) rotate(22deg) scale(.72); }
+    .slap-hand.show { animation: slapSweep .8s cubic-bezier(.18,.9,.18,1) forwards; }
+    @keyframes slapSweep {
+      0% { right: -280px; opacity: 0; transform: translateY(-50%) rotate(20deg) scale(.62); }
       18% { opacity: 1; }
-      40% { right: -40px; opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1.05); }
-      50% { right: -10px; opacity: 1; transform: translateY(-50%) rotate(-15deg) scale(1.08); }
-      62% { right: -20px; opacity: 1; transform: translateY(-50%) rotate(-12deg) scale(1.04); }
-      100% { right: -280px; opacity: 0; transform: translateY(-50%) rotate(-24deg) scale(.94); }
+      42% { right: 0px; opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1.15); }
+      52% { right: -10px; opacity: 1; transform: translateY(-50%) rotate(-14deg) scale(1.22); }
+      66% { right: -40px; opacity: .95; transform: translateY(-50%) rotate(-10deg) scale(1.04); }
+      100% { right: -210px; opacity: 0; transform: translateY(-50%) rotate(-22deg) scale(.92); }
     }
 
     .impact-burst {
-      position: absolute;
-      right: 25%;
-      top: 42%;
-      width: 0;
-      height: 0;
-      opacity: 0;
+      position: absolute; right: 25%; top: 42%; width: 0; height: 0; opacity: 0;
     }
     .impact-burst.show { animation: burstShow .56s ease-out forwards; }
     @keyframes burstShow {
@@ -395,33 +214,17 @@
       100% { opacity: 0; transform: scale(1.8); }
     }
     .burst-ray {
-      position: absolute;
-      width: 170px;
-      height: 12px;
+      position: absolute; width: 170px; height: 12px;
       background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,245,157,.98), rgba(255,72,113,.98));
-      border-radius: 999px;
-      transform-origin: left center;
+      border-radius: 999px; transform-origin: left center;
       box-shadow: 0 0 14px rgba(255,88,120,.45);
     }
 
     .comic-text {
-      position: absolute;
-      left: 50%;
-      top: 30%;
-      transform: translate(-50%, -50%) scale(.6) rotate(-8deg);
-      opacity: 0;
-      font-weight: 900;
-      font-size: clamp(42px, 12vw, 78px);
-      color: #fff600;
-      text-shadow:
-        -3px -3px 0 #111,
-        3px -3px 0 #111,
-        -3px 3px 0 #111,
-        3px 3px 0 #111,
-        0 8px 20px rgba(0,0,0,.28);
-      z-index: 46;
-      pointer-events: none;
-      letter-spacing: .03em;
+      position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%) scale(.6) rotate(-8deg);
+      opacity: 0; font-weight: 900; font-size: clamp(42px, 12vw, 78px); color: #fff600;
+      text-shadow: -3px -3px 0 #111, 3px -3px 0 #111, -3px 3px 0 #111, 3px 3px 0 #111, 0 8px 20px rgba(0,0,0,.28);
+      z-index: 46; pointer-events: none; letter-spacing: .03em;
     }
     .comic-text.show { animation: comicPop .72s cubic-bezier(.2,.9,.2,1) forwards; }
     @keyframes comicPop {
@@ -432,27 +235,15 @@
     }
 
     .flash {
-      position: fixed;
-      inset: 0;
-      background: rgba(255,40,84,.22);
-      z-index: 25;
-      opacity: 0;
-      pointer-events: none;
+      position: fixed; inset: 0; background: rgba(255,40,84,.22); z-index: 25; opacity: 0; pointer-events: none;
     }
     .flash.show { animation: flash .46s ease; }
     @keyframes flash {
-      0% { opacity: 0; }
-      20% { opacity: .95; }
-      60% { opacity: .45; }
-      100% { opacity: 0; }
+      0% { opacity: 0; } 20% { opacity: .95; } 60% { opacity: .45; } 100% { opacity: 0; }
     }
 
     .screen-hit {
-      position: fixed;
-      inset: 0;
-      z-index: 24;
-      pointer-events: none;
-      opacity: 0;
+      position: fixed; inset: 0; z-index: 24; pointer-events: none; opacity: 0;
       background:
         radial-gradient(circle at 50% 40%, rgba(255,255,255,.55), rgba(255,255,255,0) 22%),
         radial-gradient(circle at 50% 40%, rgba(255,0,76,.35), rgba(255,0,76,0) 45%);
@@ -465,11 +256,7 @@
     }
 
     .crack-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 47;
-      pointer-events: none;
-      opacity: 0;
+      position: fixed; inset: 0; z-index: 47; pointer-events: none; opacity: 0;
       background:
         linear-gradient(78deg, transparent 48.8%, rgba(255,255,255,.92) 49%, rgba(0,0,0,.72) 49.5%, transparent 50%) 50% 0/100% 100% no-repeat,
         linear-gradient(115deg, transparent 49.2%, rgba(255,255,255,.85) 49.6%, rgba(0,0,0,.68) 50%, transparent 50.6%) 60% 12%/80% 76% no-repeat,
@@ -485,63 +272,32 @@
     }
 
     .surprise {
-      margin-top: 18px;
-      text-align: center;
-      min-height: 34px;
-      color: white;
-      font-weight: 900;
-      font-size: 22px;
-      text-shadow: 0 4px 10px rgba(0,0,0,.18);
+      margin-top: 18px; text-align: center; min-height: 34px; color: white;
+      font-weight: 900; font-size: 22px; text-shadow: 0 4px 10px rgba(0,0,0,.18);
     }
 
     .records-list { margin-top: 14px; display: grid; gap: 10px; }
     .record-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      color: white;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.22);
-      padding: 12px 14px;
-      border-radius: 18px;
-      font-weight: 700;
+      display: flex; justify-content: space-between; gap: 12px; align-items: center; color: white;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+      padding: 12px 14px; border-radius: 18px; font-weight: 700;
     }
-    .empty {
-      color: rgba(255,255,255,.92);
-      font-size: 18px;
-      text-align: center;
-      padding: 20px 0 8px;
-    }
-    .footer-note {
-      margin-top: 14px;
-      text-align: center;
-      color: rgba(255,255,255,.85);
-      font-size: 14px;
-    }
+    .empty { color: rgba(255,255,255,.92); font-size: 18px; text-align: center; padding: 20px 0 8px; }
+    .footer-note { margin-top: 14px; text-align: center; color: rgba(255,255,255,.85); font-size: 14px; }
 
     .name-input {
-      width: 100%;
-      padding: 16px 18px;
-      border-radius: 18px;
-      border: 2px solid rgba(36,52,77,.08);
-      font-size: 22px;
-      outline: none;
-      color: var(--text);
-      background: rgba(255,255,255,.96);
+      width: 100%; padding: 16px 18px; border-radius: 18px; border: 2px solid rgba(36,52,77,.08);
+      font-size: 22px; outline: none; color: var(--text); background: rgba(255,255,255,.96);
       box-shadow: inset 0 2px 8px rgba(0,0,0,.05);
     }
     .final-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;
     }
 
     @media (max-width: 420px) {
       .final-actions { grid-template-columns: 1fr; }
       .voice-main { align-items: flex-start; }
-      .arm { transform-origin: right center; scale: .82; }
+      .slap-hand { width: 220px; height: 220px; font-size: 200px; }
     }
   </style>
 </head>
@@ -554,18 +310,7 @@
   <div class="slap-stage">
     <div class="impact-burst" id="impactBurst"></div>
     <div class="comic-text" id="comicText">¡PAM!</div>
-    <div class="arm" id="arm">
-      <div class="sleeve"></div>
-      <div class="forearm"></div>
-      <div class="hand">
-        <div class="thumb"></div>
-        <div class="palm"></div>
-        <div class="finger f1"></div>
-        <div class="finger f2"></div>
-        <div class="finger f3"></div>
-        <div class="finger f4"></div>
-      </div>
-    </div>
+    <div class="slap-hand" id="slapHand">✋</div>
   </div>
 
   <main class="app">
@@ -669,7 +414,7 @@
     const GOAL = 40;
     const ROUND_SECONDS = 3;
     const FINAL_GRACE_MS = 1600;
-    const RECORDS_KEY = 'tablas_divertidas_records_v5';
+    const RECORDS_KEY = 'tablas_divertidas_records_v6';
 
     const motivational = ['🔥 Bien', '⚡ Rápido', '💥 Crack', '🚀 Imparable', '🧠 Mente veloz', '⭐ Brutal'];
     const milestoneMessages = {
@@ -685,6 +430,7 @@
       lives: 3,
       answer: 1,
       roundActive: false,
+      settled: false,
       timeLeft: ROUND_SECONDS,
       timerId: null,
       timerEndAt: 0,
@@ -698,11 +444,11 @@
       lastScore: 0,
       roundDeadline: 0,
       timeoutPending: false,
-      transitionLocked: false,
       lastInterimAt: 0,
       lastFinalAt: 0,
       timeoutAttemptId: 0,
-      brokenScreenShown: false
+      brokenScreenShown: false,
+      roundId: 0
     };
 
     const $ = (id) => document.getElementById(id);
@@ -733,7 +479,7 @@
       screenHit: $('screenHit'),
       impactBurst: $('impactBurst'),
       comicText: $('comicText'),
-      arm: $('arm'),
+      slapHand: $('slapHand'),
       crackOverlay: $('crackOverlay'),
       finalEmoji: $('finalEmoji'),
       finalTitle: $('finalTitle'),
@@ -815,11 +561,8 @@
 
         if (finals.length) {
           for (const candidate of finals) {
-            if (safelyValidate(candidate.trim(), now)) {
-              return;
-            }
+            if (safelyValidate(candidate.trim(), now)) return;
           }
-          state.lastInterimAt = now;
         }
       };
 
@@ -874,7 +617,7 @@
     }
 
     function safelyValidate(rawValue, eventTime = performance.now()) {
-      if (!(state.roundActive || state.timeoutPending) || state.transitionLocked) return false;
+      if (!(state.roundActive || state.timeoutPending) || state.settled) return false;
 
       const normalized = normalizeAnswer(rawValue);
       if (!normalized) return false;
@@ -882,14 +625,12 @@
       const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
       if (eventTime > acceptedWindow) return false;
 
-      const token = state.score + '|' + state.lives + '|' + state.answer + '|' + normalized;
+      const token = state.roundId + '|' + normalized;
       if (token === state.lastValidatedToken) return false;
       state.lastValidatedToken = token;
 
       if (normalized === String(state.answer)) {
-        clearGraceTimeout();
-        state.timeoutPending = false;
-        handleCorrect();
+        settleRound('correct');
         return true;
       }
       return false;
@@ -900,11 +641,13 @@
       let a = 1 + Math.floor(Math.random() * difficulty);
       let b = 1 + Math.floor(Math.random() * 10);
       if (Math.random() > .55) [a, b] = [b, a];
+
       state.answer = a * b;
-      state.lastValidatedToken = '';
       state.transcript = '';
+      state.lastValidatedToken = '';
       state.lastInterimAt = 0;
       state.lastFinalAt = 0;
+
       els.questionText.textContent = `${a} × ${b} = ?`;
       els.transcript.textContent = 'Preparado…';
       hideFeedback();
@@ -916,29 +659,27 @@
       state.lives = 3;
       state.hasSavedCurrentScore = false;
       state.lastScore = 0;
-      state.transitionLocked = false;
-      state.timeoutPending = false;
       state.brokenScreenShown = false;
       els.crackOverlay.classList.remove('show');
       showScreen('game');
       updateHud();
       generateQuestion();
-      startRound(true);
+      startRound();
     }
 
-    function startRound(autoListen = true) {
+    function startRound() {
+      state.roundId += 1;
       state.roundActive = true;
       state.timeoutPending = false;
-      state.transitionLocked = false;
+      state.settled = false;
       clearGraceTimeout();
-      stopRecognition();
       clearTimer();
+      stopRecognition();
+
       state.timerEndAt = performance.now() + ROUND_SECONDS * 1000;
       state.roundDeadline = state.timerEndAt;
       tickTimer();
-      if (autoListen) {
-        setTimeout(() => startRecognition(), 120);
-      }
+      setTimeout(() => startRecognition(), 120);
     }
 
     function tickTimer() {
@@ -948,103 +689,79 @@
         state.timeLeft = msLeft / 1000;
         renderTimer();
         if (msLeft <= 0) {
-          onTimerReachedZero();
+          onTimerReachedZero(state.roundId);
           return;
         }
         state.timerId = requestAnimationFrame(frame);
       });
     }
 
-    function onTimerReachedZero() {
+    function onTimerReachedZero(roundId) {
       clearTimer();
+      if (roundId !== state.roundId || state.settled) return;
       state.timeLeft = 0;
       renderTimer();
       state.timeoutPending = true;
-      const attemptId = ++state.timeoutAttemptId;
       els.transcript.textContent = state.transcript || 'Cerrando respuesta…';
+
       clearGraceTimeout();
+      const attemptId = ++state.timeoutAttemptId;
 
       state.graceTimeoutId = setTimeout(() => {
         if (attemptId !== state.timeoutAttemptId) return;
-        if (!state.timeoutPending || !state.roundActive || state.transitionLocked) return;
+        if (roundId !== state.roundId || state.settled) return;
 
         const recentSpeech = Math.max(state.lastInterimAt, state.lastFinalAt);
         const now = performance.now();
-        const stillProcessingSpeech = recentSpeech && (now - recentSpeech < 520);
+        const stillProcessingSpeech = recentSpeech && (now - recentSpeech < 650);
 
         if (stillProcessingSpeech) {
           state.graceTimeoutId = setTimeout(() => {
             if (attemptId !== state.timeoutAttemptId) return;
-            if (state.timeoutPending && state.roundActive && !state.transitionLocked) {
-              state.timeoutPending = false;
-              handleWrong('⏰ Tiempo agotado. Era ' + state.answer);
-            }
-          }, 420);
+            if (roundId !== state.roundId || state.settled) return;
+            settleRound('wrong');
+          }, 500);
           return;
         }
 
-        state.timeoutPending = false;
-        handleWrong('⏰ Tiempo agotado. Era ' + state.answer);
+        settleRound('wrong');
       }, FINAL_GRACE_MS);
     }
 
-    function clearTimer() {
-      if (state.timerId) cancelAnimationFrame(state.timerId);
-      state.timerId = null;
-    }
-
-    function clearGraceTimeout() {
-      if (state.graceTimeoutId) clearTimeout(state.graceTimeoutId);
-      state.graceTimeoutId = null;
-    }
-
-    function renderTimer() {
-      const ratio = Math.max(0, Math.min(1, state.timeLeft / ROUND_SECONDS));
-      els.timerFill.style.width = `${ratio * 100}%`;
-      els.timerLabel.textContent = `${state.timeLeft.toFixed(1)}s`;
-      els.timerFill.classList.remove('warn', 'danger');
-      if (ratio < .34) els.timerFill.classList.add('danger');
-      else if (ratio < .67) els.timerFill.classList.add('warn');
-    }
-
-    function handleCorrect() {
-      if (!state.roundActive || state.transitionLocked) return;
-      state.transitionLocked = true;
+    function settleRound(result) {
+      if (state.settled) return;
+      state.settled = true;
       state.roundActive = false;
+      state.timeoutPending = false;
       clearTimer();
       clearGraceTimeout();
       stopRecognition();
-      state.score += 1;
-      state.lastScore = state.score;
-      updateHud();
-      showFeedback(randomItem(motivational), 'success');
-      playSuccessSound();
-      maybeSurprise();
 
-      if (state.score >= GOAL) {
-        setTimeout(() => endGame(true), 700);
+      if (result === 'correct') {
+        state.score += 1;
+        state.lastScore = state.score;
+        updateHud();
+        showFeedback(randomItem(motivational), 'success');
+        playSuccessSound();
+        maybeSurprise();
+
+        if (state.score >= GOAL) {
+          setTimeout(() => endGame(true), 700);
+          return;
+        }
+
+        setTimeout(() => {
+          generateQuestion();
+          startRound();
+        }, 520);
         return;
       }
-
-      setTimeout(() => {
-        generateQuestion();
-        startRound(true);
-      }, 520);
-    }
-
-    function handleWrong(message) {
-      if (!state.roundActive || state.transitionLocked) return;
-      state.transitionLocked = true;
-      state.roundActive = false;
-      clearTimer();
-      clearGraceTimeout();
-      stopRecognition();
 
       const isLastLife = state.lives === 1;
       state.lives -= 1;
       updateHud();
       showFeedback('¡INCORRECTO!', 'error');
-      updateSurprise(message || 'Fallaste');
+      updateSurprise('⏰ Tiempo agotado o respuesta incorrecta. Era ' + state.answer);
 
       els.questionCard.classList.remove('hit');
       void els.questionCard.offsetWidth;
@@ -1062,7 +779,7 @@
 
       setTimeout(() => {
         generateQuestion();
-        startRound(true);
+        startRound();
       }, 1180);
     }
 
@@ -1072,7 +789,8 @@
       stopRecognition();
       state.roundActive = false;
       state.timeoutPending = false;
-      state.transitionLocked = false;
+      state.settled = true;
+
       showScreen('final');
       els.finalScore.textContent = String(state.score);
       els.saveStatus.textContent = '';
@@ -1092,6 +810,25 @@
       }
 
       setTimeout(() => els.nameInput.focus(), 180);
+    }
+
+    function clearTimer() {
+      if (state.timerId) cancelAnimationFrame(state.timerId);
+      state.timerId = null;
+    }
+
+    function clearGraceTimeout() {
+      if (state.graceTimeoutId) clearTimeout(state.graceTimeoutId);
+      state.graceTimeoutId = null;
+    }
+
+    function renderTimer() {
+      const ratio = Math.max(0, Math.min(1, state.timeLeft / ROUND_SECONDS));
+      els.timerFill.style.width = `${ratio * 100}%`;
+      els.timerLabel.textContent = `${state.timeLeft.toFixed(1)}s`;
+      els.timerFill.classList.remove('warn', 'danger');
+      if (ratio < .34) els.timerFill.classList.add('danger');
+      else if (ratio < .67) els.timerFill.classList.add('warn');
     }
 
     function maybeSurprise() {
@@ -1124,7 +861,7 @@
     }
 
     function startRecognition() {
-      if (!state.speechSupported || !state.recognition || !(state.roundActive || state.timeoutPending)) return;
+      if (!state.speechSupported || !state.recognition || state.settled || !(state.roundActive || state.timeoutPending)) return;
       try {
         state.transcript = '';
         els.transcript.textContent = 'Escuchando…';
@@ -1148,14 +885,14 @@
     function triggerSlap(breakScreen = false) {
       els.flash.classList.remove('show');
       els.screenHit.classList.remove('show');
-      els.arm.classList.remove('show');
+      els.slapHand.classList.remove('show');
       els.impactBurst.classList.remove('show');
       els.comicText.classList.remove('show');
-      void els.arm.offsetWidth;
+      void els.slapHand.offsetWidth;
 
       els.flash.classList.add('show');
       els.screenHit.classList.add('show');
-      els.arm.classList.add('show');
+      els.slapHand.classList.add('show');
       els.impactBurst.classList.add('show');
 
       els.comicText.textContent = randomItem(['¡PAM!', '¡ZAS!', '¡PLAS!']);
@@ -1192,6 +929,10 @@
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
+    function vibrate(pattern) {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    }
+
     function getRecords() {
       try {
         return JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]');
@@ -1225,11 +966,8 @@
 
     function escapeHtml(text) {
       return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     }
 
     function createFallingMath() {
@@ -1309,7 +1047,7 @@
     function setupEvents() {
       els.playBtn.addEventListener('click', startGame);
       els.recordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
-      els.howBtn.addEventListener('click', () => alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Si respondes justo al final, el juego espera un margen amplio para aceptar la voz antes de darla por fallada.'));
+      els.howBtn.addEventListener('click', () => alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Si fallas, la partida debe continuar sola con la siguiente multiplicación mientras queden vidas.'));
       els.saveScoreBtn.addEventListener('click', () => {
         if (state.hasSavedCurrentScore) {
           els.saveStatus.textContent = 'Este resultado ya está guardado.';
