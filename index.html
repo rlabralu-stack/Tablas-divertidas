@@ -314,11 +314,7 @@
           <div><strong>⚡ Modo turbo</strong><small>Menos tiempo por ronda.</small></div>
           <button class="mode-toggle" data-mode="turbo">Bloqueado</button>
         </div>
-        <div class="mode-card locked" id="cardHighTables">
-          <div><strong>📈 Tablas más altas</strong><small>Números mayores.</small></div>
-          <button class="mode-toggle" data-mode="highTables">Bloqueado</button>
-        </div>
-        <div class="mode-card locked" id="cardSpecialBg">
+          <div class="mode-card locked" id="cardSpecialBg">
           <div><strong>🌌 Fondo especial</strong><small>Cambia el aspecto visual.</small></div>
           <button class="mode-toggle" data-mode="specialBg">Bloqueado</button>
         </div>
@@ -374,7 +370,15 @@
       <div class="victory-badge" id="victoryBadge" style="display:none;">NIVEL LEYENDA</div>
       <div class="victory-phrase" id="victoryPhrase"></div>
 
-      <div class="panel" style="margin-top:14px;">
+      <div id="victoryIntroPanel" class="panel" style="margin-top:14px;">
+        <div style="text-align:center;color:#fff;font-size:26px;font-weight:1000;margin-bottom:10px;">✨ ¡HAS GANADO! ✨</div>
+        <div style="text-align:center;color:#fff;font-size:18px;line-height:1.5;">
+          Has superado el reto principal.<br>
+          Se han desbloqueado nuevos modos de juego.
+        </div>
+      </div>
+
+      <div class="panel" id="savePanel" style="margin-top:14px;display:none;">
         <div style="font-size:24px;font-weight:900;text-align:center;color:#24415e;">Puntuación: <span id="finalScore">0</span></div>
         <div style="margin-top:14px;color:#35516f;font-size:18px;text-align:center;">Escribe tu nombre para guardar tu récord.</div>
         <div style="margin-top:16px;">
@@ -391,8 +395,11 @@
         <div class="unlock-card"><strong>♾️ Modo infinito</strong><span>Juega sin meta de 40.</span></div>
         <div class="unlock-card"><strong>🔥 Modo difícil</strong><span>Multiplicaciones más duras desde el inicio.</span></div>
         <div class="unlock-card"><strong>⚡ Modo turbo</strong><span>Rondas más rápidas y tensas.</span></div>
-        <div class="unlock-card"><strong>📈 Tablas más altas</strong><span>Nuevos rangos y resultados más grandes.</span></div>
         <div class="unlock-card"><strong>🌌 Fondo especial</strong><span>Nuevo aspecto visual desbloqueado.</span></div>
+      </div>
+
+      <div class="menu-buttons" id="postVictoryActions" style="margin-top:18px;display:none;">
+        <button class="btn-secondary" id="continueAfterWinBtn">Guardar mi récord</button>
       </div>
 
       <div class="menu-buttons" style="margin-top:18px;">
@@ -442,7 +449,7 @@
       lastValidatedToken:'', hasSavedCurrentScore:false, lastScore:0, roundDeadline:0,
       timeoutPending:false, lastInterimAt:0, lastFinalAt:0, timeoutAttemptId:0,
       brokenScreenShown:false, roundId:0, closingUI:false,
-      unlocked: { infinite:false, hard:false, turbo:false, highTables:false, specialBg:false },
+      unlocked: { infinite:false, hard:false, turbo:false, specialBg:false },
       selectedMode: 'normal'
     };
 
@@ -464,9 +471,10 @@
       victoryBadge:$('victoryBadge'), victoryPhrase:$('victoryPhrase'), unlockGrid:$('unlockGrid'),
       nameInput:$('nameInput'), saveScoreBtn:$('saveScoreBtn'), saveStatus:$('saveStatus'),
       playAgainBtn:$('playAgainBtn'), goRecordsBtn:$('goRecordsBtn'), backHomeBtn:$('backHomeBtn'),
+      continueAfterWinBtn:$('continueAfterWinBtn'), victoryIntroPanel:$('victoryIntroPanel'), savePanel:$('savePanel'), postVictoryActions:$('postVictoryActions'),
       recordsList:$('recordsList'), clearRecordsBtn:$('clearRecordsBtn'), recordsBackBtn:$('recordsBackBtn'),
       cardInfinite:$('cardInfinite'), cardHard:$('cardHard'), cardTurbo:$('cardTurbo'),
-      cardHighTables:$('cardHighTables'), cardSpecialBg:$('cardSpecialBg')
+cardSpecialBg:$('cardSpecialBg')
     };
 
     function loadUnlocks(){
@@ -484,7 +492,7 @@
     }
     function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify({ selectedMode: state.selectedMode })); }
     function unlockEverything(){
-      state.unlocked = { infinite:true, hard:true, turbo:true, highTables:true, specialBg:true };
+      state.unlocked = { infinite:true, hard:true, turbo:true, specialBg:true };
       saveUnlocks();
       renderModePanel();
     }
@@ -507,7 +515,6 @@
         infinite: state.unlocked.infinite,
         hard: state.unlocked.hard,
         turbo: state.unlocked.turbo,
-        highTables: state.unlocked.highTables,
         specialBg: state.unlocked.specialBg
       };
 
@@ -527,7 +534,6 @@
       els.cardInfinite.classList.toggle('locked', !state.unlocked.infinite);
       els.cardHard.classList.toggle('locked', !state.unlocked.hard);
       els.cardTurbo.classList.toggle('locked', !state.unlocked.turbo);
-      els.cardHighTables.classList.toggle('locked', !state.unlocked.highTables);
       els.cardSpecialBg.classList.toggle('locked', !state.unlocked.specialBg);
       applyTheme();
     }
@@ -646,18 +652,13 @@
     }
 
     function getRangeByMode(){
-      // Modo inicial: SOLO tablas del 1 al 10.
-      // Las tablas superiores se reservan para los modos desbloqueados.
+      // Normal: solo tablas del 1 al 10.
+      // Difícil: desbloquea tablas más altas.
       let maxA = 10, maxB = 10;
-
-      if(state.selectedMode === 'highTables'){
+      if(state.selectedMode === 'hard'){
         maxA = 14;
         maxB = 14;
-      } else if(state.selectedMode === 'hard'){
-        maxA = 12;
-        maxB = 12;
       }
-
       return { maxA, maxB };
     }
 
@@ -872,6 +873,9 @@
         els.victoryBadge.style.display = 'block';
         els.victoryPhrase.textContent = randomItem(victoryPhrases);
         els.unlockGrid.style.display = 'grid';
+        els.victoryIntroPanel.style.display = 'block';
+        els.savePanel.style.display = 'none';
+        els.postVictoryActions.style.display = 'grid';
         createCelebrationBurst();
         playWinSound();
         animateFinalScore(state.score);
@@ -882,6 +886,9 @@
         els.victoryBadge.style.display = 'none';
         els.victoryPhrase.textContent = 'Tu mejor arma ahora es intentarlo otra vez.';
         els.unlockGrid.style.display = 'none';
+        els.victoryIntroPanel.style.display = 'none';
+        els.savePanel.style.display = 'block';
+        els.postVictoryActions.style.display = 'none';
         els.animatedFinalScore.textContent = String(state.score);
       }
       applyTheme();
@@ -1129,6 +1136,14 @@
         renderRecords();
       });
       els.playAgainBtn.addEventListener('click', startGame);
+      if(els.continueAfterWinBtn){
+        els.continueAfterWinBtn.addEventListener('click', () => {
+          els.victoryIntroPanel.style.display = 'none';
+          els.postVictoryActions.style.display = 'none';
+          els.savePanel.style.display = 'block';
+          setTimeout(() => els.nameInput.focus(), 120);
+        });
+      }
       els.goRecordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
       els.backHomeBtn.addEventListener('click', () => showScreen('home'));
       els.recordsBackBtn.addEventListener('click', () => showScreen('home'));
