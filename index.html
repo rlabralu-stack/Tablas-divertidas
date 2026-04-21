@@ -136,7 +136,113 @@ function tickTimer(roundSeconds){clearTimer();const start=Date.now(),duration=ro
 function renderTimer(roundSeconds){const ratio=Math.max(0,Math.min(1,state.timeLeft/roundSeconds));els.timerFill.style.width=`${ratio*100}%`;els.timerLabel.textContent=`${state.timeLeft.toFixed(1)}s`;els.timerFill.classList.remove('warn','danger');if(!state.closingUI){if(ratio<.34)els.timerFill.classList.add('danger');else if(ratio<.67)els.timerFill.classList.add('warn')}}
 function updateClosingUI(active){state.closingUI=active;els.closingBadge.textContent=active?'Cerrando respuesta…':'';els.closingBadge.classList.toggle('active',active);els.timerFill.classList.toggle('closing',active);els.micOrb.classList.toggle('closing',active);if(active&&!state.settled)els.transcript.textContent=state.transcript?`✔ Detectado: ${state.transcript}`:'Cerrando respuesta…';}
 function onTimerReachedZero(roundId){if(roundId!==state.roundId||state.settled)return;state.timeLeft=0;renderTimer(currentRoundSeconds());state.timeoutPending=true;updateClosingUI(true);clearGraceTimeout();const attemptId=++state.timeoutAttemptId;state.graceTimeoutId=setTimeout(()=>{if(attemptId!==state.timeoutAttemptId||roundId!==state.roundId||state.settled)return;const recentSpeech=Math.max(state.lastInterimAt,state.lastFinalAt);const now=performance.now();const stillProcessingSpeech=recentSpeech&&(now-recentSpeech<650);if(stillProcessingSpeech){state.graceTimeoutId=setTimeout(()=>{if(attemptId!==state.timeoutAttemptId||roundId!==state.roundId||state.settled)return;settleRound('wrong')},520);return}if(state.transcript&&safelyValidate(state.transcript,performance.now()))return;settleRound('wrong')},FINAL_GRACE_MS)}
-function settleRound(result){if(state.settled)return;state.settled=true;state.roundActive=false;state.timeoutPending=false;clearTimer();clearGraceTimeout();stopRecognition();updateClosingUI(false);if(result==='correct'){state.score+=1;state.lastScore=state.score;updateHud();showFeedback(randomItem(motivational),'ok');playSuccessSound();maybeSurprise();if(state.selectedMode!=='infinite'&&state.score>=GOAL){setTimeout(()=>endGame(true),760);return}setTimeout(()=>{generateQuestion();startRound()},520);return}state.lives-=1;updateHud();showFeedback('¡INCORRECTO!','bad');updateSurprise(`Respuesta correcta: ${state.currentA}×${state.currentB} = ${state.answer}`);vibrate([160,50,190,60,160]);playErrorSound();if(state.lives<=0){setTimeout(()=>endGame(false),900);return}setTimeout(()=>{generateQuestion();startRound()},980)}
+function settleRound(result){if(state.settled)return;state.settled=true;state.roundActive=false;state.timeoutPending=false;clearTimer();clearGraceTimeout();stopRecognition();updateClosingUI(false);if(result==='correct'){state.score+=1;state.lastScore=state.score;updateHud();showFeedback(randomItem(motivational),'ok');playSuccessSound();maybeSurprise();if(state.selectedMode!=='infinite'&&state.score>=GOAL){setTimeout(()=>endGame(true),760);return}setTimeout(()=>{generateQuestion();startRound()},520);return}const isFinalLife=state.lives===1;state.lives-=1;updateHud();showFeedback('¡INCORRECTO!','bad');updateSurprise(`Respuesta correcta: ${state.currentA}×${state.currentB} = ${state.answer}`);slapEffect(isFinalLife);vibrate(isFinalLife?[220,60,220,60,260]:[160,50,190,60,160]);playErrorSound();if(state.lives<=0){setTimeout(()=>endGame(false),900);return}setTimeout(()=>{generateQuestion();startRound()},980)}
+
+function slapEffect(isFinalLife=false){
+  const hand=document.createElement('div');
+  hand.textContent='✋';
+  hand.style.position='fixed';
+  hand.style.right='-220px';
+  hand.style.top='42%';
+  hand.style.transform='translateY(-50%) rotate(18deg) scale(.7)';
+  hand.style.fontSize=isFinalLife?'220px':'180px';
+  hand.style.zIndex='99999';
+  hand.style.pointerEvents='none';
+  hand.style.filter='drop-shadow(0 18px 34px rgba(0,0,0,.32))';
+  hand.style.transition='right .16s cubic-bezier(.2,.9,.2,1), transform .16s cubic-bezier(.2,.9,.2,1), opacity .2s ease';
+
+  const burst=document.createElement('div');
+  burst.textContent=isFinalLife?'💥':'✨';
+  burst.style.position='fixed';
+  burst.style.left='50%';
+  burst.style.top='38%';
+  burst.style.transform='translate(-50%,-50%) scale(.4)';
+  burst.style.fontSize=isFinalLife?'120px':'90px';
+  burst.style.zIndex='99998';
+  burst.style.pointerEvents='none';
+  burst.style.opacity='0';
+  burst.style.transition='transform .18s ease, opacity .18s ease';
+
+  const comic=document.createElement('div');
+  comic.textContent=isFinalLife?'¡PAM!':'¡ZAS!';
+  comic.style.position='fixed';
+  comic.style.left='50%';
+  comic.style.top='28%';
+  comic.style.transform='translate(-50%,-50%) scale(.55) rotate(-8deg)';
+  comic.style.fontWeight='900';
+  comic.style.fontSize=isFinalLife?'72px':'58px';
+  comic.style.color='#fff600';
+  comic.style.textShadow='-3px -3px 0 #111,3px -3px 0 #111,-3px 3px 0 #111,3px 3px 0 #111,0 8px 20px rgba(0,0,0,.28)';
+  comic.style.zIndex='99999';
+  comic.style.pointerEvents='none';
+  comic.style.opacity='0';
+  comic.style.transition='transform .18s ease, opacity .18s ease';
+
+  const flash=document.createElement('div');
+  flash.style.position='fixed';
+  flash.style.inset='0';
+  flash.style.background=isFinalLife?'rgba(255,30,80,.28)':'rgba(255,80,120,.18)';
+  flash.style.zIndex='99990';
+  flash.style.pointerEvents='none';
+  flash.style.opacity='0';
+  flash.style.transition='opacity .14s ease';
+
+  document.body.appendChild(flash);
+  document.body.appendChild(burst);
+  document.body.appendChild(comic);
+  document.body.appendChild(hand);
+
+  const card=els.questionCard;
+  card.style.transition='transform .08s linear, filter .08s linear';
+
+  setTimeout(()=>{
+    hand.style.right='0px';
+    hand.style.transform='translateY(-50%) rotate(-10deg) scale(1.18)';
+    flash.style.opacity='1';
+    burst.style.opacity='1';
+    burst.style.transform='translate(-50%,-50%) scale(1.15)';
+    comic.style.opacity='1';
+    comic.style.transform='translate(-50%,-50%) scale(1.18) rotate(-3deg)';
+    card.style.transform='translateX(14px)';
+    card.style.filter='brightness(.92) saturate(1.15)';
+  },10);
+
+  setTimeout(()=>{
+    hand.style.right='-8px';
+    hand.style.transform='translateY(-50%) rotate(-16deg) scale(1.26)';
+    document.body.style.transform='translateX(8px)';
+  },140);
+
+  setTimeout(()=>{
+    hand.style.right='-240px';
+    hand.style.transform='translateY(-50%) rotate(-24deg) scale(.95)';
+    burst.style.opacity='0';
+    burst.style.transform='translate(-50%,-50%) scale(1.7)';
+    comic.style.opacity='0';
+    comic.style.transform='translate(-50%,-50%) scale(.95) rotate(4deg)';
+    flash.style.opacity='0';
+    card.style.transform='translateX(0px)';
+    card.style.filter='none';
+    document.body.style.transform='translateX(0px)';
+  },280);
+
+  if(isFinalLife){
+    const crack=document.createElement('div');
+    crack.style.position='fixed';
+    crack.style.inset='0';
+    crack.style.pointerEvents='none';
+    crack.style.zIndex='99991';
+    crack.style.opacity='0';
+    crack.style.background='linear-gradient(78deg,transparent 48.8%,rgba(255,255,255,.92) 49%,rgba(0,0,0,.72) 49.5%,transparent 50%) 50% 0/100% 100% no-repeat,linear-gradient(115deg,transparent 49.2%,rgba(255,255,255,.85) 49.6%,rgba(0,0,0,.68) 50%,transparent 50.6%) 60% 12%/80% 76% no-repeat,linear-gradient(20deg,transparent 49.2%,rgba(255,255,255,.9) 49.5%,rgba(0,0,0,.68) 50%,transparent 50.5%) 30% 48%/80% 70% no-repeat';
+    crack.style.transition='opacity .18s ease';
+    document.body.appendChild(crack);
+    setTimeout(()=>{crack.style.opacity='1';},150);
+    setTimeout(()=>{crack.remove();},1200);
+  }
+
+  setTimeout(()=>{ hand.remove(); burst.remove(); comic.remove(); flash.remove(); },650);
+}
+
 function maybeSurprise(){if(state.selectedMode==='turbo'&&state.score>0){updateSurprise('⚡ Turbo activo');return}if(state.selectedMode==='hard'&&state.score>0){updateSurprise('🔥 Difícil activo');return}if(state.score>=40)updateSurprise('👑 Reto superado');else if(state.score>=30)updateSurprise('🚀 Casi leyenda');else if(state.score>=20)updateSurprise('⚡ Modo serio');else if(state.score>=10)updateSurprise('🔥 Calentando');else updateSurprise('')}
 function updateSurprise(text){els.surpriseText.textContent=text||''}
 function updateHud(){els.scorePill.textContent=state.selectedMode==='infinite'?`${state.score} / ∞`:`${state.score} / ${GOAL}`;els.livesPill.textContent='❤️'.repeat(Math.max(0,state.lives))+'🖤'.repeat(Math.max(0,3-state.lives));els.milestones.forEach(el=>{const goal=Number(el.dataset.goal);el.classList.remove('active','done');if(state.score>=goal)el.classList.add('done')});const next=els.milestones.find(el=>state.score<Number(el.dataset.goal));if(next&&state.selectedMode!=='infinite')next.classList.add('active')}
