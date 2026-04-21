@@ -71,6 +71,28 @@
 
     .rules{margin-top:16px;color:rgba(255,255,255,.96);font-size:20px;line-height:1.55}
 
+    .modes-panel{
+      margin-top:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);
+      border-radius:24px;box-shadow:var(--shadow);padding:14px;display:none
+    }
+    .modes-panel.show{display:block}
+    .modes-title{
+      color:#fff;font-size:18px;font-weight:900;text-align:center;margin-bottom:10px;
+      text-shadow:0 4px 10px rgba(0,0,0,.15)
+    }
+    .modes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .mode-toggle{
+      border-radius:16px;padding:14px 12px;font-weight:900;font-size:16px;color:#24415e;
+      background:rgba(255,255,255,.88);box-shadow:0 8px 20px rgba(0,0,0,.12)
+    }
+    .mode-toggle.on{
+      background:linear-gradient(135deg,#43e7db,#73f1a0);color:#123d46
+    }
+    .mode-toggle.locked{
+      opacity:.55;filter:grayscale(.2)
+    }
+    .mode-toggle small{display:block;font-size:12px;font-weight:700;opacity:.85;margin-top:3px}
+
     .topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:10px 0 18px;color:#fff;font-weight:700}
     .pill{
       background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:10px 12px;border-radius:999px;
@@ -297,12 +319,23 @@
         <button class="btn-ghost" id="howBtn">⚙ Cómo jugar</button>
       </div>
 
+      <div class="modes-panel" id="modesPanel">
+        <div class="modes-title">Modos desbloqueados: elige cómo quieres jugar</div>
+        <div class="modes-grid">
+          <button class="mode-toggle" id="modeInfiniteBtn">♾️ Infinito<small>Sin meta de 40</small></button>
+          <button class="mode-toggle" id="modeHardBtn">🔥 Difícil<small>Más exigente</small></button>
+          <button class="mode-toggle" id="modeTurboBtn">⚡ Turbo<small>Menos tiempo</small></button>
+          <button class="mode-toggle" id="modeHighBtn">📈 Altas<small>Tablas más altas</small></button>
+          <button class="mode-toggle" id="modeSpecialBtn">🌌 Especial<small>Fondo especial</small></button>
+        </div>
+      </div>
+
       <div class="panel rules">
         🎯 Responde <strong>40 multiplicaciones</strong><br>
         🎤 Solo voz, escucha automática<br>
         ⏱ 3 segundos por pregunta + cierre justo<br>
         💥 3 vidas, tortazo y pantalla rota final<br>
-        👑 Al ganar se desbloquean modos y fondo especial
+        👑 Al ganar desbloqueas modos para elegir desde el menú
       </div>
     </section>
 
@@ -405,6 +438,7 @@
     const FINAL_GRACE_MS = 1600;
     const RECORDS_KEY = 'tablas_divertidas_records_v7';
     const UNLOCKS_KEY = 'tablas_divertidas_unlocks_v1';
+    const SELECTED_MODES_KEY = 'tablas_divertidas_selected_modes_v1';
 
     const victoryPhrases = [
       'Tu cerebro acaba de humillar a la mano.',
@@ -437,6 +471,8 @@
       impactBurst:$('impactBurst'), comicText:$('comicText'), slapHand:$('slapHand'),
       crackOverlay:$('crackOverlay'), lifeBurst:$('lifeBurst'), bgFall:$('bgFall'),
       closingBadge:$('closingBadge'), milestones:[...document.querySelectorAll('.milestone')],
+      modesPanel:$('modesPanel'), modeInfiniteBtn:$('modeInfiniteBtn'), modeHardBtn:$('modeHardBtn'),
+      modeTurboBtn:$('modeTurboBtn'), modeHighBtn:$('modeHighBtn'), modeSpecialBtn:$('modeSpecialBtn'),
       finalEmoji:$('finalEmoji'), finalTitle:$('finalTitle'), finalSubtitle:$('finalSubtitle'),
       finalScore:$('finalScore'), animatedFinalScore:$('animatedFinalScore'),
       victoryBadge:$('victoryBadge'), victoryPhrase:$('victoryPhrase'), unlockGrid:$('unlockGrid'),
@@ -455,13 +491,54 @@
     function saveUnlocks(){
       localStorage.setItem(UNLOCKS_KEY, JSON.stringify(state.unlocked));
     }
+
+    function loadSelectedModes(){
+      try{
+        const saved = JSON.parse(localStorage.getItem(SELECTED_MODES_KEY) || '{}');
+        state.selectedModes = { ...state.selectedModes, ...saved };
+      }catch{}
+      sanitizeSelectedModes();
+    }
+    function saveSelectedModes(){
+      localStorage.setItem(SELECTED_MODES_KEY, JSON.stringify(state.selectedModes));
+    }
+    function sanitizeSelectedModes(){
+      Object.keys(state.selectedModes).forEach(key => {
+        if(!state.unlocked[key]) state.selectedModes[key] = false;
+      });
+    }
+    function toggleMode(key){
+      if(!state.unlocked[key]) return;
+      state.selectedModes[key] = !state.selectedModes[key];
+      saveSelectedModes();
+      updateModesUI();
+      applyUnlockedTheme();
+    }
+    function updateModesUI(){
+      const anyUnlocked = Object.values(state.unlocked).some(Boolean);
+      els.modesPanel.classList.toggle('show', anyUnlocked);
+
+      const config = [
+        ['infinite', els.modeInfiniteBtn],
+        ['hard', els.modeHardBtn],
+        ['turbo', els.modeTurboBtn],
+        ['highTables', els.modeHighBtn],
+        ['specialBg', els.modeSpecialBtn],
+      ];
+      for(const [key, btn] of config){
+        btn.classList.toggle('locked', !state.unlocked[key]);
+        btn.classList.toggle('on', !!state.selectedModes[key] && !!state.unlocked[key]);
+      }
+    }
     function unlockEverything(){
       state.unlocked = { infinite:true, hard:true, turbo:true, highTables:true, specialBg:true };
       saveUnlocks();
+      sanitizeSelectedModes();
+      updateModesUI();
       applyUnlockedTheme();
     }
     function applyUnlockedTheme(){
-      document.body.classList.toggle('special-bg', !!state.unlocked.specialBg && state.screen !== 'final');
+      document.body.classList.toggle('special-bg', !!state.selectedModes.specialBg && state.screen !== 'final');
     }
 
     function initImpactBurst(){
@@ -517,6 +594,10 @@
         if(preview){
           state.transcript = preview.trim();
           els.transcript.textContent = state.transcript;
+          // During normal play and especially in the closing window, accept obvious interim matches too
+          if(interim.trim()){
+            safelyValidate(interim.trim(), now);
+          }
         }
         if(finals.length){
           for(const candidate of finals){
@@ -543,48 +624,115 @@
     }
 
     
+
+
 function normalizeAnswer(value){
   if(value == null) return '';
   let text = String(value)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g,'')
-    .replace(/[.,;:!?¿¡_]/g,' ')
+    .replace(/[.,;:!?¿¡_\-]+/g,' ')
     .replace(/\s+/g,' ')
     .trim();
 
   if(!text) return '';
 
-  const directMap = {
-    cero:0, un:1, uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7, ocho:8, nueve:9,
-    diez:10, once:11, doce:12, trece:13, catorce:14, quince:15, dieciseis:16, diecisiete:17, dieciocho:18, diecinueve:19,
-    veinte:20, veintiuno:21, veintidos:22, veintitres:23, veinticuatro:24, veinticinco:25, veintiseis:26,
-    veintisiete:27, veintiocho:28, veintinueve:29, treinta:30, cuarenta:40, cincuenta:50, sesenta:60,
-    setenta:70, ochenta:80, noventa:90, cien:100
-  };
-
-  const compact = text.replace(/\s+/g,'');
-  if(directMap[text] !== undefined) return String(directMap[text]);
-  if(directMap[compact] !== undefined) return String(directMap[compact]);
+  // remove common filler words often returned by voice recognition
+  text = text
+    .replace(/^(es|son|sera|seran|igual|iguala|resultado|respuesta|da|sale)\s+/,'')
+    .replace(/^(la respuesta es|el resultado es|esto es|seria|sería)\s+/,'')
+    .replace(/\s+(exacto|aprox|aproximadamente)$/,'');
 
   const numeric = text.match(/\d+/g);
   if(numeric && numeric.length) return String(parseInt(numeric.join(''), 10));
 
   const units = {cero:0, un:1, uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7, ocho:8, nueve:9};
   const teens = {diez:10, once:11, doce:12, trece:13, catorce:14, quince:15, dieciseis:16, diecisiete:17, dieciocho:18, diecinueve:19};
-  const tens = {veinte:20, treinta:30, cuarenta:40, cincuenta:50, sesenta:60, setenta:70, ochenta:80, noventa:90};
+  const twenties = {veinte:20, veintiuno:21, veintidos:22, veintitres:23, veinticuatro:24, veinticinco:25, veintiseis:26, veintisiete:27, veintiocho:28, veintinueve:29};
+  const tens = {treinta:30, cuarenta:40, cincuenta:50, sesenta:60, setenta:70, ochenta:80, noventa:90};
+  const hundreds = {cien:100, ciento:100, doscientos:200, trescientos:300, cuatrocientos:400, quinientos:500, seiscientos:600, setecientos:700, ochocientos:800, novecientos:900};
 
-  function parseSpanishNumberPhrase(str){
-    if(directMap[str] !== undefined) return directMap[str];
-    if(directMap[str.replace(/\s+/g,'')] !== undefined) return directMap[str.replace(/\s+/g,'')];
+  const compact = text.replace(/\s+/g,'');
+  if(units[text] !== undefined) return String(units[text]);
+  if(teens[text] !== undefined) return String(teens[text]);
+  if(twenties[text] !== undefined) return String(twenties[text]);
+  if(units[compact] !== undefined) return String(units[compact]);
+  if(teens[compact] !== undefined) return String(teens[compact]);
+  if(twenties[compact] !== undefined) return String(twenties[compact]);
 
-    const tokens = str.split(' ').filter(Boolean);
-    if(tokens.length === 1){
-      if(units[tokens[0]] !== undefined) return units[tokens[0]];
-      if(teens[tokens[0]] !== undefined) return teens[tokens[0]];
-      if(tens[tokens[0]] !== undefined) return tens[tokens[0]];
-      return null;
+  function parseBelow100(str){
+    if(units[str] !== undefined) return units[str];
+    if(teens[str] !== undefined) return teens[str];
+    if(twenties[str] !== undefined) return twenties[str];
+    const parts = str.split(' ').filter(Boolean);
+    if(parts.length === 1 && tens[parts[0]] !== undefined) return tens[parts[0]];
+    if(parts.length === 3 && tens[parts[0]] !== undefined && parts[1] === 'y' && units[parts[2]] !== undefined){
+      return tens[parts[0]] + units[parts[2]];
     }
+    if(parts.length === 2 && tens[parts[0]] !== undefined && units[parts[1]] !== undefined){
+      return tens[parts[0]] + units[parts[1]];
+    }
+    return null;
+  }
+
+  function parseSpanishNumber(str){
+    const below100 = parseBelow100(str);
+    if(below100 !== null) return below100;
+    if(hundreds[str] !== undefined) return hundreds[str];
+    const parts = str.split(' ').filter(Boolean);
+    if(!parts.length) return null;
+    if(hundreds[parts[0]] !== undefined){
+      let total = hundreds[parts[0]];
+      if(parts.length === 1) return total;
+      const remainder = parts.slice(1).join(' ');
+      const remVal = parseBelow100(remainder);
+      if(remVal !== null) return total + remVal;
+    }
+    return null;
+  }
+
+  const parsed = parseSpanishNumber(text);
+  if(parsed !== null) return String(parsed);
+
+  const phoneticSingles = { oi:1, oí:1, hoy:2, hay:6, ey:6, ei:6, ay:6 };
+  if(phoneticSingles[text] !== undefined) return String(phoneticSingles[text]);
+
+  return text;
+}
+    if(parts.length === 2 && tens[parts[0]] !== undefined && units[parts[1]] !== undefined){
+      return tens[parts[0]] + units[parts[1]];
+    }
+    return null;
+  }
+
+  function parseSpanishNumber(str){
+    const below100 = parseBelow100(str);
+    if(below100 !== null) return below100;
+    if(hundreds[str] !== undefined) return hundreds[str];
+
+    const parts = str.split(' ').filter(Boolean);
+    if(!parts.length) return null;
+
+    if(hundreds[parts[0]] !== undefined){
+      let total = hundreds[parts[0]];
+      if(parts.length === 1) return total;
+      const remainder = parts.slice(1).join(' ');
+      const remVal = parseBelow100(remainder);
+      if(remVal !== null) return total + remVal;
+    }
+
+    return null;
+  }
+
+  const parsed = parseSpanishNumber(text);
+  if(parsed !== null) return String(parsed);
+
+  const phoneticSingles = { oi:1, hay:6, ey:6, ei:6 };
+  if(phoneticSingles[text] !== undefined) return String(phoneticSingles[text]);
+
+  return text;
+}
 
     // veinte y cuatro, treinta y seis, cuarenta y dos, etc.
     if(tokens.length === 3 && tens[tokens[0]] !== undefined && tokens[1] === 'y' && units[tokens[2]] !== undefined){
@@ -612,13 +760,13 @@ function normalizeAnswer(value){
 }
 
     function currentRoundSeconds(){
-      return state.unlocked.turbo ? 2.35 : BASE_SECONDS;
+      return state.selectedModes.turbo ? 2.35 : BASE_SECONDS;
     }
 
     function getRangeByScore(){
       let maxA = 10, maxB = 10;
-      if(state.unlocked.highTables){ maxA = 14; maxB = 14; }
-      if(state.unlocked.hard){ maxA += 4; maxB += 4; }
+      if(state.selectedModes.highTables){ maxA = 14; maxB = 14; }
+      if(state.selectedModes.hard){ maxA += 4; maxB += 4; }
       if(state.score > 10){ maxA += 1; }
       if(state.score > 20){ maxA += 1; maxB += 1; }
       if(state.score > 30){ maxA += 1; maxB += 1; }
@@ -626,6 +774,7 @@ function normalizeAnswer(value){
     }
 
     
+
 function safelyValidate(rawValue, eventTime = performance.now()){
   if(!(state.roundActive || state.timeoutPending) || state.settled) return false;
 
@@ -635,43 +784,26 @@ function safelyValidate(rawValue, eventTime = performance.now()){
   const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
   if(eventTime > acceptedWindow) return false;
 
+  const normalizedNum = Number(normalized);
+  const expected = state.answer;
+
+  // Accept embedded answers like "es 56" or "resultado 81"
   const token = state.roundId + '|' + normalized;
   if(token === state.lastValidatedToken) return false;
   state.lastValidatedToken = token;
 
-  const expected = String(state.answer);
-  const normalizedNum = Number(normalized);
-
-  // accept exact numeric equivalence when possible
-  if(!Number.isNaN(normalizedNum) && normalizedNum === state.answer){
+  if(!Number.isNaN(normalizedNum) && normalizedNum === expected){
     settleRound('correct');
     return true;
   }
 
-  if(normalized === expected){
+  if(normalized === String(expected)){
     settleRound('correct');
     return true;
   }
+
   return false;
 }
-
-    function generateQuestion(){
-      const { maxA, maxB } = getRangeByScore();
-      let a = 1 + Math.floor(Math.random() * maxA);
-      let b = 1 + Math.floor(Math.random() * maxB);
-      if(Math.random() > .55) [a,b] = [b,a];
-      state.answer = a * b;
-      state.transcript = '';
-      state.lastValidatedToken = '';
-      state.lastInterimAt = 0;
-      state.lastFinalAt = 0;
-      state.closingUI = false;
-      els.questionText.textContent = `${a}×${b}=?`;
-      els.transcript.textContent = 'Preparado…';
-      hideFeedback();
-      updateSurprise('');
-      updateClosingUI(false);
-    }
 
     function startGame(){
       state.score = 0;
@@ -782,7 +914,7 @@ function safelyValidate(rawValue, eventTime = performance.now()){
         playSuccessSound();
         maybeSurprise();
 
-        if(!state.unlocked.infinite && state.score >= GOAL){
+        if(!state.selectedModes.infinite && state.score >= GOAL){
           setTimeout(() => endGame(true), 760);
           return;
         }
@@ -930,7 +1062,7 @@ function safelyValidate(rawValue, eventTime = performance.now()){
     function updateSurprise(text){ els.surpriseText.textContent = text || ''; }
 
     function updateHud(){
-      els.scorePill.textContent = state.unlocked.infinite ? `${state.score} / ∞` : `${state.score} / ${GOAL}`;
+      els.scorePill.textContent = state.selectedModes.infinite ? `${state.score} / ∞` : `${state.score} / ${GOAL}`;
       els.livesPill.textContent = '❤️'.repeat(Math.max(0,state.lives)) + '🖤'.repeat(Math.max(0,3 - state.lives));
       els.milestones.forEach(el => {
         const goal = Number(el.dataset.goal);
@@ -1089,8 +1221,13 @@ function safelyValidate(rawValue, eventTime = performance.now()){
 
     function setupEvents(){
       els.playBtn.addEventListener('click', startGame);
+      els.modeInfiniteBtn.addEventListener('click', () => toggleMode('infinite'));
+      els.modeHardBtn.addEventListener('click', () => toggleMode('hard'));
+      els.modeTurboBtn.addEventListener('click', () => toggleMode('turbo'));
+      els.modeHighBtn.addEventListener('click', () => toggleMode('highTables'));
+      els.modeSpecialBtn.addEventListener('click', () => toggleMode('specialBg'));
       els.recordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
-      els.howBtn.addEventListener('click', () => alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Al final del tiempo verás “Cerrando respuesta…” mientras la app espera tu voz de cierre. No hay teclado.'));
+      els.howBtn.addEventListener('click', () => alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Al final del tiempo verás “Cerrando respuesta…” mientras la app espera tu voz de cierre. No hay teclado. Cuando superes 40, desbloquearás modos y podrás activarlos desde el menú.'));
       els.saveScoreBtn.addEventListener('click', () => {
         if(state.hasSavedCurrentScore){
           els.saveStatus.textContent = 'Este resultado ya está guardado.';
@@ -1116,6 +1253,8 @@ function safelyValidate(rawValue, eventTime = performance.now()){
     function bootstrap(){
       initImpactBurst();
       loadUnlocks();
+      loadSelectedModes();
+      updateModesUI();
       initSpeech();
       createFallingMath();
       setupEvents();
