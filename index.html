@@ -646,12 +646,18 @@
     }
 
     function getRangeByMode(){
+      // Modo inicial: SOLO tablas del 1 al 10.
+      // Las tablas superiores se reservan para los modos desbloqueados.
       let maxA = 10, maxB = 10;
-      if(state.selectedMode === 'highTables'){ maxA = 14; maxB = 14; }
-      if(state.selectedMode === 'hard'){ maxA = 14; maxB = 14; }
-      if(state.score > 10){ maxA += 1; }
-      if(state.score > 20){ maxA += 1; maxB += 1; }
-      if(state.score > 30){ maxA += 1; maxB += 1; }
+
+      if(state.selectedMode === 'highTables'){
+        maxA = 14;
+        maxB = 14;
+      } else if(state.selectedMode === 'hard'){
+        maxA = 12;
+        maxB = 12;
+      }
+
       return { maxA, maxB };
     }
 
