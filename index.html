@@ -820,44 +820,16 @@ function safelyValidate(rawValue, eventTime = performance.now()){
   const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
   if(eventTime > acceptedWindow) return false;
 
-  const normalizedNum = Number(normalized);
-  const expected = state.answer;
-
-  // Accept embedded answers like "es 56" or "resultado 81"
   const token = state.roundId + '|' + normalized;
   if(token === state.lastValidatedToken) return false;
   state.lastValidatedToken = token;
 
-  if(!Number.isNaN(normalizedNum) && normalizedNum === expected){
+  if(transcriptMatchesExpected(normalized, state.answer)){
     settleRound('correct');
     return true;
   }
-
-  if(normalized === String(expected)){
-    settleRound('correct');
-    return true;
-  }
-
   return false;
 }
-
-    function startGame(){
-      state.score = 0;
-      state.lives = 3;
-      state.hasSavedCurrentScore = false;
-      state.lastScore = 0;
-      state.brokenScreenShown = false;
-      els.crackOverlay.classList.remove('show');
-      document.body.classList.remove('victory-bg');
-      applyUnlockedTheme();
-      showScreen('game');
-      try{ window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }catch(_){ window.scrollTo(0,0); }
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      updateHud();
-      generateQuestion();
-      startRound();
-    }
 
     function startRound(){
       state.roundId += 1;
@@ -1124,7 +1096,7 @@ function safelyValidate(rawValue, eventTime = performance.now()){
   Object.entries(screens).forEach(([key,el]) => el.classList.toggle('active', key === name));
   applyTheme();
   try{
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
   }catch(_){
     window.scrollTo(0, 0);
   }
@@ -1265,7 +1237,9 @@ function safelyValidate(rawValue, eventTime = performance.now()){
     function clearGraceTimeout(){ if(state.graceTimeoutId) clearTimeout(state.graceTimeoutId); state.graceTimeoutId = null; }
 
     function setupEvents(){
-      els.playBtn.addEventListener('click', startGame);
+      els.playBtn.addEventListener('click', launchGameFromGesture);
+      els.playBtn.addEventListener('touchend', launchGameFromGesture, { passive: false });
+      els.playBtn.addEventListener('pointerup', launchGameFromGesture);
       els.modeInfiniteBtn.addEventListener('click', () => toggleMode('infinite'));
       els.modeHardBtn.addEventListener('click', () => toggleMode('hard'));
       els.modeTurboBtn.addEventListener('click', () => toggleMode('turbo'));
