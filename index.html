@@ -422,9 +422,7 @@
       lastValidatedToken:'', hasSavedCurrentScore:false, lastScore:0, roundDeadline:0,
       timeoutPending:false, lastInterimAt:0, lastFinalAt:0, timeoutAttemptId:0,
       brokenScreenShown:false, roundId:0, closingUI:false,
-      unlocked: { infinite:false, hard:false, turbo:false, highTables:false, specialBg:false },
-      selectedModes: { infinite:false, hard:false, turbo:false, highTables:false, specialBg:false },
-      startingGame:false
+      unlocked: { infinite:false, hard:false, turbo:false, highTables:false, specialBg:false }
     };
 
     const $ = (id)=>document.getElementById(id);
@@ -544,55 +542,118 @@
       updateMicState();
     }
 
-    function normalizeAnswer(value){
-      if(value == null) return '';
-      let text = String(value).toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,;:!?¿¡_\\-]+/g,' ').replace(/\\s+/g,' ').trim();
-      const dict = {
-        cero:'0',un:'1',uno:'1',una:'1',dos:'2',tres:'3',cuatro:'4',cinco:'5',seis:'6',siete:'7',ocho:'8',nueve:'9',
-        diez:'10',once:'11',doce:'12',trece:'13',catorce:'14',quince:'15',dieciseis:'16',diecisiete:'17',dieciocho:'18',diecinueve:'19',
-        veinte:'20',veintiuno:'21',veintidos:'22',veintitres:'23',veinticuatro:'24',veinticinco:'25',veintiseis:'26',veintisiete:'27',veintiocho:'28',veintinueve:'29',
-        treinta:'30','treinta y uno':'31','treinta y dos':'32','treinta y tres':'33','treinta y cuatro':'34','treinta y cinco':'35','treinta y seis':'36','treinta y siete':'37','treinta y ocho':'38','treinta y nueve':'39',
-        cuarenta:'40','cuarenta y uno':'41','cuarenta y dos':'42','cuarenta y tres':'43','cuarenta y cuatro':'44','cuarenta y cinco':'45','cuarenta y seis':'46','cuarenta y siete':'47','cuarenta y ocho':'48','cuarenta y nueve':'49',
-        cincuenta:'50',sesenta:'60',setenta:'70',ochenta:'80',noventa:'90',cien:'100'
-      };
-      if(dict[text] !== undefined) return dict[text];
-      const compact = text.replace(/\\s+/g,'');
-      if(dict[compact] !== undefined) return dict[compact];
-      const numeric = text.match(/\\d+/g);
-      if(numeric && numeric.length) return numeric.join('');
-      return text;
+    
+function normalizeAnswer(value){
+  if(value == null) return '';
+  let text = String(value)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[.,;:!?¿¡_]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+
+  if(!text) return '';
+
+  const directMap = {
+    cero:0, un:1, uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7, ocho:8, nueve:9,
+    diez:10, once:11, doce:12, trece:13, catorce:14, quince:15, dieciseis:16, diecisiete:17, dieciocho:18, diecinueve:19,
+    veinte:20, veintiuno:21, veintidos:22, veintitres:23, veinticuatro:24, veinticinco:25, veintiseis:26,
+    veintisiete:27, veintiocho:28, veintinueve:29, treinta:30, cuarenta:40, cincuenta:50, sesenta:60,
+    setenta:70, ochenta:80, noventa:90, cien:100
+  };
+
+  const compact = text.replace(/\s+/g,'');
+  if(directMap[text] !== undefined) return String(directMap[text]);
+  if(directMap[compact] !== undefined) return String(directMap[compact]);
+
+  const numeric = text.match(/\d+/g);
+  if(numeric && numeric.length) return String(parseInt(numeric.join(''), 10));
+
+  const units = {cero:0, un:1, uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7, ocho:8, nueve:9};
+  const teens = {diez:10, once:11, doce:12, trece:13, catorce:14, quince:15, dieciseis:16, diecisiete:17, dieciocho:18, diecinueve:19};
+  const tens = {veinte:20, treinta:30, cuarenta:40, cincuenta:50, sesenta:60, setenta:70, ochenta:80, noventa:90};
+
+  function parseSpanishNumberPhrase(str){
+    if(directMap[str] !== undefined) return directMap[str];
+    if(directMap[str.replace(/\s+/g,'')] !== undefined) return directMap[str.replace(/\s+/g,'')];
+
+    const tokens = str.split(' ').filter(Boolean);
+    if(tokens.length === 1){
+      if(units[tokens[0]] !== undefined) return units[tokens[0]];
+      if(teens[tokens[0]] !== undefined) return teens[tokens[0]];
+      if(tens[tokens[0]] !== undefined) return tens[tokens[0]];
+      return null;
     }
+
+    // veinte y cuatro, treinta y seis, cuarenta y dos, etc.
+    if(tokens.length === 3 && tens[tokens[0]] !== undefined && tokens[1] === 'y' && units[tokens[2]] !== undefined){
+      return tens[tokens[0]] + units[tokens[2]];
+    }
+
+    // variants like "treinta seis"
+    if(tokens.length === 2 && tens[tokens[0]] !== undefined && units[tokens[1]] !== undefined){
+      return tens[tokens[0]] + units[tokens[1]];
+    }
+
+    return null;
+  }
+
+  const parsed = parseSpanishNumberPhrase(text);
+  if(parsed !== null) return String(parsed);
+
+  // common speech-recognition confusions for single-digit answers
+  const phoneticSingles = {
+    oi:1, hay:6, ey:6, ei:6, seis:6, siete:7, ocho:8
+  };
+  if(phoneticSingles[text] !== undefined) return String(phoneticSingles[text]);
+
+  return text;
+}
 
     function currentRoundSeconds(){
       return state.unlocked.turbo ? 2.35 : BASE_SECONDS;
     }
 
     function getRangeByScore(){
-  let maxA = 10, maxB = 10;
-  if(state.selectedModes.hard){
-    maxA = 14;
-    maxB = 14;
-  }
-  return { maxA, maxB };
-}
-
-    function safelyValidate(rawValue, eventTime = performance.now()){
-      if(!(state.roundActive || state.timeoutPending) || state.settled) return false;
-      const normalized = normalizeAnswer(rawValue);
-      if(!normalized) return false;
-      const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
-      if(eventTime > acceptedWindow) return false;
-
-      const token = state.roundId + '|' + normalized;
-      if(token === state.lastValidatedToken) return false;
-      state.lastValidatedToken = token;
-
-      if(normalized === String(state.answer)){
-        settleRound('correct');
-        return true;
-      }
-      return false;
+      let maxA = 10, maxB = 10;
+      if(state.unlocked.highTables){ maxA = 14; maxB = 14; }
+      if(state.unlocked.hard){ maxA += 4; maxB += 4; }
+      if(state.score > 10){ maxA += 1; }
+      if(state.score > 20){ maxA += 1; maxB += 1; }
+      if(state.score > 30){ maxA += 1; maxB += 1; }
+      return { maxA, maxB };
     }
+
+    
+function safelyValidate(rawValue, eventTime = performance.now()){
+  if(!(state.roundActive || state.timeoutPending) || state.settled) return false;
+
+  const normalized = normalizeAnswer(rawValue);
+  if(!normalized) return false;
+
+  const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
+  if(eventTime > acceptedWindow) return false;
+
+  const token = state.roundId + '|' + normalized;
+  if(token === state.lastValidatedToken) return false;
+  state.lastValidatedToken = token;
+
+  const expected = String(state.answer);
+  const normalizedNum = Number(normalized);
+
+  // accept exact numeric equivalence when possible
+  if(!Number.isNaN(normalizedNum) && normalizedNum === state.answer){
+    settleRound('correct');
+    return true;
+  }
+
+  if(normalized === expected){
+    settleRound('correct');
+    return true;
+  }
+  return false;
+}
 
     function generateQuestion(){
       const { maxA, maxB } = getRangeByScore();
@@ -627,56 +688,7 @@
       startRound();
     }
 
-    
-function launchGameFromGesture(evt){
-  if(evt && typeof evt.preventDefault === 'function') evt.preventDefault();
-  if(state.startingGame) return;
-  state.startingGame = true;
-  try{
-    const ctx = getAudioContext();
-    if(ctx && ctx.state === 'suspended') ctx.resume();
-  }catch(_){}
-  startGame();
-  setTimeout(() => { state.startingGame = false; }, 500);
-}
-
-function generateQuestion(){
-  const { maxA, maxB } = getRangeByScore();
-  let a = 1 + Math.floor(Math.random() * maxA);
-  let b = 1 + Math.floor(Math.random() * maxB);
-  if(Math.random() > 0.55) [a, b] = [b, a];
-  state.answer = a * b;
-  state.transcript = '';
-  state.lastValidatedToken = '';
-  state.lastInterimAt = 0;
-  state.lastFinalAt = 0;
-  state.closingUI = false;
-  els.questionText.textContent = `${a}×${b}=?`;
-  els.transcript.textContent = 'Preparado…';
-  hideFeedback();
-  updateSurprise('');
-  updateClosingUI(false);
-}
-
-function startGame(){
-  state.score = 0;
-  state.lives = 3;
-  state.hasSavedCurrentScore = false;
-  state.lastScore = 0;
-  state.brokenScreenShown = false;
-  state.settled = false;
-  state.timeoutPending = false;
-  els.crackOverlay.classList.remove('show');
-  showScreen('game');
-  try{ window.scrollTo(0, 0); }catch(_){}
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-  updateHud();
-  generateQuestion();
-  startRound();
-}
-
-function startRound(){
+    function startRound(){
       state.roundId += 1;
       state.roundActive = true;
       state.timeoutPending = false;
@@ -1107,9 +1119,6 @@ function startRound(){
       initSpeech();
       createFallingMath();
       setupEvents();
-      loadUnlocks();
-      loadSelectedModes();
-      updateModesUI();
       renderRecords();
       updateHud();
     }
