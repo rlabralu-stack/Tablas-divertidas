@@ -52,9 +52,9 @@ input{width:100%;padding:16px 18px;border-radius:18px;border:0;font-size:22px}.r
 
 <section class="screen" id="gameScreen">
   <div class="topbar"><div class="pill" id="scorePill">0 / 40</div><div class="pill" id="livesPill">❤️❤️❤️</div></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-    <div class="pill" style="color:#fff;text-align:center">🔥 Racha: <span id="streakPill">0</span></div>
-    <div class="pill" style="color:#fff;text-align:center">🏆 Mejor: <span id="bestStreakPill">0</span></div>
+  <div id="streakWrap" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px 0;">
+    <div class="pill" style="color:#fff;text-align:center;font-size:18px;font-weight:900">🔥 Racha: <span id="streakPill">0</span></div>
+    <div class="pill" style="color:#fff;text-align:center;font-size:18px;font-weight:900">🏆 Mejor: <span id="bestStreakPill">0</span></div>
   </div>
   <div id="fireBanner" style="display:none;margin:0 0 14px 0;text-align:center;color:#fff;font-weight:1000;font-size:26px;text-shadow:0 4px 12px rgba(0,0,0,.22);">🔥 ON FIRE 🔥</div>
   <div class="question-card" id="questionCard"><div class="feedback" id="feedback"></div><div class="question" id="questionText">6×7=?</div></div>
@@ -107,7 +107,7 @@ const state={screen:'home',score:0,lives:3,answer:1,roundActive:false,settled:fa
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),final:$('finalScreen'),records:$('recordsScreen')};
-const els={playBtn:$('playBtn'),recordsBtn:$('recordsBtn'),howBtn:$('howBtn'),scorePill:$('scorePill'),livesPill:$('livesPill'),streakPill:$('streakPill'),bestStreakPill:$('bestStreakPill'),fireBanner:$('fireBanner'),questionText:$('questionText'),timerFill:$('timerFill'),timerLabel:$('timerLabel'),feedback:$('feedback'),surpriseText:$('surpriseText'),micOrb:$('micOrb'),voiceTitle:$('voiceTitle'),transcript:$('transcript'),questionCard:$('questionCard'),closingBadge:$('closingBadge'),milestones:[...document.querySelectorAll('.milestone')],modePanel:$('modePanel'),modeButtons:[...document.querySelectorAll('.mode-toggle')],cardInfinite:$('cardInfinite'),cardHard:$('cardHard'),cardTurbo:$('cardTurbo'),cardSpecialBg:$('cardSpecialBg'),finalEmoji:$('finalEmoji'),finalTitle:$('finalTitle'),finalSubtitle:$('finalSubtitle'),finalScore:$('finalScore'),animatedFinalScore:$('animatedFinalScore'),victoryIntroPanel:$('victoryIntroPanel'),unlockGrid:$('unlockGrid'),postVictoryActions:$('postVictoryActions'),continueAfterWinBtn:$('continueAfterWinBtn'),savePanel:$('savePanel'),nameInput:$('nameInput'),saveScoreBtn:$('saveScoreBtn'),saveStatus:$('saveStatus'),playAgainBtn:$('playAgainBtn'),goRecordsBtn:$('goRecordsBtn'),backHomeBtn:$('backHomeBtn'),recordsList:$('recordsList'),clearRecordsBtn:$('clearRecordsBtn'),recordsBackBtn:$('recordsBackBtn')};
+const els={playBtn:$('playBtn'),recordsBtn:$('recordsBtn'),howBtn:$('howBtn'),scorePill:$('scorePill'),livesPill:$('livesPill'),streakWrap:$('streakWrap'),streakPill:$('streakPill'),bestStreakPill:$('bestStreakPill'),fireBanner:$('fireBanner'),questionText:$('questionText'),timerFill:$('timerFill'),timerLabel:$('timerLabel'),feedback:$('feedback'),surpriseText:$('surpriseText'),micOrb:$('micOrb'),voiceTitle:$('voiceTitle'),transcript:$('transcript'),questionCard:$('questionCard'),closingBadge:$('closingBadge'),milestones:[...document.querySelectorAll('.milestone')],modePanel:$('modePanel'),modeButtons:[...document.querySelectorAll('.mode-toggle')],cardInfinite:$('cardInfinite'),cardHard:$('cardHard'),cardTurbo:$('cardTurbo'),cardSpecialBg:$('cardSpecialBg'),finalEmoji:$('finalEmoji'),finalTitle:$('finalTitle'),finalSubtitle:$('finalSubtitle'),finalScore:$('finalScore'),animatedFinalScore:$('animatedFinalScore'),victoryIntroPanel:$('victoryIntroPanel'),unlockGrid:$('unlockGrid'),postVictoryActions:$('postVictoryActions'),continueAfterWinBtn:$('continueAfterWinBtn'),savePanel:$('savePanel'),nameInput:$('nameInput'),saveScoreBtn:$('saveScoreBtn'),saveStatus:$('saveStatus'),playAgainBtn:$('playAgainBtn'),goRecordsBtn:$('goRecordsBtn'),backHomeBtn:$('backHomeBtn'),recordsList:$('recordsList'),clearRecordsBtn:$('clearRecordsBtn'),recordsBackBtn:$('recordsBackBtn')};
 
 
 function unlockEverything(){state.unlocked={infinite:true,hard:true,turbo:true,specialBg:true};saveUnlocks();renderModePanel()}
@@ -258,6 +258,7 @@ function streakMessage(){
   return '';
 }
 function renderStreak(){
+  if(els.streakWrap) els.streakWrap.style.display = 'grid';
   if(els.streakPill) els.streakPill.textContent = String(state.streak);
   if(els.bestStreakPill) els.bestStreakPill.textContent = String(state.bestStreak);
   const msg = streakMessage();
@@ -265,6 +266,7 @@ function renderStreak(){
     els.fireBanner.style.display = msg ? 'block' : 'none';
     els.fireBanner.textContent = msg || '';
   }
+}
 }
 
 function updateHud(){els.scorePill.textContent=state.selectedMode==='infinite'?`${state.score} / ∞`:`${state.score} / ${GOAL}`;els.livesPill.textContent='❤️'.repeat(Math.max(0,state.lives))+'🖤'.repeat(Math.max(0,3-state.lives));els.milestones.forEach(el=>{const goal=Number(el.dataset.goal);el.classList.remove('active','done');if(state.score>=goal)el.classList.add('done')});const next=els.milestones.find(el=>state.score<Number(el.dataset.goal));if(next&&state.selectedMode!=='infinite')next.classList.add('active');renderStreak()}
