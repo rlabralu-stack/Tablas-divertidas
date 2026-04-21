@@ -4,309 +4,86 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Tablas Divertidas</title>
-  <meta name="theme-color" content="#ff7f50" />
+  <meta name="theme-color" content="#ff6b7a" />
   <style>
-    :root {
-      --bg1: #ff9a9e;
-      --bg2: #fad0c4;
-      --bg3: #6ee7f9;
-      --card: rgba(255,255,255,.84);
-      --text: #24344d;
-      --danger: #ff2f55;
-      --success: #1fbf75;
-      --shadow: 0 18px 40px rgba(0,0,0,.18);
+    :root{
+      --bg1:#ff9a9e;--bg2:#fad0c4;--bg3:#6ee7f9;--text:#24344d;--card:rgba(255,255,255,.86);
+      --danger:#ff2f55;--success:#1fbf75;--gold:#ffd54f;--shadow:0 18px 40px rgba(0,0,0,.18);
     }
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background: linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
-      overflow-x: hidden;
-    }
-    body { position: relative; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-
-    .bg-fall {
-      position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
-    }
-    .falling {
-      position: absolute; top: -10vh; opacity: .14; font-weight: 800; color: #fff;
-      text-shadow: 0 3px 20px rgba(0,0,0,.18); animation: fall linear forwards;
-      user-select: none; will-change: transform;
-    }
-    @keyframes fall {
-      from { transform: translateY(-10vh) rotate(0deg); }
-      to { transform: translateY(120vh) rotate(180deg); }
-    }
-
-    .app {
-      position: relative; z-index: 1; min-height: 100dvh; display: flex;
-      justify-content: center; padding: 20px 16px 28px;
-    }
-    .screen { width: 100%; max-width: 520px; display: none; animation: fadeIn .35s ease; }
-    .screen.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero { text-align: center; padding-top: 28px; }
-    .logo { font-size: 64px; filter: drop-shadow(0 8px 16px rgba(0,0,0,.15)); }
-    h1 {
-      margin: 10px 0 8px; font-size: clamp(42px, 11vw, 64px); line-height: .92;
-      color: #fff; text-shadow: 0 10px 24px rgba(0,0,0,.18); letter-spacing: -.04em;
-    }
-    .subtitle {
-      margin: 10px auto 18px; font-size: 22px; color: rgba(255,255,255,.92);
-      text-shadow: 0 4px 10px rgba(0,0,0,.15);
-    }
-    .panel {
-      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.28);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      border-radius: 28px; box-shadow: var(--shadow); padding: 16px;
-    }
-
-    .menu-buttons { display: grid; gap: 14px; margin: 26px 0 18px; }
-    button {
-      border: 0; cursor: pointer; font: inherit;
-      transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    button:active { transform: scale(.985); }
-
-    .btn-primary {
-      width: 100%; border-radius: 999px; padding: 22px 20px; font-size: 22px;
-      font-weight: 800; color: #fff; background: linear-gradient(135deg, #ffa24d, #ff5f74);
-      box-shadow: 0 14px 28px rgba(255,95,116,.34);
-    }
-    .btn-secondary, .btn-ghost {
-      width: 100%; border-radius: 999px; padding: 17px 18px; font-size: 20px;
-      font-weight: 700; color: #ff6a79; background: rgba(255,255,255,.84);
-      box-shadow: var(--shadow);
-    }
-    .btn-ghost { color: #2e4969; background: rgba(255,255,255,.6); }
-    .rules {
-      margin-top: 16px; color: rgba(255,255,255,.95); font-size: 20px; line-height: 1.55;
-    }
-
-    .topbar {
-      display: flex; justify-content: space-between; gap: 12px; align-items: center;
-      margin-top: 10px; margin-bottom: 20px; color: white; font-weight: 700;
-    }
-    .pill {
-      background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
-      padding: 10px 12px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    }
-    .hearts { letter-spacing: 4px; white-space: nowrap; }
-
-    .question-card {
-      position: relative; background: var(--card); border-radius: 30px; min-height: 210px;
-      display: grid; place-items: center; box-shadow: var(--shadow); padding: 24px;
-      overflow: hidden; transition: transform .08s linear, filter .08s linear;
-    }
-    .question-card.hit {
-      animation: megaShake .72s cubic-bezier(.36,.07,.19,.97);
-      filter: brightness(.9) saturate(1.2);
-    }
-    @keyframes megaShake {
-      0% { transform: translateX(0) rotate(0deg) scale(1); }
-      10% { transform: translateX(-16px) rotate(-1deg) scale(.99); }
-      20% { transform: translateX(18px) rotate(1deg) scale(1.01); }
-      30% { transform: translateX(-22px) rotate(-1.5deg) scale(.98); }
-      40% { transform: translateX(20px) rotate(1.4deg) scale(1.02); }
-      50% { transform: translateX(-16px) rotate(-1deg) scale(.99); }
-      60% { transform: translateX(14px) rotate(.8deg) scale(1.01); }
-      75% { transform: translateX(-8px) rotate(-.4deg) scale(1); }
-      100% { transform: translateX(0) rotate(0deg) scale(1); }
-    }
-
-    .question {
-      font-size: clamp(54px, 16vw, 90px); font-weight: 900; letter-spacing: -.06em;
-      color: var(--text); text-align: center;
-    }
-
-    .feedback-text {
-      position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-      font-size: 22px; font-weight: 900; opacity: 0; pointer-events: none;
-      text-align: center; width: calc(100% - 32px);
-    }
-    .feedback-text.show.success { color: var(--success); opacity: 1; animation: popMsg .7s ease; }
-    .feedback-text.show.error { color: var(--danger); opacity: 1; animation: popMsg .9s ease; }
-    @keyframes popMsg {
-      0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(.8); }
-      20% { opacity: 1; }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(1.08); }
-    }
-
-    .timer-wrap { margin: 22px 6px 8px; text-align: center; }
-    .timer-bar {
-      height: 16px; width: 100%; background: rgba(255,255,255,.4); border-radius: 999px;
-      overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
-    }
-    .timer-fill {
-      height: 100%; width: 100%; border-radius: inherit;
-      background: linear-gradient(90deg, #26d5d9, #62e78d); transition: width .05s linear;
-    }
-    .timer-fill.warn { background: linear-gradient(90deg, #f8d34d, #ff9946); }
-    .timer-fill.danger { background: linear-gradient(90deg, #ff7b59, #ff3e67); }
-    .timer-label {
-      margin-top: 9px; color: white; font-size: 20px; font-weight: 900;
-      text-shadow: 0 4px 10px rgba(0,0,0,.18);
-    }
-
-    .controls { display: grid; gap: 14px; margin-top: 20px; }
-    .voice-box {
-      background: rgba(255,255,255,.13); border: 2px solid rgba(255,255,255,.35);
-      border-radius: 28px; padding: 18px; color: white; box-shadow: var(--shadow);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    }
-    .voice-main { display: flex; align-items: center; gap: 14px; }
-    .mic-orb {
-      flex: 0 0 76px; width: 76px; height: 76px; border-radius: 50%;
-      background: linear-gradient(135deg, #ffffff, #d9f8ff); color: #1d5b7b;
-      font-size: 30px; box-shadow: 0 12px 22px rgba(0,0,0,.14);
-      display: grid; place-items: center;
-    }
-    .mic-orb.listening {
-      background: linear-gradient(135deg, #ffced4, #ff7b8e);
-      color: white; animation: pulse 1s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,99,132,.45); }
-      70% { box-shadow: 0 0 0 18px rgba(255,99,132,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,99,132,0); }
-    }
-    .voice-text strong { display: block; font-size: 26px; margin-bottom: 6px; }
-    .voice-sub { opacity: .95; font-size: 16px; line-height: 1.35; }
-    .transcript {
-      margin-top: 12px; border-radius: 18px; background: rgba(255,255,255,.14);
-      padding: 10px 12px; min-height: 46px; font-size: 16px; word-break: break-word;
-    }
-
-    .slap-stage {
-      position: fixed; inset: 0; pointer-events: none; z-index: 45; overflow: hidden;
-    }
-    .slap-hand {
-      position: absolute; right: -260px; top: 44%; width: 260px; height: 260px;
-      opacity: 0; transform: translateY(-50%) rotate(18deg) scale(.65);
-      filter: drop-shadow(0 18px 34px rgba(0,0,0,.28)); will-change: transform, right, opacity;
-      display: grid; place-items: center; font-size: 230px;
-    }
-    .slap-hand.show { animation: slapSweep .8s cubic-bezier(.18,.9,.18,1) forwards; }
-    @keyframes slapSweep {
-      0% { right: -280px; opacity: 0; transform: translateY(-50%) rotate(20deg) scale(.62); }
-      18% { opacity: 1; }
-      42% { right: 0px; opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1.15); }
-      52% { right: -10px; opacity: 1; transform: translateY(-50%) rotate(-14deg) scale(1.22); }
-      66% { right: -40px; opacity: .95; transform: translateY(-50%) rotate(-10deg) scale(1.04); }
-      100% { right: -210px; opacity: 0; transform: translateY(-50%) rotate(-22deg) scale(.92); }
-    }
-
-    .impact-burst {
-      position: absolute; right: 25%; top: 42%; width: 0; height: 0; opacity: 0;
-    }
-    .impact-burst.show { animation: burstShow .56s ease-out forwards; }
-    @keyframes burstShow {
-      0% { opacity: 0; transform: scale(.2); }
-      30% { opacity: 1; transform: scale(1.15); }
-      100% { opacity: 0; transform: scale(1.8); }
-    }
-    .burst-ray {
-      position: absolute; width: 170px; height: 12px;
-      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,245,157,.98), rgba(255,72,113,.98));
-      border-radius: 999px; transform-origin: left center;
-      box-shadow: 0 0 14px rgba(255,88,120,.45);
-    }
-
-    .comic-text {
-      position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%) scale(.6) rotate(-8deg);
-      opacity: 0; font-weight: 900; font-size: clamp(42px, 12vw, 78px); color: #fff600;
-      text-shadow: -3px -3px 0 #111, 3px -3px 0 #111, -3px 3px 0 #111, 3px 3px 0 #111, 0 8px 20px rgba(0,0,0,.28);
-      z-index: 46; pointer-events: none; letter-spacing: .03em;
-    }
-    .comic-text.show { animation: comicPop .72s cubic-bezier(.2,.9,.2,1) forwards; }
-    @keyframes comicPop {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(-12deg); }
-      25% { opacity: 1; transform: translate(-50%, -50%) scale(1.18) rotate(-5deg); }
-      65% { opacity: 1; transform: translate(-50%, -50%) scale(1.04) rotate(2deg); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(.96) rotate(4deg) translateY(-10px); }
-    }
-
-    .flash {
-      position: fixed; inset: 0; background: rgba(255,40,84,.22); z-index: 25; opacity: 0; pointer-events: none;
-    }
-    .flash.show { animation: flash .46s ease; }
-    @keyframes flash {
-      0% { opacity: 0; } 20% { opacity: .95; } 60% { opacity: .45; } 100% { opacity: 0; }
-    }
-
-    .screen-hit {
-      position: fixed; inset: 0; z-index: 24; pointer-events: none; opacity: 0;
-      background:
-        radial-gradient(circle at 50% 40%, rgba(255,255,255,.55), rgba(255,255,255,0) 22%),
-        radial-gradient(circle at 50% 40%, rgba(255,0,76,.35), rgba(255,0,76,0) 45%);
-    }
-    .screen-hit.show { animation: screenHit .55s ease-out; }
-    @keyframes screenHit {
-      0% { opacity: 0; transform: scale(1); }
-      25% { opacity: 1; transform: scale(1.02); }
-      100% { opacity: 0; transform: scale(1.08); }
-    }
-
-    .crack-overlay {
-      position: fixed; inset: 0; z-index: 47; pointer-events: none; opacity: 0;
-      background:
-        linear-gradient(78deg, transparent 48.8%, rgba(255,255,255,.92) 49%, rgba(0,0,0,.72) 49.5%, transparent 50%) 50% 0/100% 100% no-repeat,
-        linear-gradient(115deg, transparent 49.2%, rgba(255,255,255,.85) 49.6%, rgba(0,0,0,.68) 50%, transparent 50.6%) 60% 12%/80% 76% no-repeat,
-        linear-gradient(20deg, transparent 49.2%, rgba(255,255,255,.9) 49.5%, rgba(0,0,0,.68) 50%, transparent 50.5%) 30% 48%/80% 70% no-repeat,
-        linear-gradient(160deg, transparent 49.2%, rgba(255,255,255,.82) 49.5%, rgba(0,0,0,.62) 50%, transparent 50.5%) 62% 36%/70% 62% no-repeat;
-      mix-blend-mode: screen;
-    }
-    .crack-overlay.show { animation: crackShow 1.8s ease forwards; }
-    @keyframes crackShow {
-      0% { opacity: 0; transform: scale(1); }
-      10% { opacity: 1; transform: scale(1.02); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .surprise {
-      margin-top: 18px; text-align: center; min-height: 34px; color: white;
-      font-weight: 900; font-size: 22px; text-shadow: 0 4px 10px rgba(0,0,0,.18);
-    }
-
-    .records-list { margin-top: 14px; display: grid; gap: 10px; }
-    .record-item {
-      display: flex; justify-content: space-between; gap: 12px; align-items: center; color: white;
-      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
-      padding: 12px 14px; border-radius: 18px; font-weight: 700;
-    }
-    .empty { color: rgba(255,255,255,.92); font-size: 18px; text-align: center; padding: 20px 0 8px; }
-    .footer-note { margin-top: 14px; text-align: center; color: rgba(255,255,255,.85); font-size: 14px; }
-
-    .name-input {
-      width: 100%; padding: 16px 18px; border-radius: 18px; border: 2px solid rgba(36,52,77,.08);
-      font-size: 22px; outline: none; color: var(--text); background: rgba(255,255,255,.96);
-      box-shadow: inset 0 2px 8px rgba(0,0,0,.05);
-    }
-    .final-actions {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;
-    }
-
-    @media (max-width: 420px) {
-      .final-actions { grid-template-columns: 1fr; }
-      .voice-main { align-items: flex-start; }
-      .slap-hand { width: 220px; height: 220px; font-size: 200px; }
-    }
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:linear-gradient(140deg,var(--bg1),var(--bg2),var(--bg3));overflow-x:hidden}
+    body{position:relative;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    .bg-fall,.overlay,.slap-stage,.crack-overlay,.victory-overlay{position:fixed;inset:0;pointer-events:none}
+    .bg-fall{z-index:0;overflow:hidden}
+    .falling{position:absolute;top:-10vh;opacity:.14;font-weight:800;color:#fff;text-shadow:0 3px 20px rgba(0,0,0,.18);animation:fall linear forwards;user-select:none;will-change:transform}
+    @keyframes fall{from{transform:translateY(-10vh) rotate(0deg)}to{transform:translateY(120vh) rotate(180deg)}}
+    .app{position:relative;z-index:1;min-height:100dvh;display:flex;justify-content:center;padding:20px 16px 28px}
+    .screen{width:100%;max-width:520px;display:none;animation:fadeIn .35s ease}.screen.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .hero{text-align:center;padding-top:28px}.logo{font-size:64px;filter:drop-shadow(0 8px 16px rgba(0,0,0,.15))}
+    h1{margin:10px 0 8px;font-size:clamp(42px,11vw,64px);line-height:.92;color:#fff;text-shadow:0 10px 24px rgba(0,0,0,.18);letter-spacing:-.04em}
+    .subtitle{margin:10px auto 18px;font-size:22px;color:rgba(255,255,255,.92);text-shadow:0 4px 10px rgba(0,0,0,.15)}
+    .panel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:28px;box-shadow:var(--shadow);padding:16px}
+    .menu-buttons{display:grid;gap:14px;margin:26px 0 18px}
+    button{border:0;cursor:pointer;font:inherit;transition:transform .16s ease,box-shadow .16s ease,opacity .16s ease;-webkit-tap-highlight-color:transparent}button:active{transform:scale(.985)}
+    .btn-primary{width:100%;border-radius:999px;padding:22px 20px;font-size:22px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ffa24d,#ff5f74);box-shadow:0 14px 28px rgba(255,95,116,.34)}
+    .btn-secondary,.btn-ghost{width:100%;border-radius:999px;padding:17px 18px;font-size:20px;font-weight:700;color:#ff6a79;background:rgba(255,255,255,.84);box-shadow:var(--shadow)}
+    .btn-ghost{color:#2e4969;background:rgba(255,255,255,.6)}
+    .rules{margin-top:16px;color:rgba(255,255,255,.95);font-size:20px;line-height:1.55}
+    .topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:10px;margin-bottom:20px;color:white;font-weight:700}
+    .pill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:10px 12px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.12);backdrop-filter:blur(6px)}
+    .hearts{display:flex;gap:6px;align-items:center}.heart{display:inline-block;transition:transform .18s ease,opacity .18s ease}.heart.lost{opacity:.3}.heart.pop{animation:heartPop .6s ease forwards}@keyframes heartPop{0%{transform:scale(1)}30%{transform:scale(1.5)}100%{transform:scale(.2);opacity:0}}
+    .question-card{position:relative;background:var(--card);border-radius:30px;min-height:210px;display:grid;place-items:center;box-shadow:var(--shadow);padding:24px;overflow:hidden;transition:transform .08s linear,filter .08s linear}
+    .question-card.hit{animation:megaShake .72s cubic-bezier(.36,.07,.19,.97);filter:brightness(.9) saturate(1.2)}
+    .question-card.freeze{filter:brightness(.98) saturate(.92);transform:scale(.992)}
+    @keyframes megaShake{0%{transform:translateX(0) rotate(0deg) scale(1)}10%{transform:translateX(-16px) rotate(-1deg) scale(.99)}20%{transform:translateX(18px) rotate(1deg) scale(1.01)}30%{transform:translateX(-22px) rotate(-1.5deg) scale(.98)}40%{transform:translateX(20px) rotate(1.4deg) scale(1.02)}50%{transform:translateX(-16px) rotate(-1deg) scale(.99)}60%{transform:translateX(14px) rotate(.8deg) scale(1.01)}75%{transform:translateX(-8px) rotate(-.4deg) scale(1)}100%{transform:translateX(0) rotate(0deg) scale(1)}}
+    .question{font-size:clamp(54px,16vw,90px);font-weight:900;letter-spacing:-.06em;color:var(--text);text-align:center}
+    .feedback-text,.milestone-badge,.closing-badge{position:absolute;left:50%;transform:translateX(-50%);text-align:center;width:calc(100% - 32px);pointer-events:none}
+    .feedback-text{top:14px;font-size:22px;font-weight:900;opacity:0}.feedback-text.show.success{color:var(--success);opacity:1;animation:popMsg .7s ease}.feedback-text.show.error{color:var(--danger);opacity:1;animation:popMsg .9s ease}
+    @keyframes popMsg{0%{opacity:0;transform:translateX(-50%) translateY(10px) scale(.8)}20%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-8px) scale(1.08)}}
+    .milestone-badge{top:18px;font-size:18px;font-weight:900;color:#5b3d00;background:linear-gradient(135deg,#fff5a8,#ffd54f);padding:10px 16px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.16);opacity:0}
+    .milestone-badge.show{animation:milestoneIn 1.6s ease forwards}
+    @keyframes milestoneIn{0%{opacity:0;transform:translateX(-50%) translateY(12px) scale(.86)}12%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.05)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px) scale(.98)}}
+    .closing-badge{bottom:16px;font-size:18px;font-weight:900;color:#fff;background:linear-gradient(135deg,#4f6cf7,#7d8fff);padding:10px 16px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.16);opacity:0}
+    .closing-badge.show{animation:closingPulse .9s ease infinite alternate}
+    @keyframes closingPulse{from{opacity:.78;transform:translateX(-50%) scale(.98)}to{opacity:1;transform:translateX(-50%) scale(1.02)}}
+    .timer-wrap{margin:22px 6px 8px;text-align:center}.timer-bar{height:16px;width:100%;background:rgba(255,255,255,.4);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 8px rgba(0,0,0,.08)}
+    .timer-fill{height:100%;width:100%;border-radius:inherit;background:linear-gradient(90deg,#26d5d9,#62e78d);transition:width .05s linear}.timer-fill.warn{background:linear-gradient(90deg,#f8d34d,#ff9946)}.timer-fill.danger{background:linear-gradient(90deg,#ff7b59,#ff3e67)}
+    .timer-label{margin-top:9px;color:white;font-size:20px;font-weight:900;text-shadow:0 4px 10px rgba(0,0,0,.18)}
+    .controls{display:grid;gap:14px;margin-top:20px}.voice-box{background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.35);border-radius:28px;padding:18px;color:white;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+    .voice-main{display:flex;align-items:center;gap:14px}.mic-orb{flex:0 0 76px;width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#ffffff,#d9f8ff);color:#1d5b7b;font-size:30px;box-shadow:0 12px 22px rgba(0,0,0,.14);display:grid;place-items:center}.mic-orb.listening{background:linear-gradient(135deg,#ffced4,#ff7b8e);color:white;animation:pulse 1s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,99,132,.45)}70%{box-shadow:0 0 0 18px rgba(255,99,132,0)}100%{box-shadow:0 0 0 0 rgba(255,99,132,0)}}
+    .voice-text strong{display:block;font-size:26px;margin-bottom:6px}.voice-sub{opacity:.95;font-size:16px;line-height:1.35}.transcript{margin-top:12px;border-radius:18px;background:rgba(255,255,255,.14);padding:10px 12px;min-height:46px;font-size:16px;word-break:break-word}
+    .overlay{z-index:24;opacity:0;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.55),rgba(255,255,255,0) 22%),radial-gradient(circle at 50% 40%,rgba(255,0,76,.35),rgba(255,0,76,0) 45%)}
+    .overlay.show{animation:screenHit .55s ease-out}.overlay.freeze{opacity:.35;background:rgba(255,255,255,.18);backdrop-filter:blur(2px)}
+    @keyframes screenHit{0%{opacity:0;transform:scale(1)}25%{opacity:1;transform:scale(1.02)}100%{opacity:0;transform:scale(1.08)}}
+    .slap-hand{position:absolute;right:-260px;top:44%;width:260px;height:260px;opacity:0;transform:translateY(-50%) rotate(18deg) scale(.65);filter:drop-shadow(0 18px 34px rgba(0,0,0,.28));will-change:transform,right,opacity;display:grid;place-items:center;font-size:230px}.slap-hand.show{animation:slapSweep .8s cubic-bezier(.18,.9,.18,1) forwards}
+    @keyframes slapSweep{0%{right:-280px;opacity:0;transform:translateY(-50%) rotate(20deg) scale(.62)}18%{opacity:1}42%{right:0;opacity:1;transform:translateY(-50%) rotate(-8deg) scale(1.15)}52%{right:-10px;opacity:1;transform:translateY(-50%) rotate(-14deg) scale(1.22)}66%{right:-40px;opacity:.95;transform:translateY(-50%) rotate(-10deg) scale(1.04)}100%{right:-210px;opacity:0;transform:translateY(-50%) rotate(-22deg) scale(.92)}}
+    .impact-burst{position:absolute;right:25%;top:42%;width:0;height:0;opacity:0}.impact-burst.show{animation:burstShow .56s ease-out forwards}@keyframes burstShow{0%{opacity:0;transform:scale(.2)}30%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.8)}}
+    .burst-ray{position:absolute;width:170px;height:12px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,245,157,.98),rgba(255,72,113,.98));border-radius:999px;transform-origin:left center;box-shadow:0 0 14px rgba(255,88,120,.45)}
+    .comic-text{position:absolute;left:50%;top:30%;transform:translate(-50%,-50%) scale(.6) rotate(-8deg);opacity:0;font-weight:900;font-size:clamp(42px,12vw,78px);color:#fff600;text-shadow:-3px -3px 0 #111,3px -3px 0 #111,-3px 3px 0 #111,3px 3px 0 #111,0 8px 20px rgba(0,0,0,.28);z-index:46;letter-spacing:.03em}.comic-text.show{animation:comicPop .72s cubic-bezier(.2,.9,.2,1) forwards}@keyframes comicPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-12deg)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.18) rotate(-5deg)}65%{opacity:1;transform:translate(-50%,-50%) scale(1.04) rotate(2deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(.96) rotate(4deg) translateY(-10px)}}
+    .crack-overlay{z-index:47;opacity:0;background:linear-gradient(78deg,transparent 48.8%,rgba(255,255,255,.92) 49%,rgba(0,0,0,.72) 49.5%,transparent 50%) 50% 0/100% 100% no-repeat,linear-gradient(115deg,transparent 49.2%,rgba(255,255,255,.85) 49.6%,rgba(0,0,0,.68) 50%,transparent 50.6%) 60% 12%/80% 76% no-repeat,linear-gradient(20deg,transparent 49.2%,rgba(255,255,255,.9) 49.5%,rgba(0,0,0,.68) 50%,transparent 50.5%) 30% 48%/80% 70% no-repeat,linear-gradient(160deg,transparent 49.2%,rgba(255,255,255,.82) 49.5%,rgba(0,0,0,.62) 50%,transparent 50.5%) 62% 36%/70% 62% no-repeat;mix-blend-mode:screen}.crack-overlay.show{animation:crackShow 1.8s ease forwards}@keyframes crackShow{0%{opacity:0;transform:scale(1)}10%{opacity:1;transform:scale(1.02)}100%{opacity:1;transform:scale(1)}}
+    .surprise{margin-top:18px;text-align:center;min-height:34px;color:white;font-weight:900;font-size:22px;text-shadow:0 4px 10px rgba(0,0,0,.18)}
+    .records-list{margin-top:14px;display:grid;gap:10px}.record-item{display:flex;justify-content:space-between;gap:12px;align-items:center;color:white;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:12px 14px;border-radius:18px;font-weight:700}.empty{color:rgba(255,255,255,.92);font-size:18px;text-align:center;padding:20px 0 8px}.footer-note{margin-top:14px;text-align:center;color:rgba(255,255,255,.85);font-size:14px}
+    .name-input{width:100%;padding:16px 18px;border-radius:18px;border:2px solid rgba(36,52,77,.08);font-size:22px;outline:none;color:var(--text);background:rgba(255,255,255,.96);box-shadow:inset 0 2px 8px rgba(0,0,0,.05)}.final-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .victory-overlay{z-index:48;display:grid;place-items:center;opacity:0;background:radial-gradient(circle at 50% 20%,rgba(255,245,157,.95),rgba(255,211,79,.55) 20%,rgba(0,0,0,.18) 65%),linear-gradient(140deg,#6a11cb,#2575fc);backdrop-filter:blur(2px)}
+    .victory-overlay.show{animation:victoryIn .7s ease forwards}.victory-card{text-align:center;color:#fff;padding:28px 24px;max-width:560px}.victory-title{font-size:clamp(44px,12vw,78px);font-weight:1000;letter-spacing:-.05em;text-shadow:0 10px 26px rgba(0,0,0,.28)}.victory-sub{font-size:24px;font-weight:800;margin-top:10px}.victory-phrase{font-size:20px;line-height:1.35;margin-top:16px;opacity:.96}.victory-score{font-size:70px;font-weight:1000;margin-top:12px;color:#fff7c2;text-shadow:0 10px 26px rgba(0,0,0,.28)}.victory-chip{display:inline-block;margin-top:18px;padding:12px 18px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);font-weight:900}
+    @keyframes victoryIn{from{opacity:0}to{opacity:1}}
+    @media (max-width:420px){.final-actions{grid-template-columns:1fr}.voice-main{align-items:flex-start}.slap-hand{width:220px;height:220px;font-size:200px}}
   </style>
 </head>
 <body>
   <div class="bg-fall" id="bgFall"></div>
-  <div class="flash" id="flash"></div>
-  <div class="screen-hit" id="screenHit"></div>
+  <div class="overlay" id="overlay"></div>
   <div class="crack-overlay" id="crackOverlay"></div>
-
+  <div class="victory-overlay" id="victoryOverlay">
+    <div class="victory-card">
+      <div class="victory-title">NIVEL LEYENDA</div>
+      <div class="victory-sub">Reto superado</div>
+      <div class="victory-score" id="victoryScore">0</div>
+      <div class="victory-phrase" id="victoryPhrase"></div>
+      <div class="victory-chip">Has sobrevivido a las 40</div>
+    </div>
+  </div>
   <div class="slap-stage">
     <div class="impact-burst" id="impactBurst"></div>
     <div class="comic-text" id="comicText">¡PAM!</div>
@@ -320,13 +97,11 @@
         <h1>TABLAS<br>DIVERTIDAS</h1>
         <div class="subtitle">¡Multiplica a toda velocidad!</div>
       </div>
-
       <div class="menu-buttons">
         <button class="btn-primary" id="playBtn">▶ JUGAR</button>
         <button class="btn-secondary" id="recordsBtn">🏆 Récords</button>
         <button class="btn-ghost" id="howBtn">⚙ Cómo jugar</button>
       </div>
-
       <div class="panel rules">
         🎯 Responde <strong>40 multiplicaciones</strong><br>
         🎤 La app escucha automáticamente<br>
@@ -339,21 +114,19 @@
     <section class="screen" id="gameScreen">
       <div class="topbar">
         <div class="pill" id="scorePill">0 / 40</div>
-        <div class="pill hearts" id="livesPill">❤️❤️❤️</div>
+        <div class="pill hearts" id="livesPill"></div>
       </div>
-
       <div class="question-card" id="questionCard">
         <div class="feedback-text" id="feedbackText"></div>
+        <div class="milestone-badge" id="milestoneBadge"></div>
+        <div class="closing-badge" id="closingBadge">Cerrando respuesta…</div>
         <div class="question" id="questionText">6 × 7 = ?</div>
       </div>
-
       <div class="timer-wrap">
         <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
         <div class="timer-label" id="timerLabel">3.0s</div>
       </div>
-
       <div class="surprise" id="surpriseText"></div>
-
       <div class="controls">
         <div class="voice-box">
           <div class="voice-main">
@@ -374,20 +147,16 @@
         <h1 id="finalTitle">FIN DE LA PARTIDA</h1>
         <div class="subtitle" id="finalSubtitle">Has llegado lejos</div>
       </div>
-
       <div class="panel">
-        <div style="font-size: 24px; font-weight: 900; text-align:center; color:#24415e;">Puntuación: <span id="finalScore">0</span></div>
-        <div style="margin-top:14px; color:#35516f; font-size:18px; text-align:center;">Escribe tu nombre para guardar tu récord.</div>
-        <div style="margin-top:16px;">
-          <input id="nameInput" class="name-input" type="text" maxlength="20" placeholder="Tu nombre" />
-        </div>
+        <div style="font-size:24px;font-weight:900;text-align:center;color:#24415e;">Puntuación: <span id="finalScore">0</span></div>
+        <div style="margin-top:14px;color:#35516f;font-size:18px;text-align:center;">Escribe tu nombre para guardar tu récord.</div>
+        <div style="margin-top:16px;"><input id="nameInput" class="name-input" type="text" maxlength="20" placeholder="Tu nombre"></div>
         <div class="final-actions">
           <button class="btn-ghost" id="playAgainBtn">Jugar otra vez</button>
           <button class="btn-secondary" id="saveScoreBtn">Guardar</button>
         </div>
-        <div id="saveStatus" style="margin-top:12px; text-align:center; font-weight:800; color:#35516f;"></div>
+        <div id="saveStatus" style="margin-top:12px;text-align:center;font-weight:800;color:#35516f;"></div>
       </div>
-
       <div class="menu-buttons" style="margin-top:18px;">
         <button class="btn-primary" id="goRecordsBtn">Ver récords</button>
         <button class="btn-ghost" id="backHomeBtn">Volver al inicio</button>
@@ -395,12 +164,7 @@
     </section>
 
     <section class="screen" id="recordsScreen">
-      <div class="hero">
-        <div class="logo">🏆</div>
-        <h1>RÉCORDS</h1>
-        <div class="subtitle">Tus mejores partidas</div>
-      </div>
-
+      <div class="hero"><div class="logo">🏆</div><h1>RÉCORDS</h1><div class="subtitle">Tus mejores partidas</div></div>
       <div class="records-list" id="recordsList"></div>
       <div class="menu-buttons">
         <button class="btn-secondary" id="clearRecordsBtn">🗑 Borrar récords</button>
@@ -411,676 +175,59 @@
   </main>
 
   <script>
-    const GOAL = 40;
-    const ROUND_SECONDS = 3;
-    const FINAL_GRACE_MS = 1600;
-    const RECORDS_KEY = 'tablas_divertidas_records_v6';
-
-    const motivational = ['🔥 Bien', '⚡ Rápido', '💥 Crack', '🚀 Imparable', '🧠 Mente veloz', '⭐ Brutal'];
-    const milestoneMessages = {
-      10: '⚡ Vas volando',
-      20: '🔥 Modo bestia activado',
-      30: '🚀 Ya casi eres leyenda',
-      40: '👑 Nivel leyenda desbloqueado'
-    };
-
-    const state = {
-      screen: 'home',
-      score: 0,
-      lives: 3,
-      answer: 1,
-      roundActive: false,
-      settled: false,
-      timeLeft: ROUND_SECONDS,
-      timerId: null,
-      timerEndAt: 0,
-      graceTimeoutId: null,
-      recognition: null,
-      speechSupported: false,
-      listening: false,
-      transcript: '',
-      lastValidatedToken: '',
-      hasSavedCurrentScore: false,
-      lastScore: 0,
-      roundDeadline: 0,
-      timeoutPending: false,
-      lastInterimAt: 0,
-      lastFinalAt: 0,
-      timeoutAttemptId: 0,
-      brokenScreenShown: false,
-      roundId: 0
-    };
-
-    const $ = (id) => document.getElementById(id);
-    const screens = {
-      home: $('homeScreen'),
-      game: $('gameScreen'),
-      final: $('finalScreen'),
-      records: $('recordsScreen'),
-    };
-
-    const els = {
-      playBtn: $('playBtn'),
-      recordsBtn: $('recordsBtn'),
-      howBtn: $('howBtn'),
-      scorePill: $('scorePill'),
-      livesPill: $('livesPill'),
-      questionText: $('questionText'),
-      timerFill: $('timerFill'),
-      timerLabel: $('timerLabel'),
-      feedbackText: $('feedbackText'),
-      surpriseText: $('surpriseText'),
-      micOrb: $('micOrb'),
-      voiceTitle: $('voiceTitle'),
-      voiceSub: $('voiceSub'),
-      transcript: $('transcript'),
-      questionCard: $('questionCard'),
-      flash: $('flash'),
-      screenHit: $('screenHit'),
-      impactBurst: $('impactBurst'),
-      comicText: $('comicText'),
-      slapHand: $('slapHand'),
-      crackOverlay: $('crackOverlay'),
-      finalEmoji: $('finalEmoji'),
-      finalTitle: $('finalTitle'),
-      finalSubtitle: $('finalSubtitle'),
-      finalScore: $('finalScore'),
-      nameInput: $('nameInput'),
-      saveScoreBtn: $('saveScoreBtn'),
-      saveStatus: $('saveStatus'),
-      playAgainBtn: $('playAgainBtn'),
-      goRecordsBtn: $('goRecordsBtn'),
-      backHomeBtn: $('backHomeBtn'),
-      recordsList: $('recordsList'),
-      clearRecordsBtn: $('clearRecordsBtn'),
-      recordsBackBtn: $('recordsBackBtn'),
-      bgFall: $('bgFall'),
-    };
-
-    function initImpactBurst() {
-      els.impactBurst.innerHTML = '';
-      const rays = 12;
-      for (let i = 0; i < rays; i++) {
-        const ray = document.createElement('div');
-        ray.className = 'burst-ray';
-        ray.style.transform = `rotate(${i * (360 / rays)}deg) translateX(0)`;
-        els.impactBurst.appendChild(ray);
-      }
-    }
-
-    function initSpeech() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        state.speechSupported = false;
-        els.voiceTitle.textContent = 'Voz no disponible';
-        els.voiceSub.textContent = 'Este navegador no soporta reconocimiento de voz';
-        els.transcript.textContent = 'Prueba en Chrome móvil o en un navegador compatible.';
-        return;
-      }
-
-      state.speechSupported = true;
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'es-ES';
-      recognition.interimResults = true;
-      recognition.maxAlternatives = 5;
-      recognition.continuous = false;
-
-      recognition.onstart = () => {
-        state.listening = true;
-        updateMicState();
-        state.lastInterimAt = performance.now();
-        if (state.roundActive || state.timeoutPending) els.transcript.textContent = 'Escuchando…';
-      };
-
-      recognition.onresult = (event) => {
-        const now = performance.now();
-        let interim = '';
-        let finals = [];
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i];
-          const alternatives = [];
-          for (let j = 0; j < result.length; j++) {
-            alternatives.push(result[j].transcript || '');
-          }
-
-          if (result.isFinal) {
-            finals.push(...alternatives);
-            state.lastFinalAt = now;
-          } else {
-            interim += (alternatives[0] || '') + ' ';
-            state.lastInterimAt = now;
-          }
-        }
-
-        const preview = finals[0] || interim.trim();
-        if (preview) {
-          state.transcript = preview.trim();
-          els.transcript.textContent = state.transcript;
-        }
-
-        if (finals.length) {
-          for (const candidate of finals) {
-            if (safelyValidate(candidate.trim(), now)) return;
-          }
-        }
-      };
-
-      recognition.onerror = () => {
-        state.listening = false;
-        updateMicState();
-        if (state.screen === 'game' && (state.roundActive || state.timeoutPending)) {
-          els.transcript.textContent = 'No se pudo reconocer. Sigue hablando en la siguiente ronda.';
-        }
-      };
-
-      recognition.onend = () => {
-        state.listening = false;
-        updateMicState();
-      };
-
-      state.recognition = recognition;
-      updateMicState();
-    }
-
-    function normalizeAnswer(value) {
-      if (value == null) return '';
-      let text = String(value)
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[.,;:!?¿¡_\-]+/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      const dictionary = {
-        cero: '0', un: '1', uno: '1', una: '1', dos: '2', tres: '3', cuatro: '4', cinco: '5',
-        seis: '6', siete: '7', ocho: '8', nueve: '9', diez: '10', once: '11', doce: '12', trece: '13',
-        catorce: '14', quince: '15', dieciseis: '16', diecisiete: '17', dieciocho: '18', diecinueve: '19',
-        veinte: '20', veintiuno: '21', veintidos: '22', veintitres: '23', veinticuatro: '24', veinticinco: '25',
-        veintiseis: '26', veintisiete: '27', veintiocho: '28', veintinueve: '29', treinta: '30',
-        'treinta y uno': '31', 'treinta y dos': '32', 'treinta y tres': '33', 'treinta y cuatro': '34', 'treinta y cinco': '35',
-        'treinta y seis': '36', 'treinta y siete': '37', 'treinta y ocho': '38', 'treinta y nueve': '39', cuarenta: '40',
-        'cuarenta y uno': '41', 'cuarenta y dos': '42', 'cuarenta y tres': '43', 'cuarenta y cuatro': '44', 'cuarenta y cinco': '45',
-        'cuarenta y seis': '46', 'cuarenta y siete': '47', 'cuarenta y ocho': '48', 'cuarenta y nueve': '49', cincuenta: '50',
-        'cincuenta y uno': '51', 'cincuenta y dos': '52', 'cincuenta y tres': '53', 'cincuenta y cuatro': '54', 'cincuenta y cinco': '55',
-        'cincuenta y seis': '56', 'cincuenta y siete': '57', 'cincuenta y ocho': '58', 'cincuenta y nueve': '59',
-        sesenta: '60', setenta: '70', ochenta: '80', noventa: '90', cien: '100'
-      };
-
-      if (dictionary[text] !== undefined) return dictionary[text];
-      const compact = text.replace(/\s+/g, '');
-      if (dictionary[compact] !== undefined) return dictionary[compact];
-      const numeric = text.match(/\d+/g);
-      if (numeric && numeric.length) return numeric.join('');
-      return text;
-    }
-
-    function safelyValidate(rawValue, eventTime = performance.now()) {
-      if (!(state.roundActive || state.timeoutPending) || state.settled) return false;
-
-      const normalized = normalizeAnswer(rawValue);
-      if (!normalized) return false;
-
-      const acceptedWindow = state.roundDeadline + FINAL_GRACE_MS;
-      if (eventTime > acceptedWindow) return false;
-
-      const token = state.roundId + '|' + normalized;
-      if (token === state.lastValidatedToken) return false;
-      state.lastValidatedToken = token;
-
-      if (normalized === String(state.answer)) {
-        settleRound('correct');
-        return true;
-      }
-      return false;
-    }
-
-    function generateQuestion() {
-      const difficulty = Math.min(10, 3 + Math.floor(state.score / 4));
-      let a = 1 + Math.floor(Math.random() * difficulty);
-      let b = 1 + Math.floor(Math.random() * 10);
-      if (Math.random() > .55) [a, b] = [b, a];
-
-      state.answer = a * b;
-      state.transcript = '';
-      state.lastValidatedToken = '';
-      state.lastInterimAt = 0;
-      state.lastFinalAt = 0;
-
-      els.questionText.textContent = `${a} × ${b} = ?`;
-      els.transcript.textContent = 'Preparado…';
-      hideFeedback();
-      updateSurprise('');
-    }
-
-    function startGame() {
-      state.score = 0;
-      state.lives = 3;
-      state.hasSavedCurrentScore = false;
-      state.lastScore = 0;
-      state.brokenScreenShown = false;
-      els.crackOverlay.classList.remove('show');
-      showScreen('game');
-      updateHud();
-      generateQuestion();
-      startRound();
-    }
-
-    function startRound() {
-      state.roundId += 1;
-      state.roundActive = true;
-      state.timeoutPending = false;
-      state.settled = false;
-      clearGraceTimeout();
-      clearTimer();
-      stopRecognition();
-
-      state.timerEndAt = performance.now() + ROUND_SECONDS * 1000;
-      state.roundDeadline = state.timerEndAt;
-      tickTimer();
-      setTimeout(() => startRecognition(), 120);
-    }
-
-    function tickTimer() {
-      clearTimer();
-      state.timerId = requestAnimationFrame(function frame(now) {
-        const msLeft = Math.max(0, state.timerEndAt - now);
-        state.timeLeft = msLeft / 1000;
-        renderTimer();
-        if (msLeft <= 0) {
-          onTimerReachedZero(state.roundId);
-          return;
-        }
-        state.timerId = requestAnimationFrame(frame);
-      });
-    }
-
-    function onTimerReachedZero(roundId) {
-      clearTimer();
-      if (roundId !== state.roundId || state.settled) return;
-      state.timeLeft = 0;
-      renderTimer();
-      state.timeoutPending = true;
-      els.transcript.textContent = state.transcript || 'Cerrando respuesta…';
-
-      clearGraceTimeout();
-      const attemptId = ++state.timeoutAttemptId;
-
-      state.graceTimeoutId = setTimeout(() => {
-        if (attemptId !== state.timeoutAttemptId) return;
-        if (roundId !== state.roundId || state.settled) return;
-
-        const recentSpeech = Math.max(state.lastInterimAt, state.lastFinalAt);
-        const now = performance.now();
-        const stillProcessingSpeech = recentSpeech && (now - recentSpeech < 650);
-
-        if (stillProcessingSpeech) {
-          state.graceTimeoutId = setTimeout(() => {
-            if (attemptId !== state.timeoutAttemptId) return;
-            if (roundId !== state.roundId || state.settled) return;
-            settleRound('wrong');
-          }, 500);
-          return;
-        }
-
-        settleRound('wrong');
-      }, FINAL_GRACE_MS);
-    }
-
-    function settleRound(result) {
-      if (state.settled) return;
-      state.settled = true;
-      state.roundActive = false;
-      state.timeoutPending = false;
-      clearTimer();
-      clearGraceTimeout();
-      stopRecognition();
-
-      if (result === 'correct') {
-        state.score += 1;
-        state.lastScore = state.score;
-        updateHud();
-        showFeedback(randomItem(motivational), 'success');
-        playSuccessSound();
-        maybeSurprise();
-
-        if (state.score >= GOAL) {
-          setTimeout(() => endGame(true), 700);
-          return;
-        }
-
-        setTimeout(() => {
-          generateQuestion();
-          startRound();
-        }, 520);
-        return;
-      }
-
-      const isLastLife = state.lives === 1;
-      state.lives -= 1;
-      updateHud();
-      showFeedback('¡INCORRECTO!', 'error');
-      updateSurprise('⏰ Tiempo agotado o respuesta incorrecta. Era ' + state.answer);
-
-      els.questionCard.classList.remove('hit');
-      void els.questionCard.offsetWidth;
-      els.questionCard.classList.add('hit');
-      setTimeout(() => els.questionCard.classList.remove('hit'), 820);
-
-      triggerSlap(isLastLife);
-      vibrate(isLastLife ? [220, 60, 220, 60, 260] : [160, 50, 190, 60, 160]);
-      playErrorSound();
-
-      if (state.lives <= 0) {
-        setTimeout(() => endGame(false), 1250);
-        return;
-      }
-
-      setTimeout(() => {
-        generateQuestion();
-        startRound();
-      }, 1180);
-    }
-
-    function endGame(won) {
-      clearTimer();
-      clearGraceTimeout();
-      stopRecognition();
-      state.roundActive = false;
-      state.timeoutPending = false;
-      state.settled = true;
-
-      showScreen('final');
-      els.finalScore.textContent = String(state.score);
-      els.saveStatus.textContent = '';
-      els.nameInput.value = '';
-      state.hasSavedCurrentScore = false;
-
-      if (won) {
-        els.finalEmoji.textContent = '👑';
-        els.finalTitle.textContent = '¡HAS GANADO!';
-        els.finalSubtitle.textContent = 'Dominas las tablas. La sorpresa es que… eres una máquina.';
-        createCelebrationBurst();
-        playWinSound();
-      } else {
-        els.finalEmoji.textContent = '😵';
-        els.finalTitle.textContent = 'FIN DE LA PARTIDA';
-        els.finalSubtitle.textContent = 'La mano ganó esta vez. Otra ronda y la rompes.';
-      }
-
-      setTimeout(() => els.nameInput.focus(), 180);
-    }
-
-    function clearTimer() {
-      if (state.timerId) cancelAnimationFrame(state.timerId);
-      state.timerId = null;
-    }
-
-    function clearGraceTimeout() {
-      if (state.graceTimeoutId) clearTimeout(state.graceTimeoutId);
-      state.graceTimeoutId = null;
-    }
-
-    function renderTimer() {
-      const ratio = Math.max(0, Math.min(1, state.timeLeft / ROUND_SECONDS));
-      els.timerFill.style.width = `${ratio * 100}%`;
-      els.timerLabel.textContent = `${state.timeLeft.toFixed(1)}s`;
-      els.timerFill.classList.remove('warn', 'danger');
-      if (ratio < .34) els.timerFill.classList.add('danger');
-      else if (ratio < .67) els.timerFill.classList.add('warn');
-    }
-
-    function maybeSurprise() {
-      const msg = milestoneMessages[state.score] || '';
-      if (msg) updateSurprise(msg);
-    }
-
-    function updateSurprise(text) {
-      els.surpriseText.textContent = text || '';
-    }
-
-    function updateHud() {
-      els.scorePill.textContent = `${state.score} / ${GOAL}`;
-      els.livesPill.textContent = '❤️'.repeat(Math.max(0, state.lives)) + '🖤'.repeat(Math.max(0, 3 - state.lives));
-    }
-
-    function showFeedback(text, kind) {
-      els.feedbackText.textContent = text;
-      els.feedbackText.className = `feedback-text show ${kind}`;
-      setTimeout(hideFeedback, 900);
-    }
-
-    function hideFeedback() {
-      els.feedbackText.className = 'feedback-text';
-    }
-
-    function showScreen(name) {
-      state.screen = name;
-      Object.entries(screens).forEach(([key, el]) => el.classList.toggle('active', key === name));
-    }
-
-    function startRecognition() {
-      if (!state.speechSupported || !state.recognition || state.settled || !(state.roundActive || state.timeoutPending)) return;
-      try {
-        state.transcript = '';
-        els.transcript.textContent = 'Escuchando…';
-        state.recognition.start();
-      } catch (_) {}
-    }
-
-    function stopRecognition() {
-      if (state.recognition && state.listening) {
-        try { state.recognition.stop(); } catch (_) {}
-      }
-      state.listening = false;
-      updateMicState();
-    }
-
-    function updateMicState() {
-      els.micOrb.classList.toggle('listening', state.listening);
-      els.micOrb.textContent = state.listening ? '🔴' : '🎤';
-    }
-
-    function triggerSlap(breakScreen = false) {
-      els.flash.classList.remove('show');
-      els.screenHit.classList.remove('show');
-      els.slapHand.classList.remove('show');
-      els.impactBurst.classList.remove('show');
-      els.comicText.classList.remove('show');
-      void els.slapHand.offsetWidth;
-
-      els.flash.classList.add('show');
-      els.screenHit.classList.add('show');
-      els.slapHand.classList.add('show');
-      els.impactBurst.classList.add('show');
-
-      els.comicText.textContent = randomItem(['¡PAM!', '¡ZAS!', '¡PLAS!']);
-      els.comicText.classList.add('show');
-
-      for (let i = 0; i < 12; i++) {
-        setTimeout(() => createHitParticle(), i * 28);
-      }
-
-      if (breakScreen && !state.brokenScreenShown) {
-        state.brokenScreenShown = true;
-        setTimeout(() => {
-          els.crackOverlay.classList.remove('show');
-          void els.crackOverlay.offsetWidth;
-          els.crackOverlay.classList.add('show');
-        }, 180);
-      }
-    }
-
-    function createHitParticle() {
-      const span = document.createElement('span');
-      span.className = 'falling';
-      span.textContent = randomItem(['💥', '✨', '⚡', '✦']);
-      span.style.left = (55 + Math.random() * 22) + 'vw';
-      span.style.top = (22 + Math.random() * 20) + 'vh';
-      span.style.fontSize = (24 + Math.random() * 22) + 'px';
-      span.style.opacity = .72;
-      span.style.animationDuration = (1.2 + Math.random() * .7) + 's';
-      els.bgFall.appendChild(span);
-      setTimeout(() => span.remove(), 2200);
-    }
-
-    function randomItem(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    function vibrate(pattern) {
-      if (navigator.vibrate) navigator.vibrate(pattern);
-    }
-
-    function getRecords() {
-      try {
-        return JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]');
-      } catch {
-        return [];
-      }
-    }
-
-    function saveRecord(name, score) {
-      const safeName = (name || 'Sin nombre').trim().slice(0, 20) || 'Sin nombre';
-      const records = getRecords();
-      records.push({ name: safeName, score, date: new Date().toLocaleDateString('es-ES') });
-      records.sort((a, b) => b.score - a.score);
-      localStorage.setItem(RECORDS_KEY, JSON.stringify(records.slice(0, 10)));
-    }
-
-    function renderRecords() {
-      const records = getRecords();
-      els.recordsList.innerHTML = '';
-      if (!records.length) {
-        els.recordsList.innerHTML = '<div class="empty">Todavía no hay récords guardados.</div>';
-        return;
-      }
-      records.forEach((record, index) => {
-        const item = document.createElement('div');
-        item.className = 'record-item';
-        item.innerHTML = `<div>#${index + 1} · ${escapeHtml(record.name)}</div><div>${record.score} pts · ${escapeHtml(record.date)}</div>`;
-        els.recordsList.appendChild(item);
-      });
-    }
-
-    function escapeHtml(text) {
-      return String(text)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-    }
-
-    function createFallingMath() {
-      const symbols = ['×', '+', '-', '=', '?', '7', '8', '9', '6', '3', '12', '24'];
-      setInterval(() => {
-        const span = document.createElement('span');
-        span.className = 'falling';
-        span.textContent = randomItem(symbols);
-        span.style.left = Math.random() * 100 + 'vw';
-        span.style.fontSize = 22 + Math.random() * 34 + 'px';
-        span.style.animationDuration = 7 + Math.random() * 8 + 's';
-        els.bgFall.appendChild(span);
-        setTimeout(() => span.remove(), 16000);
-      }, 500);
-    }
-
-    function createCelebrationBurst() {
-      for (let i = 0; i < 18; i++) {
-        setTimeout(() => {
-          const span = document.createElement('span');
-          span.className = 'falling';
-          span.textContent = randomItem(['🎉', '✨', '🧠', '👑', '40', '×']);
-          span.style.left = Math.random() * 100 + 'vw';
-          span.style.top = '-5vh';
-          span.style.fontSize = 26 + Math.random() * 34 + 'px';
-          span.style.opacity = .5;
-          span.style.animationDuration = 3 + Math.random() * 2 + 's';
-          els.bgFall.appendChild(span);
-          setTimeout(() => span.remove(), 5500);
-        }, i * 80);
-      }
-    }
-
-    let audioCtx = null;
-    function getAudioContext() {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return null;
-      if (!audioCtx) audioCtx = new Ctx();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      return audioCtx;
-    }
-
-    function playTone({ freq = 440, type = 'sine', duration = 0.12, gain = 0.04, when = 0 }) {
-      try {
-        const ctx = getAudioContext();
-        if (!ctx) return;
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = type;
-        osc.frequency.value = freq;
-        g.gain.setValueAtTime(0.0001, ctx.currentTime + when);
-        g.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + when + 0.01);
-        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + when + duration);
-        osc.connect(g).connect(ctx.destination);
-        osc.start(ctx.currentTime + when);
-        osc.stop(ctx.currentTime + when + duration + 0.02);
-      } catch (_) {}
-    }
-
-    function playSuccessSound() {
-      playTone({ freq: 660, type: 'triangle', duration: 0.11, gain: 0.03, when: 0 });
-      playTone({ freq: 880, type: 'triangle', duration: 0.14, gain: 0.03, when: 0.08 });
-    }
-
-    function playErrorSound() {
-      playTone({ freq: 120, type: 'sawtooth', duration: 0.09, gain: 0.06, when: 0 });
-      playTone({ freq: 170, type: 'square', duration: 0.10, gain: 0.05, when: 0.05 });
-      playTone({ freq: 95, type: 'sawtooth', duration: 0.18, gain: 0.05, when: 0.12 });
-    }
-
-    function playWinSound() {
-      playTone({ freq: 523, type: 'triangle', duration: 0.12, gain: 0.03, when: 0 });
-      playTone({ freq: 659, type: 'triangle', duration: 0.12, gain: 0.03, when: 0.12 });
-      playTone({ freq: 784, type: 'triangle', duration: 0.18, gain: 0.03, when: 0.24 });
-    }
-
-    function setupEvents() {
-      els.playBtn.addEventListener('click', startGame);
-      els.recordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
-      els.howBtn.addEventListener('click', () => alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Si fallas, la partida debe continuar sola con la siguiente multiplicación mientras queden vidas.'));
-      els.saveScoreBtn.addEventListener('click', () => {
-        if (state.hasSavedCurrentScore) {
-          els.saveStatus.textContent = 'Este resultado ya está guardado.';
-          return;
-        }
-        const name = els.nameInput.value.trim();
-        saveRecord(name, state.lastScore || state.score);
-        state.hasSavedCurrentScore = true;
-        els.saveStatus.textContent = '✅ Récord guardado correctamente';
-        renderRecords();
-      });
-      els.playAgainBtn.addEventListener('click', startGame);
-      els.goRecordsBtn.addEventListener('click', () => { renderRecords(); showScreen('records'); });
-      els.backHomeBtn.addEventListener('click', () => showScreen('home'));
-      els.recordsBackBtn.addEventListener('click', () => showScreen('home'));
-      els.clearRecordsBtn.addEventListener('click', () => {
-        if (confirm('¿Seguro que quieres borrar los récords?')) {
-          localStorage.removeItem(RECORDS_KEY);
-          renderRecords();
-        }
-      });
-    }
-
-    function bootstrap() {
-      initImpactBurst();
-      initSpeech();
-      createFallingMath();
-      setupEvents();
-      renderRecords();
-      updateHud();
-    }
-
-    bootstrap();
+    const GOAL=40, ROUND_SECONDS=3, FINAL_GRACE_MS=1600, RECORDS_KEY='tablas_divertidas_records_v7';
+    const motivational=['🔥 Bien','⚡ Rápido','💥 Crack','🚀 Imparable','🧠 Mente veloz','⭐ Brutal'];
+    const milestones={10:'🔥 Calentando',20:'⚡ Modo serio',30:'🚀 Casi leyenda',40:'👑 Reto superado'};
+    const victoryPhrases=['Tu cerebro acaba de humillar a la mano.','No eras alumno. Eras jefe final.','Has dominado las tablas como una máquina.','La mano perdió. Tú mandas.'];
+
+    const state={screen:'home',score:0,lives:3,answer:1,roundActive:false,settled:false,timeLeft:ROUND_SECONDS,timerId:null,timerEndAt:0,graceTimeoutId:null,recognition:null,speechSupported:false,listening:false,transcript:'',lastValidatedToken:'',hasSavedCurrentScore:false,lastScore:0,roundDeadline:0,timeoutPending:false,lastInterimAt:0,lastFinalAt:0,timeoutAttemptId:0,brokenScreenShown:false,roundId:0};
+    const $=id=>document.getElementById(id);
+    const screens={home:$('homeScreen'),game:$('gameScreen'),final:$('finalScreen'),records:$('recordsScreen')};
+    const els={playBtn:$('playBtn'),recordsBtn:$('recordsBtn'),howBtn:$('howBtn'),scorePill:$('scorePill'),livesPill:$('livesPill'),questionText:$('questionText'),timerFill:$('timerFill'),timerLabel:$('timerLabel'),feedbackText:$('feedbackText'),milestoneBadge:$('milestoneBadge'),closingBadge:$('closingBadge'),surpriseText:$('surpriseText'),micOrb:$('micOrb'),voiceTitle:$('voiceTitle'),voiceSub:$('voiceSub'),transcript:$('transcript'),questionCard:$('questionCard'),overlay:$('overlay'),impactBurst:$('impactBurst'),comicText:$('comicText'),slapHand:$('slapHand'),crackOverlay:$('crackOverlay'),victoryOverlay:$('victoryOverlay'),victoryScore:$('victoryScore'),victoryPhrase:$('victoryPhrase'),finalEmoji:$('finalEmoji'),finalTitle:$('finalTitle'),finalSubtitle:$('finalSubtitle'),finalScore:$('finalScore'),nameInput:$('nameInput'),saveScoreBtn:$('saveScoreBtn'),saveStatus:$('saveStatus'),playAgainBtn:$('playAgainBtn'),goRecordsBtn:$('goRecordsBtn'),backHomeBtn:$('backHomeBtn'),recordsList:$('recordsList'),clearRecordsBtn:$('clearRecordsBtn'),recordsBackBtn:$('recordsBackBtn'),bgFall:$('bgFall')};
+
+    function initImpactBurst(){els.impactBurst.innerHTML='';for(let i=0;i<12;i++){const ray=document.createElement('div');ray.className='burst-ray';ray.style.transform=`rotate(${i*30}deg)`;els.impactBurst.appendChild(ray)}}
+    function showScreen(name){state.screen=name;Object.entries(screens).forEach(([k,el])=>el.classList.toggle('active',k===name))}
+    function updateHud(){els.scorePill.textContent=`${state.score} / ${GOAL}`;els.livesPill.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('span');s.className='heart'+(i>=state.lives?' lost':'');s.textContent='❤️';els.livesPill.appendChild(s)}}
+    function explodeLostHeart(index){const hearts=[...els.livesPill.querySelectorAll('.heart')];if(hearts[index]) hearts[index].classList.add('pop')}
+    function showFeedback(text,kind){els.feedbackText.textContent=text;els.feedbackText.className=`feedback-text show ${kind}`;setTimeout(()=>els.feedbackText.className='feedback-text',900)}
+    function showMilestone(text){els.milestoneBadge.textContent=text;els.milestoneBadge.className='milestone-badge show';setTimeout(()=>els.milestoneBadge.className='milestone-badge',1650)}
+    function setClosingState(active){els.closingBadge.classList.toggle('show',active);els.questionCard.classList.toggle('freeze',active);els.overlay.classList.toggle('freeze',active)}
+    function updateSurprise(text){els.surpriseText.textContent=text||''}
+    function clearTimer(){if(state.timerId) cancelAnimationFrame(state.timerId);state.timerId=null}
+    function clearGraceTimeout(){if(state.graceTimeoutId) clearTimeout(state.graceTimeoutId);state.graceTimeoutId=null}
+    function renderTimer(){const ratio=Math.max(0,Math.min(1,state.timeLeft/ROUND_SECONDS));els.timerFill.style.width=`${ratio*100}%`;els.timerLabel.textContent=`${state.timeLeft.toFixed(1)}s`;els.timerFill.classList.remove('warn','danger');if(ratio<.34)els.timerFill.classList.add('danger');else if(ratio<.67)els.timerFill.classList.add('warn')}
+    function randomItem(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function vibrate(pattern){if(navigator.vibrate) navigator.vibrate(pattern)}
+    function normalizeAnswer(value){if(value==null)return'';let text=String(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,;:!?¿¡_\-]+/g,' ').replace(/\s+/g,' ').trim();const d={cero:'0',un:'1',uno:'1',una:'1',dos:'2',tres:'3',cuatro:'4',cinco:'5',seis:'6',siete:'7',ocho:'8',nueve:'9',diez:'10',once:'11',doce:'12',trece:'13',catorce:'14',quince:'15',dieciseis:'16',diecisiete:'17',dieciocho:'18',diecinueve:'19',veinte:'20',veintiuno:'21',veintidos:'22',veintitres:'23',veinticuatro:'24',veinticinco:'25',veintiseis:'26',veintisiete:'27',veintiocho:'28',veintinueve:'29',treinta:'30','treinta y uno':'31','treinta y dos':'32','treinta y tres':'33','treinta y cuatro':'34','treinta y cinco':'35','treinta y seis':'36','treinta y siete':'37','treinta y ocho':'38','treinta y nueve':'39',cuarenta:'40','cuarenta y uno':'41','cuarenta y dos':'42','cuarenta y tres':'43','cuarenta y cuatro':'44','cuarenta y cinco':'45','cuarenta y seis':'46','cuarenta y siete':'47','cuarenta y ocho':'48','cuarenta y nueve':'49',cincuenta:'50','cincuenta y uno':'51','cincuenta y dos':'52','cincuenta y tres':'53','cincuenta y cuatro':'54','cincuenta y cinco':'55','cincuenta y seis':'56','cincuenta y siete':'57','cincuenta y ocho':'58','cincuenta y nueve':'59',sesenta:'60',setenta:'70',ochenta:'80',noventa:'90',cien:'100'};if(d[text]!==undefined)return d[text];const compact=text.replace(/\s+/g,'');if(d[compact]!==undefined)return d[compact];const numeric=text.match(/\d+/g);if(numeric&&numeric.length)return numeric.join('');return text}
+    function initSpeech(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){state.speechSupported=false;els.voiceTitle.textContent='Voz no disponible';els.voiceSub.textContent='Este navegador no soporta reconocimiento de voz';els.transcript.textContent='Prueba en Chrome móvil o en un navegador compatible.';return}state.speechSupported=true;const recognition=new SR();recognition.lang='es-ES';recognition.interimResults=true;recognition.maxAlternatives=5;recognition.continuous=false;recognition.onstart=()=>{state.listening=true;updateMicState();state.lastInterimAt=performance.now();if(state.roundActive||state.timeoutPending) els.transcript.textContent='Escuchando…'};recognition.onresult=(event)=>{const now=performance.now();let interim='';let finals=[];for(let i=event.resultIndex;i<event.results.length;i++){const result=event.results[i];const alternatives=[];for(let j=0;j<result.length;j++) alternatives.push(result[j].transcript||'');if(result.isFinal){finals.push(...alternatives);state.lastFinalAt=now}else{interim+=(alternatives[0]||'')+' ';state.lastInterimAt=now}}const preview=finals[0]||interim.trim();if(preview){state.transcript=preview.trim();els.transcript.textContent=state.transcript}if(finals.length){for(const candidate of finals){if(safelyValidate(candidate.trim(),now)) return}}};recognition.onerror=()=>{state.listening=false;updateMicState();if(state.screen==='game'&&(state.roundActive||state.timeoutPending)) els.transcript.textContent='No se pudo reconocer. Sigue hablando en la siguiente ronda.'};recognition.onend=()=>{state.listening=false;updateMicState()};state.recognition=recognition;updateMicState()}
+    function updateMicState(){els.micOrb.classList.toggle('listening',state.listening);els.micOrb.textContent=state.listening?'🔴':'🎤'}
+    function startRecognition(){if(!state.speechSupported||!state.recognition||state.settled||!(state.roundActive||state.timeoutPending)) return;try{state.transcript='';els.transcript.textContent='Escuchando…';state.recognition.start()}catch(_){}}
+    function stopRecognition(){if(state.recognition&&state.listening){try{state.recognition.stop()}catch(_){}}state.listening=false;updateMicState()}
+    function generateQuestion(){const difficulty=Math.min(10,3+Math.floor(state.score/4));let a=1+Math.floor(Math.random()*difficulty);let b=1+Math.floor(Math.random()*10);if(Math.random()>.55)[a,b]=[b,a];state.answer=a*b;state.transcript='';state.lastValidatedToken='';state.lastInterimAt=0;state.lastFinalAt=0;els.questionText.textContent=`${a} × ${b} = ?`;els.transcript.textContent='Preparado…';els.feedbackText.className='feedback-text';setClosingState(false);updateSurprise('')}
+    function startGame(){state.score=0;state.lives=3;state.hasSavedCurrentScore=false;state.lastScore=0;state.brokenScreenShown=false;els.crackOverlay.classList.remove('show');els.victoryOverlay?.classList.remove('show');showScreen('game');updateHud();generateQuestion();startRound()}
+    function startRound(){state.roundId+=1;state.roundActive=true;state.timeoutPending=false;state.settled=false;clearGraceTimeout();clearTimer();stopRecognition();setClosingState(false);state.timerEndAt=performance.now()+ROUND_SECONDS*1000;state.roundDeadline=state.timerEndAt;tickTimer();setTimeout(()=>startRecognition(),120)}
+    function tickTimer(){clearTimer();state.timerId=requestAnimationFrame(function frame(now){const msLeft=Math.max(0,state.timerEndAt-now);state.timeLeft=msLeft/1000;renderTimer();if(msLeft<=0){onTimerReachedZero(state.roundId);return}state.timerId=requestAnimationFrame(frame)})}
+    function onTimerReachedZero(roundId){clearTimer();if(roundId!==state.roundId||state.settled) return;state.timeLeft=0;renderTimer();state.timeoutPending=true;els.transcript.textContent=state.transcript||'Cerrando respuesta…';setClosingState(true);clearGraceTimeout();const attemptId=++state.timeoutAttemptId;state.graceTimeoutId=setTimeout(()=>{if(attemptId!==state.timeoutAttemptId||roundId!==state.roundId||state.settled) return;const recentSpeech=Math.max(state.lastInterimAt,state.lastFinalAt);const now=performance.now();const stillProcessingSpeech=recentSpeech&&(now-recentSpeech<650);if(stillProcessingSpeech){state.graceTimeoutId=setTimeout(()=>{if(attemptId!==state.timeoutAttemptId||roundId!==state.roundId||state.settled) return;settleRound('wrong')},500);return}settleRound('wrong')},FINAL_GRACE_MS)}
+    function safelyValidate(rawValue,eventTime=performance.now()){if(!(state.roundActive||state.timeoutPending)||state.settled) return false;const normalized=normalizeAnswer(rawValue);if(!normalized) return false;const acceptedWindow=state.roundDeadline+FINAL_GRACE_MS;if(eventTime>acceptedWindow) return false;const token=state.roundId+'|'+normalized;if(token===state.lastValidatedToken) return false;state.lastValidatedToken=token;if(normalized===String(state.answer)){settleRound('correct');return true}return false}
+    function settleRound(result){if(state.settled) return;state.settled=true;state.roundActive=false;state.timeoutPending=false;clearTimer();clearGraceTimeout();stopRecognition();setClosingState(false);if(result==='correct'){state.score+=1;state.lastScore=state.score;updateHud();showFeedback(randomItem(motivational),'success');playSuccessSound();if(milestones[state.score]){showMilestone(milestones[state.score]);updateSurprise(milestones[state.score])}if(state.score>=GOAL){setTimeout(()=>endGame(true),900);return}setTimeout(()=>{generateQuestion();startRound()},520);return}const isLastLife=state.lives===1;const lostIndex=state.lives-1;state.lives-=1;updateHud();explodeLostHeart(lostIndex);showFeedback('¡INCORRECTO!','error');updateSurprise('⏰ Tiempo agotado o respuesta incorrecta. Era '+state.answer);els.questionCard.classList.remove('hit');void els.questionCard.offsetWidth;els.questionCard.classList.add('hit');setTimeout(()=>els.questionCard.classList.remove('hit'),820);triggerSlap(isLastLife);vibrate(isLastLife?[220,60,220,60,260]:[160,50,190,60,160]);playErrorSound();if(state.lives<=0){setTimeout(()=>endGame(false),1350);return}setTimeout(()=>{generateQuestion();startRound()},1200)}
+    function triggerSlap(breakScreen=false){els.overlay.classList.remove('show');els.slapHand.classList.remove('show');els.impactBurst.classList.remove('show');els.comicText.classList.remove('show');void els.slapHand.offsetWidth;els.overlay.classList.add('show');els.slapHand.classList.add('show');els.impactBurst.classList.add('show');els.comicText.textContent=randomItem(['¡PAM!','¡ZAS!','¡PLAS!']);els.comicText.classList.add('show');setFreezeImpact(180);for(let i=0;i<12;i++) setTimeout(()=>createHitParticle(),i*28);if(breakScreen&&!state.brokenScreenShown){state.brokenScreenShown=true;setTimeout(()=>{els.crackOverlay.classList.remove('show');void els.crackOverlay.offsetWidth;els.crackOverlay.classList.add('show')},180)}}
+    function setFreezeImpact(ms){els.questionCard.classList.add('freeze');setTimeout(()=>els.questionCard.classList.remove('freeze'),ms)}
+    function createHitParticle(){const span=document.createElement('span');span.className='falling';span.textContent=randomItem(['💥','✨','⚡','✦']);span.style.left=(55+Math.random()*22)+'vw';span.style.top=(22+Math.random()*20)+'vh';span.style.fontSize=(24+Math.random()*22)+'px';span.style.opacity=.72;span.style.animationDuration=(1.2+Math.random()*.7)+'s';els.bgFall.appendChild(span);setTimeout(()=>span.remove(),2200)}
+    function getRecords(){try{return JSON.parse(localStorage.getItem(RECORDS_KEY)||'[]')}catch{return[]}}
+    function saveRecord(name,score){const safeName=(name||'Sin nombre').trim().slice(0,20)||'Sin nombre';const records=getRecords();records.push({name:safeName,score,date:new Date().toLocaleDateString('es-ES')});records.sort((a,b)=>b.score-a.score);localStorage.setItem(RECORDS_KEY,JSON.stringify(records.slice(0,10)))}
+    function renderRecords(){const records=getRecords();els.recordsList.innerHTML='';if(!records.length){els.recordsList.innerHTML='<div class="empty">Todavía no hay récords guardados.</div>';return}records.forEach((record,index)=>{const item=document.createElement('div');item.className='record-item';item.innerHTML=`<div>#${index+1} · ${escapeHtml(record.name)}</div><div>${record.score} pts · ${escapeHtml(record.date)}</div>`;els.recordsList.appendChild(item)})}
+    function escapeHtml(text){return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
+    function createFallingMath(){const symbols=['×','+','-','=','?','7','8','9','6','3','12','24'];setInterval(()=>{const span=document.createElement('span');span.className='falling';span.textContent=randomItem(symbols);span.style.left=Math.random()*100+'vw';span.style.fontSize=22+Math.random()*34+'px';span.style.animationDuration=7+Math.random()*8+'s';els.bgFall.appendChild(span);setTimeout(()=>span.remove(),16000)},500)}
+    function createCelebrationBurst(){for(let i=0;i<26;i++){setTimeout(()=>{const span=document.createElement('span');span.className='falling';span.textContent=randomItem(['🎉','✨','🧠','👑','40','×','★']);span.style.left=Math.random()*100+'vw';span.style.top='-5vh';span.style.fontSize=26+Math.random()*42+'px';span.style.opacity=.7;span.style.animationDuration=2.8+Math.random()*2.2+'s';els.bgFall.appendChild(span);setTimeout(()=>span.remove(),6500)},i*60)}}
+    let audioCtx=null;function getAudioContext(){const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx) return null;if(!audioCtx) audioCtx=new Ctx();if(audioCtx.state==='suspended') audioCtx.resume();return audioCtx}
+    function playTone({freq=440,type='sine',duration=.12,gain=.04,when=0}){try{const ctx=getAudioContext();if(!ctx)return;const osc=ctx.createOscillator();const g=ctx.createGain();osc.type=type;osc.frequency.value=freq;g.gain.setValueAtTime(.0001,ctx.currentTime+when);g.gain.exponentialRampToValueAtTime(gain,ctx.currentTime+when+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+when+duration);osc.connect(g).connect(ctx.destination);osc.start(ctx.currentTime+when);osc.stop(ctx.currentTime+when+duration+.02)}catch(_){}}
+    function playSuccessSound(){playTone({freq:660,type:'triangle',duration:.11,gain:.03,when:0});playTone({freq:880,type:'triangle',duration:.14,gain:.03,when:.08})}
+    function playErrorSound(){playTone({freq:120,type:'sawtooth',duration:.09,gain:.06,when:0});playTone({freq:170,type:'square',duration:.1,gain:.05,when:.05});playTone({freq:95,type:'sawtooth',duration:.18,gain:.05,when:.12})}
+    function playWinSound(){playTone({freq:523,type:'triangle',duration:.12,gain:.03,when:0});playTone({freq:659,type:'triangle',duration:.12,gain:.03,when:.12});playTone({freq:784,type:'triangle',duration:.18,gain:.03,when:.24});playTone({freq:1046,type:'triangle',duration:.26,gain:.03,when:.42})}
+    function animateVictoryScore(target){let current=0;const step=Math.max(1,Math.ceil(target/35));const id=setInterval(()=>{current=Math.min(target,current+step);els.victoryScore.textContent=current;if(current>=target) clearInterval(id)},32)}
+    function endGame(won){clearTimer();clearGraceTimeout();stopRecognition();state.roundActive=false;state.timeoutPending=false;state.settled=true;showScreen('final');els.finalScore.textContent=String(state.score);els.saveStatus.textContent='';els.nameInput.value='';state.hasSavedCurrentScore=false;if(won){els.finalEmoji.textContent='👑';els.finalTitle.textContent='¡HAS GANADO!';els.finalSubtitle.textContent='Dominas las tablas. La sorpresa es que… eres una máquina.';els.victoryPhrase.textContent=randomItem(victoryPhrases);els.victoryOverlay.classList.remove('show');void els.victoryOverlay.offsetWidth;els.victoryOverlay.classList.add('show');els.victoryScore.textContent='0';animateVictoryScore(40);createCelebrationBurst();playWinSound();setTimeout(()=>els.victoryOverlay.classList.remove('show'),2800)}else{els.finalEmoji.textContent='😵';els.finalTitle.textContent='FIN DE LA PARTIDA';els.finalSubtitle.textContent='La mano ganó esta vez. Otra ronda y la rompes.'}setTimeout(()=>els.nameInput.focus(),180)}
+    function setupEvents(){els.playBtn.addEventListener('click',startGame);els.recordsBtn.addEventListener('click',()=>{renderRecords();showScreen('records')});els.howBtn.addEventListener('click',()=>alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Cuando se acaba la barra, aparece “Cerrando respuesta…” para darte margen real de voz.'));els.saveScoreBtn.addEventListener('click',()=>{if(state.hasSavedCurrentScore){els.saveStatus.textContent='Este resultado ya está guardado.';return}const name=els.nameInput.value.trim();saveRecord(name,state.lastScore||state.score);state.hasSavedCurrentScore=true;els.saveStatus.textContent='✅ Récord guardado correctamente';renderRecords()});els.playAgainBtn.addEventListener('click',startGame);els.goRecordsBtn.addEventListener('click',()=>{renderRecords();showScreen('records')});els.backHomeBtn.addEventListener('click',()=>showScreen('home'));els.recordsBackBtn.addEventListener('click',()=>showScreen('home'));els.clearRecordsBtn.addEventListener('click',()=>{if(confirm('¿Seguro que quieres borrar los récords?')){localStorage.removeItem(RECORDS_KEY);renderRecords()}})}
+    function bootstrap(){initImpactBurst();initSpeech();createFallingMath();setupEvents();renderRecords();updateHud()} bootstrap();
   </script>
 </body>
 </html>
