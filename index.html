@@ -52,11 +52,6 @@ input{width:100%;padding:16px 18px;border-radius:18px;border:0;font-size:22px}.r
 
 <section class="screen" id="gameScreen">
   <div class="topbar"><div class="pill" id="scorePill">0 / 40</div><div class="pill" id="livesPill">❤️❤️❤️</div></div>
-  <div id="streakWrap" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px 0;">
-    <div class="pill" style="color:#fff;text-align:center;font-size:18px;font-weight:900">🔥 Racha: <span id="streakPill">0</span></div>
-    <div class="pill" style="color:#fff;text-align:center;font-size:18px;font-weight:900">🏆 Mejor: <span id="bestStreakPill">0</span></div>
-  </div>
-  <div id="fireBanner" style="display:none;margin:0 0 14px 0;text-align:center;color:#fff;font-weight:1000;font-size:26px;text-shadow:0 4px 12px rgba(0,0,0,.22);">🔥 ON FIRE 🔥</div>
   <div class="question-card" id="questionCard"><div class="feedback" id="feedback"></div><div class="question" id="questionText">6×7=?</div></div>
   <div class="timer-wrap"><div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div><div class="timer-label" id="timerLabel">3.0s</div><div class="closing-badge" id="closingBadge"></div></div>
   <div class="surprise" id="surpriseText"></div>
@@ -103,11 +98,11 @@ const RECORDS_KEY='tablas_records_strict_v1', UNLOCKS_KEY='tablas_unlocks_strict
 const victoryPhrases=['Has dominado las tablas.','La leyenda es oficial.','No eras jugador. Eras jefe final.'];
 const motivational=['🔥 Bien','⚡ Rápido','💥 Crack','🚀 Imparable','🧠 Mente veloz','⭐ Brutal'];
 
-const state={screen:'home',score:0,lives:3,answer:1,roundActive:false,settled:false,timeLeft:BASE_SECONDS,timerId:null,graceTimeoutId:null,recognition:null,speechSupported:false,listening:false,transcript:'',heardText:'',lastValidatedToken:'',hasSavedCurrentScore:false,lastScore:0,roundDeadline:0,timeoutPending:false,lastInterimAt:0,lastFinalAt:0,timeoutAttemptId:0,roundId:0,closingUI:false,unlocked:{infinite:false,hard:false,turbo:false,specialBg:false},selectedMode:'normal',startingGame:false,currentA:1,currentB:1,recentPairs:[],recentAnswers:[],streak:0,bestStreak:0};
+const state={screen:'home',score:0,lives:3,answer:1,roundActive:false,settled:false,timeLeft:BASE_SECONDS,timerId:null,graceTimeoutId:null,recognition:null,speechSupported:false,listening:false,transcript:'',heardText:'',lastValidatedToken:'',hasSavedCurrentScore:false,lastScore:0,roundDeadline:0,timeoutPending:false,lastInterimAt:0,lastFinalAt:0,timeoutAttemptId:0,roundId:0,closingUI:false,unlocked:{infinite:false,hard:false,turbo:false,specialBg:false},selectedMode:'normal',startingGame:false,currentA:1,currentB:1,recentPairs:[],recentAnswers:[]};
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),final:$('finalScreen'),records:$('recordsScreen')};
-const els={playBtn:$('playBtn'),recordsBtn:$('recordsBtn'),howBtn:$('howBtn'),scorePill:$('scorePill'),livesPill:$('livesPill'),streakWrap:$('streakWrap'),streakPill:$('streakPill'),bestStreakPill:$('bestStreakPill'),fireBanner:$('fireBanner'),questionText:$('questionText'),timerFill:$('timerFill'),timerLabel:$('timerLabel'),feedback:$('feedback'),surpriseText:$('surpriseText'),micOrb:$('micOrb'),voiceTitle:$('voiceTitle'),transcript:$('transcript'),questionCard:$('questionCard'),closingBadge:$('closingBadge'),milestones:[...document.querySelectorAll('.milestone')],modePanel:$('modePanel'),modeButtons:[...document.querySelectorAll('.mode-toggle')],cardInfinite:$('cardInfinite'),cardHard:$('cardHard'),cardTurbo:$('cardTurbo'),cardSpecialBg:$('cardSpecialBg'),finalEmoji:$('finalEmoji'),finalTitle:$('finalTitle'),finalSubtitle:$('finalSubtitle'),finalScore:$('finalScore'),animatedFinalScore:$('animatedFinalScore'),victoryIntroPanel:$('victoryIntroPanel'),unlockGrid:$('unlockGrid'),postVictoryActions:$('postVictoryActions'),continueAfterWinBtn:$('continueAfterWinBtn'),savePanel:$('savePanel'),nameInput:$('nameInput'),saveScoreBtn:$('saveScoreBtn'),saveStatus:$('saveStatus'),playAgainBtn:$('playAgainBtn'),goRecordsBtn:$('goRecordsBtn'),backHomeBtn:$('backHomeBtn'),recordsList:$('recordsList'),clearRecordsBtn:$('clearRecordsBtn'),recordsBackBtn:$('recordsBackBtn')};
+const els={playBtn:$('playBtn'),recordsBtn:$('recordsBtn'),howBtn:$('howBtn'),scorePill:$('scorePill'),livesPill:$('livesPill'),questionText:$('questionText'),timerFill:$('timerFill'),timerLabel:$('timerLabel'),feedback:$('feedback'),surpriseText:$('surpriseText'),micOrb:$('micOrb'),voiceTitle:$('voiceTitle'),transcript:$('transcript'),questionCard:$('questionCard'),closingBadge:$('closingBadge'),milestones:[...document.querySelectorAll('.milestone')],modePanel:$('modePanel'),modeButtons:[...document.querySelectorAll('.mode-toggle')],cardInfinite:$('cardInfinite'),cardHard:$('cardHard'),cardTurbo:$('cardTurbo'),cardSpecialBg:$('cardSpecialBg'),finalEmoji:$('finalEmoji'),finalTitle:$('finalTitle'),finalSubtitle:$('finalSubtitle'),finalScore:$('finalScore'),animatedFinalScore:$('animatedFinalScore'),victoryIntroPanel:$('victoryIntroPanel'),unlockGrid:$('unlockGrid'),postVictoryActions:$('postVictoryActions'),continueAfterWinBtn:$('continueAfterWinBtn'),savePanel:$('savePanel'),nameInput:$('nameInput'),saveScoreBtn:$('saveScoreBtn'),saveStatus:$('saveStatus'),playAgainBtn:$('playAgainBtn'),goRecordsBtn:$('goRecordsBtn'),backHomeBtn:$('backHomeBtn'),recordsList:$('recordsList'),clearRecordsBtn:$('clearRecordsBtn'),recordsBackBtn:$('recordsBackBtn')};
 
 
 function unlockEverything(){state.unlocked={infinite:true,hard:true,turbo:true,specialBg:true};saveUnlocks();renderModePanel()}
@@ -135,7 +130,7 @@ function rememberQuestion(a,b,answer){state.recentPairs.unshift(`${a}x${b}`);sta
 function generateQuestion(){let c=buildCandidateQuestion(),tries=0;while(isCandidateTooRepetitive(c)&&tries<20){c=buildCandidateQuestion();tries++}state.currentA=c.a;state.currentB=c.b;state.answer=c.answer;rememberQuestion(c.a,c.b,c.answer);state.transcript='';state.heardText='';state.lastValidatedToken='';state.lastInterimAt=0;state.lastFinalAt=0;state.closingUI=false;els.questionText.textContent=`${c.a}×${c.b}=?`;els.transcript.textContent='Preparado…';hideFeedback();updateSurprise('');updateClosingUI(false)}
 function currentRoundSeconds(){return state.selectedMode==='turbo'?TURBO_SECONDS:BASE_SECONDS}
 function launchGameFromGesture(evt){if(evt&&typeof evt.preventDefault==='function')evt.preventDefault();if(state.startingGame)return;state.startingGame=true;try{const ctx=getAudioContext();if(ctx&&ctx.state==='suspended')ctx.resume()}catch(_){}startGame();setTimeout(()=>state.startingGame=false,450)}
-function startGame(){state.score=0;state.lives=3;state.hasSavedCurrentScore=false;state.lastScore=0;state.settled=false;state.timeoutPending=false;state.recentPairs=[];state.recentAnswers=[];state.streak=0;state.bestStreak=0;showScreen('game');updateHud();renderStreak();generateQuestion();startRound()}
+function startGame(){state.score=0;state.lives=3;state.hasSavedCurrentScore=false;state.lastScore=0;state.settled=false;state.timeoutPending=false;state.recentPairs=[];state.recentAnswers=[];showScreen('game');updateHud();generateQuestion();startRound()}
 function startRound(){state.roundId+=1;state.roundActive=true;state.timeoutPending=false;state.settled=false;state.closingUI=false;clearGraceTimeout();clearTimer();stopRecognition();const seconds=currentRoundSeconds();state.timeLeft=seconds;state.roundDeadline=performance.now()+seconds*1000;renderTimer(seconds);tickTimer(seconds);setTimeout(startRecognition,120)}
 function tickTimer(roundSeconds){clearTimer();const start=Date.now(),duration=roundSeconds*1000;state.timerId=setInterval(()=>{const elapsed=Date.now()-start,remaining=Math.max(0,duration-elapsed);state.timeLeft=remaining/1000;renderTimer(roundSeconds);if(state.timeLeft<=CLOSING_ZONE_SECONDS&&!state.closingUI&&!state.settled)updateClosingUI(true);if(remaining<=0){clearTimer();onTimerReachedZero(state.roundId)}},50)}
 function renderTimer(roundSeconds){const ratio=Math.max(0,Math.min(1,state.timeLeft/roundSeconds));els.timerFill.style.width=`${ratio*100}%`;els.timerLabel.textContent=`${state.timeLeft.toFixed(1)}s`;els.timerFill.classList.remove('warn','danger');if(!state.closingUI){if(ratio<.34)els.timerFill.classList.add('danger');else if(ratio<.67)els.timerFill.classList.add('warn')}}
@@ -250,26 +245,7 @@ function slapEffect(isFinalLife=false){
 
 function maybeSurprise(){if(state.selectedMode==='turbo'&&state.score>0){updateSurprise('⚡ Turbo activo');return}if(state.selectedMode==='hard'&&state.score>0){updateSurprise('🔥 Difícil activo');return}if(state.score>=40)updateSurprise('👑 Reto superado');else if(state.score>=30)updateSurprise('🚀 Casi leyenda');else if(state.score>=20)updateSurprise('⚡ Modo serio');else if(state.score>=10)updateSurprise('🔥 Calentando');else updateSurprise('')}
 function updateSurprise(text){els.surpriseText.textContent=text||''}
-
-function streakMessage(){
-  if(state.streak >= 20) return '🔥🔥 MONSTRUO';
-  if(state.streak >= 10) return '🔥 ON FIRE 🔥';
-  if(state.streak >= 5) return '⚡ EN RACHA';
-  return '';
-}
-function renderStreak(){
-  if(els.streakWrap) els.streakWrap.style.display = 'grid';
-  if(els.streakPill) els.streakPill.textContent = String(state.streak);
-  if(els.bestStreakPill) els.bestStreakPill.textContent = String(state.bestStreak);
-  const msg = streakMessage();
-  if(els.fireBanner){
-    els.fireBanner.style.display = msg ? 'block' : 'none';
-    els.fireBanner.textContent = msg || '';
-  }
-}
-}
-
-function updateHud(){els.scorePill.textContent=state.selectedMode==='infinite'?`${state.score} / ∞`:`${state.score} / ${GOAL}`;els.livesPill.textContent='❤️'.repeat(Math.max(0,state.lives))+'🖤'.repeat(Math.max(0,3-state.lives));els.milestones.forEach(el=>{const goal=Number(el.dataset.goal);el.classList.remove('active','done');if(state.score>=goal)el.classList.add('done')});const next=els.milestones.find(el=>state.score<Number(el.dataset.goal));if(next&&state.selectedMode!=='infinite')next.classList.add('active');renderStreak()}
+function updateHud(){els.scorePill.textContent=state.selectedMode==='infinite'?`${state.score} / ∞`:`${state.score} / ${GOAL}`;els.livesPill.textContent='❤️'.repeat(Math.max(0,state.lives))+'🖤'.repeat(Math.max(0,3-state.lives));els.milestones.forEach(el=>{const goal=Number(el.dataset.goal);el.classList.remove('active','done');if(state.score>=goal)el.classList.add('done')});const next=els.milestones.find(el=>state.score<Number(el.dataset.goal));if(next&&state.selectedMode!=='infinite')next.classList.add('active')}
 function endGame(won){clearTimer();clearGraceTimeout();stopRecognition();state.roundActive=false;state.timeoutPending=false;state.settled=true;showScreen('final');els.finalScore.textContent=String(state.score);els.saveStatus.textContent='';els.nameInput.value='';state.hasSavedCurrentScore=false;if(won){unlockEverything();document.body.classList.add('victory-bg');els.finalEmoji.textContent='👑';els.finalTitle.textContent='NIVEL LEYENDA';els.finalSubtitle.textContent='Has superado las 40. La recompensa está desbloqueada.';els.victoryIntroPanel.style.display='block';els.unlockGrid.style.display='block';els.postVictoryActions.style.display='grid';els.savePanel.style.display='none';animateFinalScore(state.score)}else{document.body.classList.remove('victory-bg');els.finalEmoji.textContent='😵';els.finalTitle.textContent='FIN DE LA PARTIDA';els.finalSubtitle.textContent='La mano ganó esta vez.';els.victoryIntroPanel.style.display='none';els.unlockGrid.style.display='none';els.postVictoryActions.style.display='none';els.savePanel.style.display='block';els.animatedFinalScore.textContent=String(state.score)}renderModePanel()}
 function animateFinalScore(target){let current=0;const start=performance.now();const duration=1200;function frame(now){const t=Math.min(1,(now-start)/duration);current=Math.round(target*(1-Math.pow(1-t,3)));els.animatedFinalScore.textContent=current+(state.selectedMode==='infinite'?' / ∞':' / '+GOAL);if(t<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
 function showFeedback(text,kind){els.feedback.textContent=text;els.feedback.className=`feedback show ${kind}`;setTimeout(hideFeedback,900)}
