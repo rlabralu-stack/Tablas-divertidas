@@ -208,12 +208,6 @@ button:active{transform:scale(.985)}
     <div class="closing-badge" id="closingBadge"></div>
   </div>
   <div class="surprise" id="surpriseText"></div>
-  <div class="milestones">
-    <div class="milestone" data-goal="10"><div><small>10</small>Calentando</div></div>
-    <div class="milestone" data-goal="20"><div><small>20</small>Modo serio</div></div>
-    <div class="milestone" data-goal="30"><div><small>30</small>Casi leyenda</div></div>
-    <div class="milestone" data-goal="40"><div><small>40</small>Reto superado</div></div>
-  </div>
   <div class="voice-box">
     <div class="voice-main">
       <div class="mic-orb" id="micOrb">🎤</div>
@@ -302,7 +296,7 @@ window.App = (() => {
     fireBanner:document.getElementById('fireBanner'), questionText:document.getElementById('questionText'), timerFill:document.getElementById('timerFill'),
     timerLabel:document.getElementById('timerLabel'), closingBadge:document.getElementById('closingBadge'), feedback:document.getElementById('feedback'),
     surpriseText:document.getElementById('surpriseText'), micOrb:document.getElementById('micOrb'), voiceTitle:document.getElementById('voiceTitle'),
-    transcript:document.getElementById('transcript'), questionCard:document.getElementById('questionCard'), milestones:[...document.querySelectorAll('.milestone')],
+    transcript:document.getElementById('transcript'), questionCard:document.getElementById('questionCard'),
     finalEmoji:document.getElementById('finalEmoji'), finalTitle:document.getElementById('finalTitle'), finalSubtitle:document.getElementById('finalSubtitle'),
     finalScore:document.getElementById('finalScore'), animatedFinalScore:document.getElementById('animatedFinalScore'), victoryBadge:document.getElementById('victoryBadge'),
     victoryPhrase:document.getElementById('victoryPhrase'), victoryIntroPanel:document.getElementById('victoryIntroPanel'), unlockGrid:document.getElementById('unlockGrid'),
@@ -717,7 +711,9 @@ window.App = (() => {
   function hideFeedback(){ els.feedback.className = 'feedback'; }
   function updateSurprise(text){ els.surpriseText.textContent = text || ''; }
   function updateHud(){
-    els.scorePill.textContent = state.selectedMode === 'infinite' ? `${state.score} / ∞` : `${state.score} / ${GOAL}`;
+  els.scorePill.textContent = `${state.score} / ${GOAL}`;
+  els.livesPill.textContent = '❤️'.repeat(Math.max(0, state.lives)) + '🖤'.repeat(Math.max(0, 3 - state.lives));
+} / ∞` : `${state.score} / ${GOAL}`;
     els.livesPill.textContent = '❤️'.repeat(Math.max(0,state.lives)) + '🖤'.repeat(Math.max(0,3-state.lives));
     els.milestones.forEach(el => {
       const goal = Number(el.dataset.goal);
