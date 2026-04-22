@@ -798,7 +798,7 @@ function settleRound(result){
     showFeedback(randomItem(motivational), 'ok');
 
     if(state.selectedMode !== 'infinite' && state.score >= GOAL){
-      setTimeout(()=> playEpicWin(); showEpicText(); endGame(true), 760);
+      setTimeout(()=> endGame(true), 760);
       return;
     }
     setTimeout(()=>{
@@ -1073,39 +1073,6 @@ function animateFinalScore(target){
 
 loadSettings();
 refreshModesUI();
-
-function playEpicWin(){
-  try{
-    const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type='sine';
-    osc.frequency.setValueAtTime(440, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime+1.5);
-    gain.gain.setValueAtTime(0.001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.1, ctx.currentTime+0.2);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+2);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime+2);
-  }catch(e){}
-}
-
-function showEpicText(){
-  const el = document.createElement('div');
-  el.innerText = "NIVEL LEYENDA";
-  el.style.position='fixed';
-  el.style.top='40%';
-  el.style.left='50%';
-  el.style.transform='translate(-50%,-50%)';
-  el.style.fontSize='48px';
-  el.style.color='white';
-  el.style.fontWeight='bold';
-  el.style.zIndex='9999';
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),2000);
-}
-
 initSpeech();
 updateHud();
 </script>
