@@ -334,15 +334,15 @@ button:active{transform:scale(.985)}
     <div class="panel rules">
       🎯 Responde <strong>40 multiplicaciones</strong><br>
       🎤 Solo voz, escucha automática<br>
-      ⏱ 3 segundos por pregunta + cierre justo<br>
-      💥 3 vidas, mano viral al fallar<br>
-      👑 Al ganar desbloqueas difícil, turbo, infinito y fondo especial
+      ⏱ 3 segundos por pregunta<br>
+      💥 3 vidas<br>
+      👑 Gana y descubre…
     </div>
 
     <div class="mode-panel" id="modePanel">
       <div class="mode-card">
         <div><strong>Modo normal</strong><small>Solo tablas del 1 al 10.</small></div>
-        <button class="mode-toggle active" onclick="selectMode('normal')">Activo</button>
+        <button class="mode-toggle active" id="btnNormal" onclick="selectMode('normal')">Activo</button>
       </div>
       <div class="mode-card locked" id="cardHard">
         <div><strong>🔥 Modo difícil</strong><small>Incluye 11, 12 y 13.</small></div>
@@ -409,6 +409,7 @@ button:active{transform:scale(.985)}
     </div>
 
     <div class="final-score" id="animatedFinalScore">0</div>
+    <div id="legendSequence"><div id="legendMain">NIVEL LEYENDA</div><div id="legendSub"></div></div>
     <div class="final-block" id="victoryPhrase"></div>
 
     <div id="unlockBlock" style="display:none">
@@ -503,6 +504,9 @@ const els = {
   finalTitle:document.getElementById('finalTitle'),
   finalSubtitle:document.getElementById('finalSubtitle'),
   victoryPhrase:document.getElementById('victoryPhrase'),
+  legendSequence:document.getElementById('legendSequence'),
+  legendMain:document.getElementById('legendMain'),
+  legendSub:document.getElementById('legendSub'),
   unlockBlock:document.getElementById('unlockBlock'),
   saveStatus:document.getElementById('saveStatus'),
   nameInput:document.getElementById('nameInput'),
@@ -533,6 +537,36 @@ function showHow(){
 }
 function randomItem(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
+
+function playEpicWinSequence(){
+  const notes = [
+    [392,0.00,0.24],[523,0.18,0.26],[659,0.42,0.30],[784,0.72,0.34],
+    [988,1.02,0.40],[784,1.40,0.32],[1046,1.68,0.54],[1318,2.14,0.72],
+    [1174,2.82,0.42],[1318,3.12,0.58],[1568,3.62,0.96],[1760,4.40,1.20]
+  ];
+  notes.forEach(([f,w,d],i)=>{
+    playTone(f, d, i % 2 === 0 ? 'triangle' : 'sine', 0.045, w);
+    playTone(f/2, d + 0.08, 'sine', 0.018, w);
+  });
+}
+function runLegendSequence(onDone){
+  const words = ['JEFE','CRACK','MÁQUINA','GENIO'];
+  els.legendSequence.style.display = 'block';
+  els.legendMain.textContent = 'NIVEL LEYENDA';
+  els.legendSub.textContent = '';
+  setTimeout(()=>{ els.legendSub.textContent = 'Tu cerebro acaba de humillar a la mano.'; }, 450);
+  words.forEach((word, idx)=>{
+    setTimeout(()=>{
+      els.legendSub.textContent = word;
+      for(let i=0;i<5;i++) setTimeout(()=>spawnFxNumber(randomItem(['40','×','👑','🧠','7','8','9']), 3200, true), i*90);
+    }, 1650 + idx * 900);
+  });
+  setTimeout(()=>{
+    els.legendSequence.style.display = 'none';
+    if(onDone) onDone();
+  }, 1650 + words.length * 900 + 550);
+}
+
 function loadSettings(){
   try{
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
@@ -548,6 +582,15 @@ function saveSettings(){
 }
 function refreshModesUI(){
   els.modePanel.classList.toggle('show', Object.values(state.unlocked).some(Boolean));
+
+  if(els.btnNormal){
+    els.btnNormal.textContent = state.selectedMode === 'normal' ? 'Activo' : 'Elegir';
+    els.btnNormal.classList.toggle('active', state.selectedMode === 'normal');
+  }
+  if(els.cardNormal){
+    els.cardNormal.classList.toggle('locked', false);
+  }
+
   const map = [
     ['hard', els.cardHard, els.btnHard],
     ['turbo', els.cardTurbo, els.btnTurbo],
@@ -798,7 +841,7 @@ function settleRound(result){
     showFeedback(randomItem(motivational), 'ok');
 
     if(state.selectedMode !== 'infinite' && state.score >= GOAL){
-      setTimeout(()=> endGame(true), 760);
+      setTimeout(()=> { endGame(true); }, 760);
       return;
     }
     setTimeout(()=>{
@@ -1031,23 +1074,40 @@ function endGame(won){
   clearTimer();
   clearGraceTimeout();
   stopRecognition();
-  state.roundActive = false;
-  state.timeoutPending = false;
-  state.settled = true;
   showScreen('finalScreen');
+  document.getElementById('finalScreen').classList.add('final-compact');
   els.finalScore.textContent = String(state.score);
   els.saveStatus.textContent = '';
   els.nameInput.value = '';
   state.hasSavedCurrentScore = false;
+  els.unlockBlock.style.display = 'none';
+  document.getElementById('savePanel').style.display = 'block';
+  if(els.legendSequence) els.legendSequence.style.display = 'none';
+
   if(won){
     unlockAll();
     document.body.classList.add('victory-bg');
     els.finalEmoji.textContent = '👑';
     els.finalTitle.textContent = 'NIVEL LEYENDA';
-    els.finalSubtitle.textContent = 'Has superado las 40.';
-    els.victoryPhrase.textContent = randomItem(victoryPhrases);
-    els.unlockBlock.style.display = 'block';
+    els.finalSubtitle.textContent = '';
+    els.victoryPhrase.textContent = '';
+    document.getElementById('savePanel').style.display = 'none';
     animateFinalScore(state.score);
+    startVictoryRain();
+    playVictorySound();
+    setTimeout(playEpicWinSequence, 220);
+    setTimeout(()=>{
+      runLegendSequence(()=>{
+        els.finalSubtitle.textContent = 'Has superado las 40.';
+        els.victoryPhrase.textContent = randomItem(victoryPhrases);
+        els.unlockBlock.style.display = 'block';
+        [...document.querySelectorAll('.unlock-item')].forEach((item, i) => {
+          item.classList.remove('show');
+          setTimeout(() => item.classList.add('show'), 150 + i * 180);
+        });
+        document.getElementById('savePanel').style.display = 'block';
+      });
+    }, 350);
   }else{
     document.body.classList.remove('victory-bg');
     els.finalEmoji.textContent = '😵';
@@ -1073,6 +1133,39 @@ function animateFinalScore(target){
 
 loadSettings();
 refreshModesUI();
+
+function playEpicWin(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(440, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime+1.5);
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.1, ctx.currentTime+0.2);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+2);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime+2);
+  }catch(e){}
+}
+
+function showEpicText(){
+  const el = document.createElement('div');
+  el.innerText = "NIVEL LEYENDA";
+  el.style.position='fixed';
+  el.style.top='40%';
+  el.style.left='50%';
+  el.style.transform='translate(-50%,-50%)';
+  el.style.fontSize='48px';
+  el.style.color='white';
+  el.style.fontWeight='bold';
+  el.style.zIndex='9999';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2000);
+}
+
 initSpeech();
 updateHud();
 </script>
