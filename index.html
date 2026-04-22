@@ -305,6 +305,37 @@ button:active{transform:scale(.985)}
 }
 #flash.show{animation:flash .36s ease}
 @keyframes flash{0%{opacity:0}20%{opacity:.95}100%{opacity:0}}
+
+#crackOverlay{
+  position:fixed;inset:0;pointer-events:none;z-index:18;opacity:0;
+  background:
+    linear-gradient(78deg,transparent 48.8%,rgba(255,255,255,.92) 49%,rgba(0,0,0,.72) 49.5%,transparent 50%) 50% 0/100% 100% no-repeat,
+    linear-gradient(115deg,transparent 49.2%,rgba(255,255,255,.85) 49.6%,rgba(0,0,0,.68) 50%,transparent 50.6%) 60% 12%/80% 76% no-repeat,
+    linear-gradient(20deg,transparent 49.2%,rgba(255,255,255,.9) 49.5%,rgba(0,0,0,.68) 50%,transparent 50.5%) 30% 48%/80% 70% no-repeat,
+    linear-gradient(160deg,transparent 49.2%,rgba(255,255,255,.82) 49.5%,rgba(0,0,0,.62) 50%,transparent 50.5%) 62% 36%/70% 62% no-repeat;
+  mix-blend-mode:screen;
+}
+#crackOverlay.show{animation:crackShow 1.6s ease forwards}
+@keyframes crackShow{0%{opacity:0;transform:scale(1)}10%{opacity:1;transform:scale(1.02)}100%{opacity:1}}
+#fxLayer{
+  position:fixed;inset:0;pointer-events:none;z-index:8;overflow:hidden;
+}
+.fx-number{
+  position:absolute;top:-12vh;color:rgba(255,255,255,.16);font-weight:1000;
+  animation:fallNum linear forwards;text-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+@keyframes fallNum{from{transform:translateY(-10vh) rotate(0deg)}to{transform:translateY(120vh) rotate(180deg)}}
+body.special-bg .fx-number{color:rgba(255,255,255,.22)}
+.final-compact .hero{padding-top:8px}
+.final-compact h1{font-size:clamp(34px,10vw,56px)}
+.final-compact .subtitle{font-size:clamp(18px,4.6vw,24px);margin:8px auto 12px}
+.final-compact .final-score{line-height:.92}
+.final-compact .panel{padding:14px}
+.final-compact .menu-buttons{margin:14px 0 10px}
+.unlock-item{opacity:0;transform:translateY(12px) scale(.98)}
+.unlock-item.show{animation:unlockPop .55s ease forwards}
+@keyframes unlockPop{to{opacity:1;transform:translateY(0) scale(1)}}
+
 @media (max-width:430px){
   .topbar,.info-grid{grid-template-columns:1fr 1fr}
 }
@@ -312,6 +343,8 @@ button:active{transform:scale(.985)}
 </head>
 <body>
 <div id="flash"></div>
+<div id="crackOverlay"></div>
+<div id="fxLayer"></div>
 <div id="slapStage">
   <div id="comic">¡ZAS!</div>
   <div id="slapHand">✋</div>
@@ -334,15 +367,15 @@ button:active{transform:scale(.985)}
     <div class="panel rules">
       🎯 Responde <strong>40 multiplicaciones</strong><br>
       🎤 Solo voz, escucha automática<br>
-      ⏱ 3 segundos por pregunta + cierre justo<br>
-      💥 3 vidas, mano viral al fallar<br>
-      👑 Al ganar desbloqueas difícil, turbo, infinito y fondo especial
+      ⏱ 3 segundos por pregunta<br>
+      💥 3 vidas<br>
+      👑 Gana y descubre lo que se desbloquea
     </div>
 
     <div class="mode-panel" id="modePanel">
-      <div class="mode-card">
+      <div class="mode-card" id="cardNormal">
         <div><strong>Modo normal</strong><small>Solo tablas del 1 al 10.</small></div>
-        <button class="mode-toggle active" onclick="selectMode('normal')">Activo</button>
+        <button class="mode-toggle active" id="btnNormal" onclick="selectMode('normal')">Activo</button>
       </div>
       <div class="mode-card locked" id="cardHard">
         <div><strong>🔥 Modo difícil</strong><small>Incluye 11, 12 y 13.</small></div>
@@ -477,7 +510,7 @@ const state = {
   lastValidatedToken:'', lastInterimAt:0, lastFinalAt:0,
   recentPairs:[], recentAnswers:[],
   selectedMode:'normal', unlocked:{hard:false,turbo:false,infinite:false,specialBg:false},
-  startingGame:false, hasSavedCurrentScore:false, lastScore:0
+  startingGame:false, hasSavedCurrentScore:false, lastScore:0, crackShown:false
 };
 
 const els = {
@@ -504,6 +537,10 @@ const els = {
   finalSubtitle:document.getElementById('finalSubtitle'),
   victoryPhrase:document.getElementById('victoryPhrase'),
   unlockBlock:document.getElementById('unlockBlock'),
+  crackOverlay:document.getElementById('crackOverlay'),
+  fxLayer:document.getElementById('fxLayer'),
+  cardNormal:document.getElementById('cardNormal'),
+  btnNormal:document.getElementById('btnNormal'),
   saveStatus:document.getElementById('saveStatus'),
   nameInput:document.getElementById('nameInput'),
   recordsList:document.getElementById('recordsList'),
@@ -529,10 +566,76 @@ function showScreen(id){
   window.scrollTo(0,0);
 }
 function showHow(){
-  alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Solo voz. Si dices la correcta al final, entra dentro del cierre justo.');
+  alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Solo voz. Responde antes de que termine el tiempo.');
 }
 function randomItem(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
+
+function getAudioContext(){
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if(!Ctx) return null;
+  if(!window.__tablasAudioCtx) window.__tablasAudioCtx = new Ctx();
+  if(window.__tablasAudioCtx.state === 'suspended') window.__tablasAudioCtx.resume();
+  return window.__tablasAudioCtx;
+}
+function playTone(freq, duration=0.12, type='triangle', gainValue=0.03, when=0){
+  try{
+    const ctx = getAudioContext();
+    if(!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime + when);
+    gain.gain.exponentialRampToValueAtTime(gainValue, ctx.currentTime + when + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + when + duration);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(ctx.currentTime + when);
+    osc.stop(ctx.currentTime + when + duration + 0.02);
+  }catch(_){}
+}
+function playSuccessSound(){
+  playTone(660, 0.10, 'triangle', 0.03, 0);
+  playTone(880, 0.14, 'triangle', 0.03, 0.08);
+}
+function playSlapSound(){
+  playTone(110, 0.08, 'sawtooth', 0.07, 0);
+  playTone(180, 0.10, 'square', 0.06, 0.04);
+  playTone(90, 0.18, 'sawtooth', 0.06, 0.12);
+}
+function playVictorySound(){
+  playTone(523, 0.12, 'triangle', 0.03, 0);
+  playTone(659, 0.12, 'triangle', 0.03, 0.12);
+  playTone(784, 0.16, 'triangle', 0.03, 0.24);
+  playTone(1046, 0.24, 'triangle', 0.03, 0.40);
+}
+function spawnFxNumber(text, life=2200, strong=false){
+  if(!els.fxLayer) return;
+  const span = document.createElement('span');
+  span.className = 'fx-number';
+  span.textContent = text;
+  span.style.left = (Math.random() * 100) + 'vw';
+  span.style.fontSize = (strong ? 34 + Math.random()*28 : 20 + Math.random()*30) + 'px';
+  span.style.animationDuration = (strong ? 2.3 + Math.random()*1.5 : 5 + Math.random()*5) + 's';
+  els.fxLayer.appendChild(span);
+  setTimeout(() => span.remove(), life);
+}
+function startAmbientNumbers(){
+  if(window.__ambientFxStarted) return;
+  window.__ambientFxStarted = true;
+  setInterval(() => {
+    const activeSpecial = document.body.classList.contains('special-bg');
+    if(!activeSpecial) return;
+    spawnFxNumber(randomItem(['6','7','8','9','×','12','13','42','56']), 8000, false);
+  }, 550);
+}
+function startVictoryRain(){
+  for(let i=0;i<26;i++){
+    setTimeout(() => {
+      spawnFxNumber(randomItem(['40','×','👑','🧠','∞','⚡','11','12','13']), 5000, true);
+    }, i * 85);
+  }
+}
 function loadSettings(){
   try{
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
@@ -548,6 +651,12 @@ function saveSettings(){
 }
 function refreshModesUI(){
   els.modePanel.classList.toggle('show', Object.values(state.unlocked).some(Boolean));
+
+  if(els.btnNormal){
+    els.btnNormal.textContent = state.selectedMode === 'normal' ? 'Activo' : 'Elegir';
+    els.btnNormal.classList.toggle('active', state.selectedMode === 'normal');
+  }
+
   const map = [
     ['hard', els.cardHard, els.btnHard],
     ['turbo', els.cardTurbo, els.btnTurbo],
@@ -764,7 +873,7 @@ function onTimerReachedZero(roundId){
   }, FINAL_GRACE_MS);
 }
 
-function slap(){
+function slap(lastLife=false){
   els.flash.classList.remove('show');
   els.slapHand.classList.remove('show');
   els.comic.classList.remove('show');
@@ -773,6 +882,17 @@ function slap(){
   els.slapHand.classList.add('show');
   els.comic.textContent = randomItem(['¡ZAS!','¡PAM!','¡PLAS!']);
   els.comic.classList.add('show');
+  playSlapSound();
+
+  if(lastLife && !state.crackShown){
+    state.crackShown = true;
+    setTimeout(() => {
+      els.crackOverlay.classList.remove('show');
+      void els.crackOverlay.offsetWidth;
+      els.crackOverlay.classList.add('show');
+    }, 120);
+  }
+
   setTimeout(()=>{
     els.flash.classList.remove('show');
     els.comic.classList.remove('show');
@@ -796,6 +916,7 @@ function settleRound(result){
     state.bestStreak = Math.max(state.bestStreak, state.streak);
     updateHud();
     showFeedback(randomItem(motivational), 'ok');
+    playSuccessSound();
 
     if(state.selectedMode !== 'infinite' && state.score >= GOAL){
       setTimeout(()=> endGame(true), 760);
@@ -808,6 +929,7 @@ function settleRound(result){
     return;
   }
 
+  const lastLife = state.lives === 1;
   state.streak = 0;
   state.lives = Math.max(0, state.lives - 1);
   updateHud();
@@ -816,7 +938,7 @@ function settleRound(result){
   els.questionCard.classList.remove('hit');
   void els.questionCard.offsetWidth;
   els.questionCard.classList.add('hit');
-  slap();
+  slap(lastLife);
 
   if(state.lives <= 0){
     setTimeout(()=> endGame(false), 980);
@@ -1018,6 +1140,10 @@ function startGame(){
   state.timeoutPending = false;
   state.hasSavedCurrentScore = false;
   showScreen('gameScreen');
+  document.getElementById('finalScreen').classList.remove('final-compact');
+  document.body.classList.remove('victory-bg');
+  els.crackOverlay.classList.remove('show');
+  state.crackShown = false;
   updateHud();
   generateQuestion();
   startRound();
@@ -1031,14 +1157,13 @@ function endGame(won){
   clearTimer();
   clearGraceTimeout();
   stopRecognition();
-  state.roundActive = false;
-  state.timeoutPending = false;
-  state.settled = true;
   showScreen('finalScreen');
+  document.getElementById('finalScreen').classList.add('final-compact');
   els.finalScore.textContent = String(state.score);
   els.saveStatus.textContent = '';
   els.nameInput.value = '';
   state.hasSavedCurrentScore = false;
+
   if(won){
     unlockAll();
     document.body.classList.add('victory-bg');
@@ -1047,6 +1172,12 @@ function endGame(won){
     els.finalSubtitle.textContent = 'Has superado las 40.';
     els.victoryPhrase.textContent = randomItem(victoryPhrases);
     els.unlockBlock.style.display = 'block';
+    [...document.querySelectorAll('.unlock-item')].forEach((item, i) => {
+      item.classList.remove('show');
+      setTimeout(() => item.classList.add('show'), 250 + i * 180);
+    });
+    startVictoryRain();
+    playVictorySound();
     animateFinalScore(state.score);
   }else{
     document.body.classList.remove('victory-bg');
@@ -1074,6 +1205,7 @@ function animateFinalScore(target){
 loadSettings();
 refreshModesUI();
 initSpeech();
+startAmbientNumbers();
 updateHud();
 </script>
 </body>
