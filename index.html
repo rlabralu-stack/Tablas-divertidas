@@ -305,9 +305,21 @@ button:active{transform:scale(.985)}
 }
 #flash.show{animation:flash .36s ease}
 @keyframes flash{0%{opacity:0}20%{opacity:.95}100%{opacity:0}}
+@media (max-width:430px){
+  .topbar,.info-grid{grid-template-columns:1fr 1fr}
+}
 
+#bgNumbers{
+  position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; display:none;
+}
+.bg-num{
+  position:absolute; top:-10vh; color:rgba(255,255,255,.10); font-weight:1000;
+  animation:bgFall linear forwards;
+  text-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+@keyframes bgFall{from{transform:translateY(-10vh) rotate(0deg)}to{transform:translateY(120vh) rotate(160deg)}}
 #crackOverlay{
-  position:fixed;inset:0;pointer-events:none;z-index:18;opacity:0;
+  position:fixed; inset:0; pointer-events:none; z-index:18; opacity:0;
   background:
     linear-gradient(78deg,transparent 48.8%,rgba(255,255,255,.92) 49%,rgba(0,0,0,.72) 49.5%,transparent 50%) 50% 0/100% 100% no-repeat,
     linear-gradient(115deg,transparent 49.2%,rgba(255,255,255,.85) 49.6%,rgba(0,0,0,.68) 50%,transparent 50.6%) 60% 12%/80% 76% no-repeat,
@@ -315,36 +327,45 @@ button:active{transform:scale(.985)}
     linear-gradient(160deg,transparent 49.2%,rgba(255,255,255,.82) 49.5%,rgba(0,0,0,.62) 50%,transparent 50.5%) 62% 36%/70% 62% no-repeat;
   mix-blend-mode:screen;
 }
-#crackOverlay.show{animation:crackShow 1.6s ease forwards}
+#crackOverlay.show{animation:crackShow 1.9s ease forwards}
 @keyframes crackShow{0%{opacity:0;transform:scale(1)}10%{opacity:1;transform:scale(1.02)}100%{opacity:1}}
-#fxLayer{
-  position:fixed;inset:0;pointer-events:none;z-index:8;overflow:hidden;
+#legendSequence{
+  display:none;
+  margin:18px 0 12px;
+  min-height:160px;
+  color:#fff;
+  text-align:center;
+  padding:12px 8px;
 }
-.fx-number{
-  position:absolute;top:-12vh;color:rgba(255,255,255,.16);font-weight:1000;
-  animation:fallNum linear forwards;text-shadow:0 4px 10px rgba(0,0,0,.1);
+#legendMain{
+  font-size:clamp(36px,9vw,62px);
+  font-weight:1000;
+  letter-spacing:-.04em;
+  text-shadow:0 8px 18px rgba(0,0,0,.22);
+  animation:legendPulse .9s infinite;
 }
-@keyframes fallNum{from{transform:translateY(-10vh) rotate(0deg)}to{transform:translateY(120vh) rotate(180deg)}}
-body.special-bg .fx-number{color:rgba(255,255,255,.22)}
-.final-compact .hero{padding-top:8px}
-.final-compact h1{font-size:clamp(34px,10vw,56px)}
-.final-compact .subtitle{font-size:clamp(18px,4.6vw,24px);margin:8px auto 12px}
-.final-compact .final-score{line-height:.92}
-.final-compact .panel{padding:14px}
-.final-compact .menu-buttons{margin:14px 0 10px}
-.unlock-item{opacity:0;transform:translateY(12px) scale(.98)}
-.unlock-item.show{animation:unlockPop .55s ease forwards}
-@keyframes unlockPop{to{opacity:1;transform:translateY(0) scale(1)}}
+#legendSub{
+  margin-top:14px;
+  min-height:54px;
+  font-size:clamp(24px,6vw,38px);
+  font-weight:1000;
+  color:#fff6a8;
+  text-shadow:0 6px 14px rgba(0,0,0,.22);
+}
+@keyframes legendPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.final-screen-wrap{
+  min-height:calc(100dvh - 44px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
-@media (max-width:430px){
-  .topbar,.info-grid{grid-template-columns:1fr 1fr}
-}
 </style>
 </head>
 <body>
-<div id="flash"></div>
+<div id="bgNumbers"></div>
 <div id="crackOverlay"></div>
-<div id="fxLayer"></div>
+<div id="flash"></div>
 <div id="slapStage">
   <div id="comic">¡ZAS!</div>
   <div id="slapHand">✋</div>
@@ -369,11 +390,11 @@ body.special-bg .fx-number{color:rgba(255,255,255,.22)}
       🎤 Solo voz, escucha automática<br>
       ⏱ 3 segundos por pregunta<br>
       💥 3 vidas<br>
-      👑 Gana y descubre lo que se desbloquea
+      👑 Gana y descubre…
     </div>
 
     <div class="mode-panel" id="modePanel">
-      <div class="mode-card" id="cardNormal">
+      <div class="mode-card">
         <div><strong>Modo normal</strong><small>Solo tablas del 1 al 10.</small></div>
         <button class="mode-toggle active" id="btnNormal" onclick="selectMode('normal')">Activo</button>
       </div>
@@ -435,6 +456,7 @@ body.special-bg .fx-number{color:rgba(255,255,255,.22)}
   </section>
 
   <section class="screen" id="finalScreen">
+    <div class="final-screen-wrap">
     <div class="hero">
       <div class="logo" id="finalEmoji">🏁</div>
       <h1 id="finalTitle">FIN DE LA PARTIDA</h1>
@@ -442,6 +464,7 @@ body.special-bg .fx-number{color:rgba(255,255,255,.22)}
     </div>
 
     <div class="final-score" id="animatedFinalScore">0</div>
+    <div id="legendSequence"><div id="legendMain">NIVEL LEYENDA</div><div id="legendSub"></div></div>
     <div class="final-block" id="victoryPhrase"></div>
 
     <div id="unlockBlock" style="display:none">
@@ -468,6 +491,7 @@ body.special-bg .fx-number{color:rgba(255,255,255,.22)}
       <button class="btn-primary" onclick="openRecords()">Ver récords</button>
       <button class="btn-ghost" onclick="showScreen('homeScreen')">Volver al inicio</button>
     </div>
+      </div>
   </section>
 
   <section class="screen" id="recordsScreen">
@@ -510,7 +534,7 @@ const state = {
   lastValidatedToken:'', lastInterimAt:0, lastFinalAt:0,
   recentPairs:[], recentAnswers:[],
   selectedMode:'normal', unlocked:{hard:false,turbo:false,infinite:false,specialBg:false},
-  startingGame:false, hasSavedCurrentScore:false, lastScore:0, crackShown:false
+  startingGame:false, hasSavedCurrentScore:false, lastScore:0
 };
 
 const els = {
@@ -518,6 +542,12 @@ const els = {
   scorePill:document.getElementById('scorePill'),
   livesPill:document.getElementById('livesPill'),
   streakPill:document.getElementById('streakPill'),
+  btnNormal:document.getElementById('btnNormal'),
+  bgNumbers:document.getElementById('bgNumbers'),
+  crackOverlay:document.getElementById('crackOverlay'),
+  legendSequence:document.getElementById('legendSequence'),
+  legendMain:document.getElementById('legendMain'),
+  legendSub:document.getElementById('legendSub'),
   bestStreakPill:document.getElementById('bestStreakPill'),
   fireBanner:document.getElementById('fireBanner'),
   questionText:document.getElementById('questionText'),
@@ -537,10 +567,6 @@ const els = {
   finalSubtitle:document.getElementById('finalSubtitle'),
   victoryPhrase:document.getElementById('victoryPhrase'),
   unlockBlock:document.getElementById('unlockBlock'),
-  crackOverlay:document.getElementById('crackOverlay'),
-  fxLayer:document.getElementById('fxLayer'),
-  cardNormal:document.getElementById('cardNormal'),
-  btnNormal:document.getElementById('btnNormal'),
   saveStatus:document.getElementById('saveStatus'),
   nameInput:document.getElementById('nameInput'),
   recordsList:document.getElementById('recordsList'),
@@ -563,79 +589,14 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   document.body.classList.toggle('special-bg', state.selectedMode === 'specialBg' && state.unlocked.specialBg && id !== 'finalScreen');
   if(id !== 'finalScreen') document.body.classList.remove('victory-bg');
+  refreshBgNumbers();
   window.scrollTo(0,0);
 }
 function showHow(){
-  alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Solo voz. Responde antes de que termine el tiempo.');
+  alert('Pulsa JUGAR, concede permiso al micrófono y responde hablando. Solo voz. Si dices la correcta al final, entra dentro del cierre justo.');
 }
 function randomItem(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-
-function getAudioContext(){
-  const Ctx = window.AudioContext || window.webkitAudioContext;
-  if(!Ctx) return null;
-  if(!window.__tablasAudioCtx) window.__tablasAudioCtx = new Ctx();
-  if(window.__tablasAudioCtx.state === 'suspended') window.__tablasAudioCtx.resume();
-  return window.__tablasAudioCtx;
-}
-function playTone(freq, duration=0.12, type='triangle', gainValue=0.03, when=0){
-  try{
-    const ctx = getAudioContext();
-    if(!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime + when);
-    gain.gain.exponentialRampToValueAtTime(gainValue, ctx.currentTime + when + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + when + duration);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(ctx.currentTime + when);
-    osc.stop(ctx.currentTime + when + duration + 0.02);
-  }catch(_){}
-}
-function playSuccessSound(){
-  playTone(660, 0.10, 'triangle', 0.03, 0);
-  playTone(880, 0.14, 'triangle', 0.03, 0.08);
-}
-function playSlapSound(){
-  playTone(110, 0.08, 'sawtooth', 0.07, 0);
-  playTone(180, 0.10, 'square', 0.06, 0.04);
-  playTone(90, 0.18, 'sawtooth', 0.06, 0.12);
-}
-function playVictorySound(){
-  playTone(523, 0.12, 'triangle', 0.03, 0);
-  playTone(659, 0.12, 'triangle', 0.03, 0.12);
-  playTone(784, 0.16, 'triangle', 0.03, 0.24);
-  playTone(1046, 0.24, 'triangle', 0.03, 0.40);
-}
-function spawnFxNumber(text, life=2200, strong=false){
-  if(!els.fxLayer) return;
-  const span = document.createElement('span');
-  span.className = 'fx-number';
-  span.textContent = text;
-  span.style.left = (Math.random() * 100) + 'vw';
-  span.style.fontSize = (strong ? 34 + Math.random()*28 : 20 + Math.random()*30) + 'px';
-  span.style.animationDuration = (strong ? 2.3 + Math.random()*1.5 : 5 + Math.random()*5) + 's';
-  els.fxLayer.appendChild(span);
-  setTimeout(() => span.remove(), life);
-}
-function startAmbientNumbers(){
-  if(window.__ambientFxStarted) return;
-  window.__ambientFxStarted = true;
-  setInterval(() => {
-    const activeSpecial = document.body.classList.contains('special-bg');
-    if(!activeSpecial) return;
-    spawnFxNumber(randomItem(['6','7','8','9','×','12','13','42','56']), 8000, false);
-  }, 550);
-}
-function startVictoryRain(){
-  for(let i=0;i<26;i++){
-    setTimeout(() => {
-      spawnFxNumber(randomItem(['40','×','👑','🧠','∞','⚡','11','12','13']), 5000, true);
-    }, i * 85);
-  }
-}
 function loadSettings(){
   try{
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
@@ -651,12 +612,10 @@ function saveSettings(){
 }
 function refreshModesUI(){
   els.modePanel.classList.toggle('show', Object.values(state.unlocked).some(Boolean));
-
   if(els.btnNormal){
     els.btnNormal.textContent = state.selectedMode === 'normal' ? 'Activo' : 'Elegir';
     els.btnNormal.classList.toggle('active', state.selectedMode === 'normal');
   }
-
   const map = [
     ['hard', els.cardHard, els.btnHard],
     ['turbo', els.cardTurbo, els.btnTurbo],
@@ -873,7 +832,7 @@ function onTimerReachedZero(roundId){
   }, FINAL_GRACE_MS);
 }
 
-function slap(lastLife=false){
+function slap(){
   els.flash.classList.remove('show');
   els.slapHand.classList.remove('show');
   els.comic.classList.remove('show');
@@ -882,17 +841,7 @@ function slap(lastLife=false){
   els.slapHand.classList.add('show');
   els.comic.textContent = randomItem(['¡ZAS!','¡PAM!','¡PLAS!']);
   els.comic.classList.add('show');
-  playSlapSound();
-
-  if(lastLife && !state.crackShown){
-    state.crackShown = true;
-    setTimeout(() => {
-      els.crackOverlay.classList.remove('show');
-      void els.crackOverlay.offsetWidth;
-      els.crackOverlay.classList.add('show');
-    }, 120);
-  }
-
+  playSlapHitSound();
   setTimeout(()=>{
     els.flash.classList.remove('show');
     els.comic.classList.remove('show');
@@ -916,7 +865,6 @@ function settleRound(result){
     state.bestStreak = Math.max(state.bestStreak, state.streak);
     updateHud();
     showFeedback(randomItem(motivational), 'ok');
-    playSuccessSound();
 
     if(state.selectedMode !== 'infinite' && state.score >= GOAL){
       setTimeout(()=> endGame(true), 760);
@@ -929,8 +877,8 @@ function settleRound(result){
     return;
   }
 
-  const lastLife = state.lives === 1;
   state.streak = 0;
+  const lastLifeHit = state.lives === 1;
   state.lives = Math.max(0, state.lives - 1);
   updateHud();
   showFeedback('¡INCORRECTO!', 'bad');
@@ -938,7 +886,12 @@ function settleRound(result){
   els.questionCard.classList.remove('hit');
   void els.questionCard.offsetWidth;
   els.questionCard.classList.add('hit');
-  slap(lastLife);
+  slap();
+  if(lastLifeHit){
+    els.crackOverlay.classList.remove('show');
+    void els.crackOverlay.offsetWidth;
+    els.crackOverlay.classList.add('show');
+  }
 
   if(state.lives <= 0){
     setTimeout(()=> endGame(false), 980);
@@ -1121,6 +1074,165 @@ function updateMicState(){
   els.micOrb.textContent = state.listening ? '🔴' : '🎤';
 }
 
+
+function setBgNumbers(active){
+  if(!els.bgNumbers) return;
+  els.bgNumbers.style.display = active ? 'block' : 'none';
+}
+function spawnBgNumberSet(symbols=['7','8','9','×','=','12','24']){
+  if(!els.bgNumbers) return;
+  const span = document.createElement('span');
+  span.className = 'bg-num';
+  span.textContent = randomItem(symbols);
+  span.style.left = (Math.random()*100) + 'vw';
+  span.style.fontSize = (20 + Math.random()*42) + 'px';
+  span.style.animationDuration = (6 + Math.random()*7) + 's';
+  els.bgNumbers.appendChild(span);
+  setTimeout(()=>span.remove(), 15000);
+}
+let bgNumberInterval = null;
+function refreshBgNumbers(){
+  const active = state.selectedMode === 'specialBg' || document.body.classList.contains('victory-bg');
+  setBgNumbers(active);
+  if(bgNumberInterval){ clearInterval(bgNumberInterval); bgNumberInterval = null; }
+  if(active){
+    for(let i=0;i<8;i++) setTimeout(()=>spawnBgNumberSet(), i*140);
+    bgNumberInterval = setInterval(()=>spawnBgNumberSet(state.selectedMode==='specialBg' ? ['1','2','3','4','5','6','7','8','9','×','+','?'] : ['40','×','🧠','👑','7','8','9','12']), 420);
+  }
+}
+function playSlapHitSound(){
+  try{
+    const ctx = getAudioContext(); if(!ctx) return;
+    const bursts = [
+      {freq:140, type:'sawtooth', dur:0.10, gain:0.10, when:0},
+      {freq:90, type:'square', dur:0.14, gain:0.08, when:0.04},
+      {freq:220, type:'triangle', dur:0.06, gain:0.04, when:0.08}
+    ];
+    bursts.forEach(b=>playTone({freq:b.freq,type:b.type,duration:b.dur,gain:b.gain,when:b.when}));
+  }catch(_){}
+}
+function playEpicWinSequence(){
+  try{
+    const notes = [
+      [392,0.00,0.30],[523,0.20,0.32],[659,0.46,0.36],[784,0.78,0.42],
+      [988,1.18,0.50],[784,1.64,0.38],[1046,1.96,0.62],[1318,2.48,0.82],
+      [1174,3.20,0.55],[1318,3.56,0.72],[1568,4.18,1.20],[1760,5.10,1.40]
+    ];
+    notes.forEach(([f,w,d],i)=>{
+      playTone({freq:f,type:i%2===0?'triangle':'sine',duration:d,gain:0.075,when:w});
+      playTone({freq:f/2,type:'sine',duration:d+0.12,gain:0.03,when:w});
+    });
+  }catch(_){}
+}
+function runLegendSequence(onDone){
+  const words = ['JEFE','CRACK','MÁQUINA','GENIO'];
+  els.legendSequence.style.display = 'block';
+  els.legendMain.textContent = 'NIVEL LEYENDA';
+  els.legendSub.textContent = '';
+  for(let i=0;i<8;i++) setTimeout(()=>spawnBgNumberSet(['40','7','8','9','×','🧠','👑']), i*90);
+  setTimeout(()=>{ els.legendSub.textContent = 'Tu cerebro acaba de humillar a la mano.'; }, 500);
+  words.forEach((word, idx)=>{
+    setTimeout(()=>{
+      els.legendSub.textContent = word;
+      for(let i=0;i<5;i++) setTimeout(()=>spawnBgNumberSet(['40','7','8','9','×','🧠','👑']), i*70);
+    }, 1800 + idx*950);
+  });
+  setTimeout(()=>{
+    els.legendSequence.style.display = 'none';
+    if(onDone) onDone();
+  }, 1800 + words.length*950 + 700);
+}
+
+
+let audioCtx = null;
+function getAudioContext(){
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if(!Ctx) return null;
+  if(!audioCtx) audioCtx = new Ctx();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playTone({freq=440,type='sine',duration=0.12,gain=0.04,when=0}){
+  try{
+    const ctx = getAudioContext(); if(!ctx) return;
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime + when);
+    g.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + when + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + when + duration);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(ctx.currentTime + when); osc.stop(ctx.currentTime + when + duration + 0.02);
+  }catch(_){}
+}
+
+function setBgNumbers(active){
+  if(!els.bgNumbers) return;
+  els.bgNumbers.style.display = active ? 'block' : 'none';
+}
+function spawnBgNumberSet(symbols=['7','8','9','×','=','12','24']){
+  if(!els.bgNumbers) return;
+  const span = document.createElement('span');
+  span.className = 'bg-num';
+  span.textContent = randomItem(symbols);
+  span.style.left = (Math.random()*100) + 'vw';
+  span.style.fontSize = (20 + Math.random()*42) + 'px';
+  span.style.animationDuration = (6 + Math.random()*7) + 's';
+  els.bgNumbers.appendChild(span);
+  setTimeout(()=>span.remove(), 15000);
+}
+let bgNumberInterval = null;
+function refreshBgNumbers(){
+  const active = state.selectedMode === 'specialBg' || document.body.classList.contains('victory-bg');
+  setBgNumbers(active);
+  if(bgNumberInterval){ clearInterval(bgNumberInterval); bgNumberInterval = null; }
+  if(active){
+    for(let i=0;i<8;i++) setTimeout(()=>spawnBgNumberSet(), i*140);
+    bgNumberInterval = setInterval(()=>spawnBgNumberSet(state.selectedMode==='specialBg' ? ['1','2','3','4','5','6','7','8','9','×','+','?'] : ['40','×','🧠','👑','7','8','9','12']), 420);
+  }
+}
+function playSlapHitSound(){
+  try{
+    const ctx = getAudioContext(); if(!ctx) return;
+    const bursts = [
+      {freq:140, type:'sawtooth', dur:0.10, gain:0.10, when:0},
+      {freq:90, type:'square', dur:0.14, gain:0.08, when:0.04},
+      {freq:220, type:'triangle', dur:0.06, gain:0.04, when:0.08}
+    ];
+    bursts.forEach(b=>playTone({freq:b.freq,type:b.type,duration:b.dur,gain:b.gain,when:b.when}));
+  }catch(_){}
+}
+function playEpicWinSequence(){
+  try{
+    const notes = [
+      [392,0.00,0.30],[523,0.20,0.32],[659,0.46,0.36],[784,0.78,0.42],
+      [988,1.18,0.50],[784,1.64,0.38],[1046,1.96,0.62],[1318,2.48,0.82],
+      [1174,3.20,0.55],[1318,3.56,0.72],[1568,4.18,1.20],[1760,5.10,1.40]
+    ];
+    notes.forEach(([f,w,d],i)=>{
+      playTone({freq:f,type:i%2===0?'triangle':'sine',duration:d,gain:0.075,when:w});
+      playTone({freq:f/2,type:'sine',duration:d+0.12,gain:0.03,when:w});
+    });
+  }catch(_){}
+}
+function runLegendSequence(onDone){
+  const words = ['JEFE','CRACK','MÁQUINA','GENIO'];
+  els.legendSequence.style.display = 'block';
+  els.legendMain.textContent = 'NIVEL LEYENDA';
+  els.legendSub.textContent = '';
+  for(let i=0;i<8;i++) setTimeout(()=>spawnBgNumberSet(['40','7','8','9','×','🧠','👑']), i*90);
+  setTimeout(()=>{ els.legendSub.textContent = 'Tu cerebro acaba de humillar a la mano.'; }, 500);
+  words.forEach((word, idx)=>{
+    setTimeout(()=>{
+      els.legendSub.textContent = word;
+      for(let i=0;i<5;i++) setTimeout(()=>spawnBgNumberSet(['40','7','8','9','×','🧠','👑']), i*70);
+    }, 1800 + idx*950);
+  });
+  setTimeout(()=>{
+    els.legendSequence.style.display = 'none';
+    if(onDone) onDone();
+  }, 1800 + words.length*950 + 700);
+}
+
 function launchGameFromGesture(evt){
   if(evt && typeof evt.preventDefault === 'function') evt.preventDefault();
   if(state.startingGame) return;
@@ -1140,10 +1252,6 @@ function startGame(){
   state.timeoutPending = false;
   state.hasSavedCurrentScore = false;
   showScreen('gameScreen');
-  document.getElementById('finalScreen').classList.remove('final-compact');
-  document.body.classList.remove('victory-bg');
-  els.crackOverlay.classList.remove('show');
-  state.crackShown = false;
   updateHud();
   generateQuestion();
   startRound();
@@ -1157,35 +1265,46 @@ function endGame(won){
   clearTimer();
   clearGraceTimeout();
   stopRecognition();
+  state.roundActive = false;
+  state.timeoutPending = false;
+  state.settled = true;
   showScreen('finalScreen');
-  document.getElementById('finalScreen').classList.add('final-compact');
   els.finalScore.textContent = String(state.score);
   els.saveStatus.textContent = '';
   els.nameInput.value = '';
   state.hasSavedCurrentScore = false;
+  els.unlockBlock.style.display = 'none';
+  els.savePanel.style.display = 'none';
+  els.legendSequence.style.display = 'none';
 
   if(won){
     unlockAll();
     document.body.classList.add('victory-bg');
+    refreshBgNumbers();
     els.finalEmoji.textContent = '👑';
     els.finalTitle.textContent = 'NIVEL LEYENDA';
-    els.finalSubtitle.textContent = 'Has superado las 40.';
-    els.victoryPhrase.textContent = randomItem(victoryPhrases);
-    els.unlockBlock.style.display = 'block';
-    [...document.querySelectorAll('.unlock-item')].forEach((item, i) => {
-      item.classList.remove('show');
-      setTimeout(() => item.classList.add('show'), 250 + i * 180);
-    });
-    startVictoryRain();
-    playVictorySound();
+    els.finalSubtitle.textContent = '';
+    els.victoryPhrase.textContent = '';
     animateFinalScore(state.score);
+
+    setTimeout(()=>playEpicWinSequence(), 120);
+    setTimeout(()=>{
+      runLegendSequence(()=>{
+        els.finalSubtitle.textContent = randomItem(victoryPhrases);
+        els.victoryPhrase.textContent = 'Has desbloqueado nuevos modos.';
+        els.unlockBlock.style.display = 'block';
+        els.savePanel.style.display = 'block';
+      });
+    }, 350);
   }else{
     document.body.classList.remove('victory-bg');
+    refreshBgNumbers();
     els.finalEmoji.textContent = '😵';
     els.finalTitle.textContent = 'FIN DE LA PARTIDA';
     els.finalSubtitle.textContent = 'La mano ganó esta vez.';
     els.victoryPhrase.textContent = '';
     els.unlockBlock.style.display = 'none';
+    els.savePanel.style.display = 'block';
     els.animatedFinalScore.textContent = String(state.score);
   }
 }
@@ -1205,8 +1324,8 @@ function animateFinalScore(target){
 loadSettings();
 refreshModesUI();
 initSpeech();
-startAmbientNumbers();
 updateHud();
+refreshBgNumbers();
 </script>
 </body>
 </html>
